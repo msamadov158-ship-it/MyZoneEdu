@@ -64,6 +64,9 @@ export interface Lesson {
     video_url: string
     cover_url: string
     description: string
+    lesson_test_progress: {
+        is_completed: boolean
+    }
 }
 
 export interface LessonPayload {
@@ -74,6 +77,9 @@ export interface LessonPayload {
     video_url: string
     cover_url: string
     description: string
+    lesson_test_progress: {
+        is_completed: boolean
+    }
 }
 
 export interface ModulePayload {
@@ -158,3 +164,23 @@ export interface NotificationPayload {
     type: NotificationTYPE
 }
 
+export interface Question {
+    id: string | number;
+    question_text: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
+    option_d: string;
+    correct_option: string;
+    lesson_id: number;
+}
+
+export interface QuestionEdit {
+    question_text: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
+    option_d: string;
+    correct_option: string;
+    lesson_id?: number;
+}

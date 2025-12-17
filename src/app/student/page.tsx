@@ -177,7 +177,7 @@ export default function StudentDashboard() {
                                                 className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg flex items-center gap-2 text-sm font-medium"
                                                 onClick={(e) => {
                                                     e.stopPropagation()
-                                                    router.push(`/student/lesson/${course.id}`)
+                                                    router.push(`student/courses/${course.id}`)
                                                 }}
                                             >
                                                 <Play className="w-4 h-4" />
