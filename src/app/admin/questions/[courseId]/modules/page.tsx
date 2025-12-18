@@ -16,14 +16,14 @@ export default function CourseModule() {
 				<motion.div variants={fadeUp} className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-lg">
 					<div className="text-center">
 						<div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-						<p className="text-gray-600">Loading course module data...</p>
+						<p className="text-gray-600">Kurs modullari yuklanmoqda...</p>
 					</div>
 				</motion.div>
 			) : modules.length === 0 ? (
 				<motion.div variants={fadeUp} className="text-center py-16 bg-white rounded-2xl shadow-lg">
 					<BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-					<h3 className="text-lg font-semibold text-gray-900 mb-2">No course modules found</h3>
-					<p className="text-gray-600 mb-4">Get started by adding your first course module</p>
+					<h3 className="text-lg font-semibold text-gray-900 mb-2">Kurs modullari topilmadi</h3>
+					<p className="text-gray-600 mb-4">Birinchi modulni qo‘shish orqali boshlang</p>
 				</motion.div>
 			) : (
 				<motion.div variants={fadeUp} className="space-y-6">
@@ -34,7 +34,7 @@ export default function CourseModule() {
 								<div className="p-4 md:p-6 cursor-pointer transition-all duration-300 hover:bg-gray-50">
 									<div className="flex items-start justify-between">
 										<div className="flex flex-col md:flex-row items-start gap-4 flex-1">
-											<div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">{module.order}</div>
+											<div className="flex-shrink-0 w-12 h-12 bg-myZoneOnline rounded-xl flex items-center justify-center text-white font-bold text-lg">{module.order}</div>
 
 											<div className="flex-1 min-w-0">
 												<h3 className="text-xl font-bold text-gray-900">{module.title}</h3>

@@ -1,7 +1,7 @@
 import { StoredAuth } from '@/types'
 import { redirectToLogin } from './redirectToLogin'
 
-const TOKEN_KEY = process.env.NEXT_PUBLIC_EDUPATH_TOKEN || 'EDUPATH_TOKEN'
+const TOKEN_KEY = process.env.NEXT_PUBLIC_MY_ZONE_ONLINE_TOKEN || 'MY_ZONE_ONLINE_TOKEN'
 
 export const getToken = (): string => {
     if (typeof window === 'undefined') return ''

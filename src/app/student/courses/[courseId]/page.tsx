@@ -201,7 +201,7 @@ export default function Courses() {
 									<motion.div key={module.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.1 }} className="bg-white">
 										<button onClick={() => router.push(`${courseId}/module/${module.id}/lessons`)} className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-all duration-300 group">
 											<div className="flex items-center gap-4 flex-1 text-left">
-												<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-sm">{index + 1}</div>
+												<div className="w-10 h-10 bg-myZoneOnline rounded-xl flex items-center justify-center text-white font-bold text-sm">{index + 1}</div>
 												<div className="flex-1 min-w-0">
 													<h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">{module.title}</h3>
 													<p className="text-gray-600 text-sm mt-1 line-clamp-2">{module.description}</p>

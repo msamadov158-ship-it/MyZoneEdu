@@ -20,8 +20,8 @@ API.interceptors.request.use(
     (config) => {
         let token: string = ''
 
-        if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_EDUPATH_TOKEN) {
-            const stored = localStorage.getItem(process.env.NEXT_PUBLIC_EDUPATH_TOKEN)
+        if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MY_ZONE_ONLINE_TOKEN) {
+            const stored = localStorage.getItem(process.env.NEXT_PUBLIC_MY_ZONE_ONLINE_TOKEN)
             token = stored ? JSON.parse(stored)?.access_token || '' : ''
         }
 
@@ -44,13 +44,13 @@ API.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
-            if (currentPath.startsWith('/auth/login')) {
+            if (currentPath.startsWith('/')) {
                 return Promise.reject(error)
             }
             clearToken()
 
             if (typeof window !== 'undefined') {
-                window.location.href = '/auth/login'
+                window.location.href = '/'
             }
 
             return Promise.reject(error)

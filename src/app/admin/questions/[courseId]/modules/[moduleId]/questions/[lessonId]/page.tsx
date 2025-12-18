@@ -16,18 +16,15 @@ export default function Questions() {
 
 	const filteredQuestions = useMemo(() => {
 		if (!searchTerm.trim()) return questions
-
-		return questions.filter((q) => {
-			return q.question_text.toLowerCase().includes(searchTerm.toLowerCase())
-		})
+		return questions.filter((q) => q.question_text.toLowerCase().includes(searchTerm.toLowerCase()))
 	}, [questions, searchTerm])
 
 	const handleOpenCreate = () => {
 		openModal({
 			type: 'CREATE',
 			formId: 'questionCreate',
-			title: 'Create Question',
-			btnTitle: 'Create Question',
+			title: 'Savol Qo‘shish',
+			btnTitle: 'Yaratish',
 			content: <CreateQuestionModal lessonId={lessonId} closeModal={closeModal} handleCreate={handleCreate} />,
 		})
 	}
@@ -36,8 +33,8 @@ export default function Questions() {
 		openModal({
 			type: 'EDIT',
 			formId: 'questionEdit',
-			title: 'Edit Question',
-			btnTitle: 'Edit Question',
+			title: 'Savolni Tahrirlash',
+			btnTitle: 'Saqlash',
 			content: <EditQuestionModal id={id} closeModal={closeModal} fetchQuestion={fetchQuestion} handleUpdate={handleUpdate} />,
 		})
 	}
@@ -46,8 +43,8 @@ export default function Questions() {
 		openModal({
 			type: 'DELETE',
 			formId: 'questionDelete',
-			title: 'Delete Question',
-			btnTitle: 'Delete Question',
+			title: 'Savolni O‘chirish',
+			btnTitle: 'O‘chirish',
 			content: <DeleteQuestionModal id={id} closeModal={closeModal} handleDelete={handleDelete} />,
 		})
 	}
@@ -58,41 +55,42 @@ export default function Questions() {
 				<motion.div variants={fadeUp} className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-lg">
 					<div className="text-center">
 						<div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-						<p className="text-gray-600">Loading question data...</p>
+						<p className="text-gray-600">Savollar yuklanmoqda...</p>
 					</div>
 				</motion.div>
 			) : questions.length === 0 ? (
 				<motion.div variants={fadeUp} className="text-center py-16 bg-white rounded-2xl shadow-lg">
 					<HelpCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-					<h3 className="text-lg font-semibold text-gray-900 mb-2">No questions found</h3>
-					<p className="text-gray-600 mb-4">Get started by adding your first question</p>
-					<button onClick={handleOpenCreate} className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg">
-						Create Question
+					<h3 className="text-lg font-semibold text-gray-900 mb-2">Savollar topilmadi</h3>
+					<p className="text-gray-600 mb-4">Birinchi savolingizni qo‘shish orqali boshlang</p>
+					<button onClick={handleOpenCreate} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg">
+						Savol Qo‘shish
 					</button>
 				</motion.div>
 			) : (
 				<motion.div variants={fadeUp} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
 					<div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-						<h3 className="text-lg font-semibold text-gray-900">Recent Questions</h3>
-						<button onClick={handleOpenCreate} className="px-6 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition">
-							Add Question
+						<h3 className="text-lg font-semibold text-gray-900">So‘nggi savollar</h3>
+						<button onClick={handleOpenCreate} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white transition">
+							Savol Qo‘shish
 						</button>
 					</div>
+
 					<div className="px-6 py-4 border-b border-gray-200 flex gap-4">
-						<input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-2xl focus:ring-2 ring-blue-500 transition-all duration-300 w-full outline-0" />
+						<input type="text" placeholder="Qidirish..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-2xl focus:ring-2 ring-blue-500 transition-all duration-300 w-full outline-0" />
 					</div>
 
 					<div className="overflow-x-auto">
 						<table className="w-full">
 							<thead>
 								<tr className="bg-gray-50">
-									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Question Text</th>
-									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Option A</th>
-									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Option B</th>
-									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Option C</th>
-									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Option D</th>
-									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Correct</th>
-									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Savol matni</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Variant A</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Variant B</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Variant C</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Variant D</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">To‘g‘ri</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Amallar</th>
 								</tr>
 							</thead>
 							<tbody className="divide-y divide-gray-200">
@@ -108,10 +106,10 @@ export default function Questions() {
 										</td>
 										<td className="px-6 py-4 flex gap-4 whitespace-nowrap">
 											<button onClick={() => handleOpenEdit(question.id.toString())} className="text-indigo-600 hover:text-indigo-800">
-												Edit
+												Tahrirlash
 											</button>
 											<button onClick={() => handleOpenDelete(question.id.toString())} className="text-red-600 hover:text-red-800">
-												Delete
+												O‘chirish
 											</button>
 										</td>
 									</motion.tr>

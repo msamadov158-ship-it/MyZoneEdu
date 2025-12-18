@@ -1,10 +1,8 @@
 'use client'
-
-import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { useParams, useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { BookOpen } from 'lucide-react'
 import { useLessons } from '@/hooks/useLessons'
-import { BookOpen, Clock, FileText, Play, Video } from 'lucide-react'
 import { fadeUp, staggeredList } from '@/lib/motion'
 
 export default function CourseLesson() {
@@ -18,14 +16,14 @@ export default function CourseLesson() {
 				<motion.div variants={fadeUp} className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-lg">
 					<div className="text-center">
 						<div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-						<p className="text-gray-600">Loading course module data...</p>
+						<p className="text-gray-600">Modul ma'lumotlari yuklanmoqda...</p>
 					</div>
 				</motion.div>
 			) : lessons.length === 0 ? (
 				<motion.div variants={fadeUp} className="text-center py-16 bg-white rounded-2xl shadow-lg">
 					<BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-					<h3 className="text-lg font-semibold text-gray-900 mb-2">No course lessons found</h3>
-					<p className="text-gray-600 mb-4">Get started by adding your first course module</p>
+					<h3 className="text-lg font-semibold text-gray-900 mb-2">Modul darslari topilmadi</h3>
+					<p className="text-gray-600 mb-4">Birinchi darsni qo‘shish orqali boshlang</p>
 				</motion.div>
 			) : (
 				<motion.div variants={fadeUp} className="space-y-6">
@@ -39,7 +37,6 @@ export default function CourseLesson() {
 											<div className="flex items-start justify-between gap-4 mb-3">
 												<div className="flex-1 min-w-0">
 													<h5 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">{lesson.title}</h5>
-
 													{lesson.description && <p className="text-gray-600 mt-2 line-clamp-2">{lesson.description}</p>}
 												</div>
 											</div>

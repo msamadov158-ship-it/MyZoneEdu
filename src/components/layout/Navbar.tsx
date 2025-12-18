@@ -6,47 +6,47 @@ import { getUserFromStorage } from '@/lib/helpers/userStore'
 import { useRouter } from 'next/navigation'
 
 export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const router = useRouter()
-    const [user, setUser] = useState<StoredAuth | null>(null)
+	const router = useRouter()
+	const [user, setUser] = useState<StoredAuth | null>(null)
 
-    useEffect(() => {
-        const storedUser = getUserFromStorage()
-        setTimeout(() => {
-            if (storedUser) setUser(storedUser)
-        }, 0)
-    }, [])
-    return (
-        <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full fixed top-0 lg:z-60 bg-white/80 backdrop-blur-xl border-b border-gray-200">
-            <div className="px-6 py-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-                            <Menu className="w-5 h-5 cursor-pointer" />
-                        </button>
-                        <div className="relative hidden md:block">
-                            <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                            <input type="text" placeholder="Search..." className="pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-2xl focus:ring-2 ring-blue-500 transition-all duration-300 w-80" />
-                        </div>
-                    </div>
+	useEffect(() => {
+		const storedUser = getUserFromStorage()
+		setTimeout(() => {
+			if (storedUser) setUser(storedUser)
+		}, 0)
+	}, [])
+	return (
+		<motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full fixed top-0 lg:z-60 bg-white/80 backdrop-blur-xl border-b border-gray-200">
+			<div className="px-6 py-4">
+				<div className="flex items-center justify-between">
+					<div className="flex items-center gap-4">
+						<button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+							<Menu className="w-5 h-5 cursor-pointer" />
+						</button>
+						<div className="relative hidden md:block">
+							<Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+							<input type="text" placeholder="Search..." className="pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-2xl focus:ring-2 ring-blue-500 transition-all duration-300 w-80" />
+						</div>
+					</div>
 
-                    <div className="flex items-center gap-4">
-                        <button onClick={() => router.push("/notification")} className="relative p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-                            <Bell className="w-5 h-5" />
-                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white "></span>
-                        </button>
+					<div className="flex items-center gap-4">
+						<button onClick={() => router.push('/notification')} className="relative p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+							<Bell className="w-5 h-5" />
+							<span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white "></span>
+						</button>
 
-                        <motion.div onClick={() => router.push("/profile")} whileHover={{ scale: 1.05 }} className="flex items-center gap-3 p-2 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer transition-all duration-300">
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                                <span className="text-white text-sm font-semibold">A</span>
-                            </div>
-                            <div className="hidden md:block">
-                                <p className="text-sm font-semibold">{user && user.full_name}</p>
-                                <p className="text-xs text-gray-500">{user && user.role}</p>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </div>
-        </motion.header>
-    )
+						<motion.div onClick={() => router.push('/profile')} whileHover={{ scale: 1.05 }} className="flex items-center gap-3 p-2 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer transition-all duration-300">
+							<div className="w-8 h-8 bg-myZoneOnline rounded-full flex items-center justify-center">
+								<span className="text-white text-sm font-semibold">A</span>
+							</div>
+							<div className="hidden md:block">
+								<p className="text-sm font-semibold">{user && user.full_name}</p>
+								<p className="text-xs text-gray-500">{user && user.role}</p>
+							</div>
+						</motion.div>
+					</div>
+				</div>
+			</div>
+		</motion.header>
+	)
 }

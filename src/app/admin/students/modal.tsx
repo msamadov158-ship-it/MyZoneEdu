@@ -1,16 +1,30 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Users } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { StudentEdit, Role } from '@/types'
 import { useTypes } from '@/hooks/useTypes'
+import { useStudents } from '@/hooks/useStudents'
+import { useModal } from '@/components/UI/Modal'
+import { fadeUp, staggeredList } from '@/lib/motion'
 
+// ---------------- Create Student Modal ----------------
 interface StudentCreateModalProps {
 	closeModal: () => void
 	handleCreate(data: StudentEdit): Promise<void>
 }
 
 export const CreateStudentModal = ({ closeModal, handleCreate }: StudentCreateModalProps) => {
-	const [formData, setFormData] = useState<StudentEdit>({ full_name: '', username: '', phone_number: '', role: 'STUDENT', active_term: 0, password: '', type_id: '', is_active: true })
+	const [formData, setFormData] = useState<StudentEdit>({
+		full_name: '',
+		username: '',
+		phone_number: '',
+		role: 'STUDENT',
+		active_term: 0,
+		password: '',
+		type_id: '',
+		is_active: true,
+	})
 	const { types } = useTypes()
 
 	return (
@@ -25,43 +39,44 @@ export const CreateStudentModal = ({ closeModal, handleCreate }: StudentCreateMo
 		>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-					<input type="text" required value={formData.full_name} onChange={(e) => setFormData({ ...formData, full_name: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter full name" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">To‘liq Ism *</label>
+					<input type="text" required value={formData.full_name} onChange={(e) => setFormData({ ...formData, full_name: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="To‘liq ismingizni kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Username *</label>
-					<input type="text" required value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter username" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Foydalanuvchi nomi *</label>
+					<input type="text" required value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Foydalanuvchi nomini kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Active Term *</label>
-					<input type="number" required value={formData.active_term} onChange={(e) => setFormData({ ...formData, active_term: Number(e.target.value) })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter active term" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Faol davr *</label>
+					<input type="number" required value={formData.active_term} onChange={(e) => setFormData({ ...formData, active_term: Number(e.target.value) })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Faol davrni kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-					<input type="tel" required value={formData.phone_number} onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter phone number" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Telefon raqami *</label>
+					<input type="tel" required value={formData.phone_number} onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Telefon raqamini kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Password *</label>
-					<input type="password" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter password" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Parol *</label>
+					<input type="password" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Parolni kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+					<label className="block text-sm font-medium text-gray-700 mb-2">Roli</label>
 					<select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
-						<option value="STUDENT">Student</option>
-						<option value="ADMIN">Admin</option>
-						<option value="TEACHER">Teacher</option>
+						<option value="STUDENT">Talaba</option>
+						<option value="ADMIN">Administrator</option>
+						<option value="TEACHER">O‘qituvchi</option>
 					</select>
 				</div>
+
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+					<label className="block text-sm font-medium text-gray-700 mb-2">Tur</label>
 					<select value={formData.type_id} onChange={(e) => setFormData({ ...formData, type_id: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
 						<option value="" disabled>
-							Select a type
+							Turini tanlang
 						</option>
 						{types.map((type) => (
 							<option key={type.id} value={type.id}>
@@ -75,16 +90,16 @@ export const CreateStudentModal = ({ closeModal, handleCreate }: StudentCreateMo
 	)
 }
 
+// ---------------- Edit Student Modal ----------------
 interface StudentEditModalProps {
 	id: string
 	closeModal: () => void
 	fetchStudent: (id: string) => Promise<StudentEdit | undefined>
-	handleUpdate(id: string, data: StudentEdit): Promise<void>
+	handleUpdate: (id: string, data: StudentEdit) => Promise<void>
 }
 
 export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }: StudentEditModalProps) => {
 	const { types } = useTypes()
-
 	const [formData, setFormData] = useState<StudentEdit | null>(null)
 	const [isFetchingData, setIsFetchingData] = useState(true)
 
@@ -92,9 +107,7 @@ export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }:
 		const loadStudentData = async () => {
 			setIsFetchingData(true)
 			const res = await fetchStudent(id)
-			if (res) {
-				setFormData(res)
-			}
+			if (res) setFormData(res)
 			setIsFetchingData(false)
 		}
 		loadStudentData()
@@ -120,43 +133,44 @@ export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }:
 		>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-					<input type="text" required value={formData.full_name} onChange={(e) => setFormData({ ...formData, full_name: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter full name" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">To‘liq Ism *</label>
+					<input type="text" required value={formData.full_name} onChange={(e) => setFormData({ ...formData, full_name: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="To‘liq ismingizni kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Username *</label>
-					<input type="text" required value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter username" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Foydalanuvchi nomi *</label>
+					<input type="text" required value={formData.username} onChange={(e) => setFormData({ ...formData, username: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Foydalanuvchi nomini kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Active Term *</label>
-					<input type="number" required value={formData.active_term} onChange={(e) => setFormData({ ...formData, active_term: Number(e.target.value) })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter active term" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Faol davr *</label>
+					<input type="number" required value={formData.active_term} onChange={(e) => setFormData({ ...formData, active_term: Number(e.target.value) })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Faol davrni kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-					<input type="tel" required value={formData.phone_number} onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter phone number" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Telefon raqami *</label>
+					<input type="tel" required value={formData.phone_number} onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Telefon raqamini kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Password *</label>
-					<input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Enter password" />
+					<label className="block text-sm font-medium text-gray-700 mb-2">Parol *</label>
+					<input type="password" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Parolni kiriting" />
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+					<label className="block text-sm font-medium text-gray-700 mb-2">Roli</label>
 					<select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
-						<option value="STUDENT">Student</option>
-						<option value="ADMIN">Admin</option>
-						<option value="TEACHER">Teacher</option>
+						<option value="STUDENT">Talaba</option>
+						<option value="ADMIN">Administrator</option>
+						<option value="TEACHER">O‘qituvchi</option>
 					</select>
 				</div>
+
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+					<label className="block text-sm font-medium text-gray-700 mb-2">Tur</label>
 					<select value={formData.type_id} onChange={(e) => setFormData({ ...formData, type_id: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
 						<option value="" disabled>
-							Select a type
+							Turini tanlang
 						</option>
 						{types.map((type) => (
 							<option key={type.id} value={type.id}>
@@ -170,6 +184,7 @@ export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }:
 	)
 }
 
+// ---------------- Delete Student Modal ----------------
 interface StudentDeleteModalProps {
 	id: string
 	closeModal: () => void
@@ -191,19 +206,19 @@ export const DeleteStudentModal = ({ id, closeModal, handleDelete }: StudentDele
 				<Trash2 className="w-10 h-10 text-red-600" />
 			</div>
 
-			<h3 className="text-2xl font-bold text-gray-900 mb-3">Delete Student</h3>
-			<p className="text-gray-600 mb-2">Are you sure you want to delete this student account?</p>
-			<p className="text-sm text-gray-500 mb-6">This action cannot be undone. All student data will be permanently removed from the system.</p>
+			<h3 className="text-2xl font-bold text-gray-900 mb-3">Talabani o‘chirish</h3>
+			<p className="text-gray-600 mb-2">Ushbu talabani hisobini o‘chirishni xohlaysizmi?</p>
+			<p className="text-sm text-gray-500 mb-6">Ushbu amalni qaytarib bo‘lmaydi. Talabaning barcha ma’lumotlari tizimdan butunlay o‘chiriladi.</p>
 
 			<div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-left">
 				<h4 className="font-medium text-red-800 mb-2 flex items-center gap-2">
 					<span className="w-2 h-2 bg-red-600 rounded-full"></span>
-					Important Notice
+					Muhim Eslatma
 				</h4>
 				<ul className="text-sm text-red-700 space-y-1">
-					<li>• Student profile will be deleted</li>
-					<li>• Course enrollments will be removed</li>
-					<li>• Progress data will be lost</li>
+					<li>• Talaba profili o‘chiriladi</li>
+					<li>• Kursga yozilganlar olib tashlanadi</li>
+					<li>• Rivojlanish ma’lumotlari yo‘qoladi</li>
 				</ul>
 			</div>
 		</form>

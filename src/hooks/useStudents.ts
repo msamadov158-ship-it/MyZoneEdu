@@ -82,7 +82,14 @@ export const useStudents = () => {
             const res = await studentService.login(username, password)
             setToken(res)
             toast.success('Login muvaffaqiyatli!')
-            router.push(res.role === 'ADMIN' ? '/admin' : '/student')
+            switch (res.role) {
+                case 'ADMIN':
+                    return router.push('/admin')
+                case 'STUDENT':
+                    return router.push('/student')
+                case 'TEACHER':
+                    return router.push('/teacher')
+            }
         } catch (err) {
             handleApiError(err, 'Login yoki parol xato!')
         } finally {

@@ -1,21 +1,33 @@
 @import 'tailwindcss';
 
 :root {
-    --bgLight: #f6f7f8;
-    --bgDark: #101922;
-    --primary: #137fec;
-    --contentLight: #111418;
-    --contentDark: #e1e7ef;
-    --subtleLight: #617589;
-    --subtleDark: #94a3b8;
-    --borderLight: #e2e8f0;
-    --borderDark: #334155;
-    --foregroundLight: #101922;
-    --foregroundDark: #f6f7f8;
-    --mutedLight: #6c757d;
-    --mutedDark: #a0a8b0;
+	--bgLight: #f6f7f8;
+	--bgDark: #101922;
+	--primary: #137fec;
+	--contentLight: #111418;
+	--contentDark: #e1e7ef;
+	--subtleLight: #617589;
+	--subtleDark: #94a3b8;
+	--borderLight: #e2e8f0;
+	--borderDark: #334155;
+	--foregroundLight: #101922;
+	--foregroundDark: #f6f7f8;
+	--mutedLight: #6c757d;
+	--mutedDark: #a0a8b0;
 }
 
 .scroll-none::-webkit-scrollbar {
-    display: none;
+	display: none;
+}
+
+.bg-myZoneOnline {
+    background: linear-gradient(to bottom, #dd0000 0%, #d50000 30%, #cd0000 60%, #c30000 100%);
+}
+
+.myZoneOnlineText {
+	background: linear-gradient(to bottom, #dd0000 0%, #d50000 30%, #cd0000 60%, #c30000 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
 }

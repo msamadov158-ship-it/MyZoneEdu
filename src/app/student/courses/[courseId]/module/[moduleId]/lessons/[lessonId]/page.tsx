@@ -47,8 +47,9 @@ export default function LessonDetail() {
 							<div className="p-6">
 								<h2 className="text-2xl font-bold text-gray-900 mb-3">{lesson?.title}</h2>
 								<p className="text-gray-600 mb-4">{lesson?.description}</p>
-								<button onClick={() => router.push(`${lessonId}/test`)} className="cursor-pointer px-4 py-4 rounded-lg font-medium text-md whitespace-nowrap transition-all duration-300 bg-blue-600 text-white shadow-md">
-									Lesson Test
+								<button onClick={() => router.push(`${lessonId}/test`)} className="cursor-pointer relative overflow-hidden group px-6 py-4 rounded-xl font-semibold text-md whitespace-nowrap text-white bg-myZoneOnline to-purple-600 shadow-[0_10px_25px_rgba(79,70,229,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_15px_35px_rgba(79,70,229,0.45)] active:scale-[0.98]">
+									<span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
+									<span className="relative z-10 flex items-center gap-2">🧠 Lesson Test</span>
 								</button>
 							</div>
 

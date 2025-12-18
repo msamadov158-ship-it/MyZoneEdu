@@ -35,7 +35,7 @@ export default function TeacherCourses() {
 			fetchCourses()
 		} else {
 			toast.error("Teacher ma'lumotlari topilmadi!")
-			router.push('/auth/login')
+			router.push('/')
 		}
 	}, [router, fetchCourses])
 

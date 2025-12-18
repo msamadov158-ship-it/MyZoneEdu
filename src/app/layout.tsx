@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		const user = getUserFromStorage()
 
 		if (!user) {
-			router.replace('/auth/login')
+			router.replace('/')
 			return
 		}
 

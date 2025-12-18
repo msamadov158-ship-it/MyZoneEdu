@@ -1,5 +1,5 @@
 import API from '@/lib/axios'
-import { Student, StudentEdit } from '@/types/index'
+import { Role, Student, StudentEdit } from '@/types/index'
 
 export const studentService = {
     async getAll(): Promise<Student[]> {
@@ -24,7 +24,7 @@ export const studentService = {
         await API.delete(`/api/user/${id}`)
     },
 
-    async login(username: string, password: string): Promise<{ access_token: string; role: 'ADMIN' | 'STUDENT'; user_id: number }> {
+    async login(username: string, password: string): Promise<{ access_token: string; role: Role; user_id: number }> {
         const res = await API.post('/api/auth/login', { username, password })
         return res.data.result
     },
