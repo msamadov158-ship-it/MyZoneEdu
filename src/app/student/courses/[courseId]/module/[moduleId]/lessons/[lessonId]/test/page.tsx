@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, CheckCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import API from '@/lib/axios'
 import { Question } from '@/types/index'
@@ -24,6 +24,8 @@ export default function LessonTest() {
 	const [loading, setLoading] = useState(true)
 	const [submitting, setSubmitting] = useState(false)
 	const [studentId, setStudentId] = useState<number | string | null>(null)
+	const [showResultModal, setShowResultModal] = useState(false)
+	const [score, setScore] = useState({ correct: 0, total: 0 })
 
 	useEffect(() => {
 		const user = getUserFromStorage()
@@ -67,8 +69,9 @@ export default function LessonTest() {
 
 			if (studentId && data.correct_count !== undefined) {
 				await API.get(`/api/lesson_test/finish/action/${studentId}/${lessonId}/${data.correct_count}`)
+				setScore({ correct: data.correct_count, total: questions.length })
+				setShowResultModal(true)
 				toast.success('Test muvaffaqiyatli yakunlandi!')
-				router.push(`/student/courses/${courseId}/module/${moduleId}/lessons/${lessonId}`)
 			} else {
 				throw new Error('Student ID or correct count missing')
 			}
@@ -77,6 +80,11 @@ export default function LessonTest() {
 		} finally {
 			setSubmitting(false)
 		}
+	}
+
+	const handleCloseModal = () => {
+		setShowResultModal(false)
+		router.push(`/student/courses/${courseId}/module/${moduleId}/lessons/${lessonId}`)
 	}
 
 	if (loading) {
@@ -91,7 +99,7 @@ export default function LessonTest() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen bg-gray-50 relative">
 			<header className="bg-white shadow-sm border-b border-gray-200">
 				<div className="max-w-4xl mx-auto px-4 py-4">
 					<div className="flex items-center justify-between">
@@ -116,12 +124,7 @@ export default function LessonTest() {
 								</h3>
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 									{['A', 'B', 'C', 'D'].map((opt) => (
-										<button
-											key={opt}
-											onClick={() => handleSelectAnswer(Number(question.id), opt)}
-											className={`p-4 rounded-xl border transition-all duration-300 text-left
-                                                ${answers[Number(question.id)] === opt ? 'border-blue-500 bg-blue-50 text-blue-900' : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'}`}
-										>
+										<button key={opt} onClick={() => handleSelectAnswer(Number(question.id), opt)} className={`p-4 rounded-xl border transition-all duration-300 text-left ${answers[Number(question.id)] === opt ? 'border-blue-500 bg-blue-50 text-blue-900' : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'}`}>
 											<span className="font-medium mr-2">{opt}.</span>
 											{question[`option_${opt.toLowerCase()}` as keyof Question]}
 										</button>
@@ -147,6 +150,25 @@ export default function LessonTest() {
 					</div>
 				</div>
 			</main>
+
+			{showResultModal && (
+				<div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+					<div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+						<div className="text-center space-y-6">
+							<div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100">{score.correct / score.total >= 0.7 ? <CheckCircle className="w-12 h-12 text-green-500" /> : <XCircle className="w-12 h-12 text-red-500" />}</div>
+							<h2 className="text-3xl font-bold text-gray-900">
+								{score.correct}/{score.total}
+							</h2>
+							<p className="text-gray-600 text-lg">{score.correct / score.total >= 0.7 ? 'Ajoyib natija!' : "Keyingi safar yaxshiroq bo'ladi!"}</p>
+							<div className="pt-4">
+								<button onClick={handleCloseModal} className="w-full px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium">
+									OK
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

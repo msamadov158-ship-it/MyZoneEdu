@@ -3,13 +3,27 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BookOpen, ChevronDown, CheckCircle, Share2, Bookmark, ArrowLeft, Award, Loader2 } from 'lucide-react'
+import { BookOpen, ChevronDown, CheckCircle, Share2, Bookmark, ArrowLeft, Award, Loader2, Video } from 'lucide-react'
 import { CourseEdit } from '@/types'
 import { useCourse } from '@/hooks/useCourse'
 import { useCourses } from '@/hooks/useCourses'
 import { useCourseSave } from '@/hooks/useCourseSave'
 import { useCourseContent } from '@/hooks/useCourseContent'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
+import API from '@/lib/axios'
+import { toast } from 'react-toastify'
+
+interface MeetingInfo {
+	id: 1
+	course_id: number
+	created_at: string
+	ended_at: string
+	meet_url: string
+	started_at: string
+	status: string
+	teacher_id: number
+	calendar_event_id: string
+}
 
 export default function Courses() {
 	const router = useRouter()
@@ -23,6 +37,8 @@ export default function Courses() {
 	const { isSaved, loading: saveLoading, toggleSave } = useCourseSave(userId as string)
 
 	const [course, setCourse] = useState<CourseEdit | null>(null)
+	const [meetingInfo, setMeetingInfo] = useState<MeetingInfo | null>(null)
+	const [meetingLoading, setMeetingLoading] = useState(true)
 
 	const [openId, setOpenId] = useState<string | null>(null)
 
@@ -46,6 +62,27 @@ export default function Courses() {
 		}
 		loadModules()
 	}, [courseId, fetchModules])
+
+	useEffect(() => {
+		const loadMeetingInfo = async () => {
+			setMeetingLoading(true)
+			try {
+				const res = await API.get(`/api/meeting_lesson/${courseId}`)
+				setMeetingInfo(res.data.result[0])
+			} catch (err) {
+				toast.error("Meeting ma'lumotlarini yuklashda xatolik!")
+			} finally {
+				setMeetingLoading(false)
+			}
+		}
+		loadMeetingInfo()
+	}, [courseId])
+
+	const handleJoinMeeting = () => {
+		if (meetingInfo?.meet_url) {
+			window.open(meetingInfo.meet_url, '_blank')
+		}
+	}
 
 	if (loading || !course) {
 		return (
@@ -76,7 +113,13 @@ export default function Courses() {
 						</div>
 
 						<div className="flex items-center gap-3">
-							<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => toggleSave(courseId)} className={`p-2 rounded-xl transition-colors flex items-center gap-2 ${currentStatus ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`} disabled={loading}>
+							{meetingInfo?.status === 'ACTIVE' && (
+								<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleJoinMeeting} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2" disabled={meetingLoading}>
+									<Video className="w-4 h-4" />
+									Join Meeting
+								</motion.button>
+							)}
+							<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => toggleSave(courseId)} className={`p-2 rounded-xl transition-colors flex items-center gap-2 ${currentStatus ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`} disabled={saveLoading}>
 								{saveLoading ? <Loader2 className="w-5 h-5 animate-spin text-blue-500" /> : currentStatus ? <CheckCircle className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
 							</motion.button>
 							<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors">

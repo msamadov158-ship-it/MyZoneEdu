@@ -13,3 +13,8 @@ export const StudentMenu = [
 	{ name: 'Home', href: '/student', icon: <Home className="w-5 h-5" /> },
 	{ name: 'Notification', href: '/notification', icon: <Bell className="w-5 h-5" /> },
 ]
+
+export const TeacherMenu = [
+	{ name: 'Home', href: '/teacher', icon: <Home className="w-5 h-5" /> },
+	{ name: 'Notification', href: '/notification', icon: <Bell className="w-5 h-5" /> },
+]

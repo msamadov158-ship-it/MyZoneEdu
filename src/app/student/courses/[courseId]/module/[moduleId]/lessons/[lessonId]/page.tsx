@@ -47,11 +47,9 @@ export default function LessonDetail() {
 							<div className="p-6">
 								<h2 className="text-2xl font-bold text-gray-900 mb-3">{lesson?.title}</h2>
 								<p className="text-gray-600 mb-4">{lesson?.description}</p>
-								{!lesson?.lesson_test_progress.is_completed && (
-									<button onClick={() => router.push(`${lessonId}/test`)} className="cursor-pointer px-4 py-4 rounded-lg font-medium text-md whitespace-nowrap transition-all duration-300 bg-blue-600 text-white shadow-md">
-										Lesson Test
-									</button>
-								)}
+								<button onClick={() => router.push(`${lessonId}/test`)} className="cursor-pointer px-4 py-4 rounded-lg font-medium text-md whitespace-nowrap transition-all duration-300 bg-blue-600 text-white shadow-md">
+									Lesson Test
+								</button>
 							</div>
 
 							{<MaterialTemplate lessonId={lessonId} />}
