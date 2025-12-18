@@ -3,13 +3,6 @@ import { LessonPayload } from '@/types'
 import { useRef, useEffect, useState } from 'react'
 import shaka from 'shaka-player'
 
-declare global {
-	interface HTMLVideoElement {
-		controlsList: DOMTokenList
-		disablePictureInPicture: boolean
-	}
-}
-
 interface LessonVideoProps {
 	lesson?: LessonPayload | null
 }

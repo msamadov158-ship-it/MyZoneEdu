@@ -2,11 +2,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { BookOpen, Video, CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import { toast } from 'react-toastify'
+import { Video, CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import API from '@/lib/axios'
 import { useCourses } from '@/hooks/useCourses'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
-import API from '@/lib/axios'
-import { toast } from 'react-toastify'
 
 interface MeetingInfo {
 	id: number
@@ -18,12 +18,6 @@ interface MeetingInfo {
 	status: string
 	teacher_id: number
 	calendar_event_id: string
-}
-
-interface CourseWithMeeting {
-	id: string
-	title: string
-	meeting?: MeetingInfo
 }
 
 export default function TeacherCourses() {

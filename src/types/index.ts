@@ -77,7 +77,7 @@ export interface LessonPayload {
     video_url: string
     cover_url: string
     description: string
-    lesson_test_progress: {
+    lesson_test_progress?: {
         is_completed: boolean
     }
 }
