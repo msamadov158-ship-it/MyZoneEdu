@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import '@/styles/globals.css'
 import ToastProvider from '@/providers/ToastProvider'
 import { clearToken, getUserFromStorage } from '@/lib/helpers/userStore'
+import { ToastContainer } from 'react-toastify'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
@@ -61,7 +62,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="en" className="dark">
 			<body>
-				<ToastProvider>{children}</ToastProvider>
+				<ToastContainer />
+				{children}
 			</body>
 		</html>
 	)

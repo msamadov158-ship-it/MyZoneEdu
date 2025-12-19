@@ -31,7 +31,7 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
     const showToast = (message: string, type: ToastType = 'info') => {
         const id = crypto.randomUUID()
         setToasts((prev) => [...prev, { id, message, type }])
-        setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4000)
+        setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 2000)
     }
 
     const iconMap = {

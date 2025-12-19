@@ -11,6 +11,8 @@ export const AdminMenu = [
 
 export const StudentMenu = [
 	{ name: 'Bosh sahifa', href: '/student', icon: <Home className="w-5 h-5" /> },
+	{ name: 'Imtihon', href: '#exam', icon: <Home className="w-5 h-5" /> },
+	{ name: 'Mening Sertifikatim', href: '#certification', icon: <Home className="w-5 h-5" /> },
 	{ name: 'Qollab-quvvatlash', href: '/support', icon: <Home className="w-5 h-5" /> },
 	{ name: 'Bildirishnomalar', href: '/notification', icon: <Bell className="w-5 h-5" /> },
 ]

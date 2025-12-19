@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { Bell, Menu, Search } from 'lucide-react'
-import { StoredAuth } from '@/types'
-import { getUserFromStorage } from '@/lib/helpers/userStore'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { StoredAuth } from '@/types'
+import { Bell, Menu, Search } from 'lucide-react'
+import { getUserFromStorage } from '@/lib/helpers/userStore'
 
 export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
 	const router = useRouter()

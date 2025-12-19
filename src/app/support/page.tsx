@@ -97,8 +97,6 @@ export default function SupportPage() {
 	const { tickets, loading, selectedTicket, messages, setSelectedTicket, fetchTickets, fetchMessages, createTicket, sendMessage, closeTicket } = support
 
 	const primaryColor = role === 'STUDENT' ? 'purple' : 'indigo'
-	const borderColor = `border-${primaryColor}-100`
-	const focusBorder = `focus:border-${primaryColor}-400`
 	const spinnerBorder = `border-${primaryColor}-500`
 	const buttonGradient = role === 'STUDENT' ? 'from-purple-500 to-pink-500' : 'from-indigo-500 to-purple-500'
 	const headerGradient = role === 'STUDENT' ? 'from-purple-50 to-pink-50' : 'from-indigo-50 to-purple-50'
@@ -141,7 +139,7 @@ export default function SupportPage() {
 
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:h-full">
-			<div className={`lg:col-span-1 bg-white rounded-2xl shadow-xl border-2 min-h-[400px] h-full ${borderColor} overflow-hidden flex flex-col`}>
+			<div className="lg:col-span-1 bg-white rounded-2xl shadow-xl min-h-[400px] h-full overflow-hidden flex flex-col">
 				<div className="p-4 border-b-2 border-gray-100">
 					{/* <div className="relative mb-3">
 						<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -176,7 +174,7 @@ export default function SupportPage() {
 					)}
 				</div>
 			</div>
-			<div className={`lg:col-span-2 bg-white rounded-2xl shadow-xl border-2 min-h-[400px] h-full ${borderColor} overflow-auto flex flex-col `}>
+			<div className="lg:col-span-2 bg-white rounded-2xl shadow-xl min-h-[400px] h-full overflow-auto flex flex-col">
 				{role === 'STUDENT' && showNewTicketForm ? (
 					<>
 						<div className={`p-4 border-b-2 border-gray-100 bg-gradient-to-r ${headerGradient}`}>
@@ -190,7 +188,7 @@ export default function SupportPage() {
 							</div>
 						</div>
 						<div className={`flex-1 p-6 bg-gradient-to-br ${messagesGradient}`}>
-							<textarea placeholder="Ariza matnini yozing..." value={newTicketMessage} onChange={(e) => setNewTicketMessage(e.target.value)} className={`w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors resize-none`} />
+							<textarea placeholder="Ariza matnini yozing..." value={newTicketMessage} onChange={(e) => setNewTicketMessage(e.target.value)} className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors resize-none" />
 						</div>
 						<div className="p-4 border-t-2 border-gray-100 bg-white">
 							<button onClick={handleCreateTicket} disabled={!newTicketMessage.trim() || loading} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:scale-105`}>
@@ -245,7 +243,7 @@ export default function SupportPage() {
 						{selectedTicket.status !== 'CLOSED' && (
 							<div className="p-4 border-t-2 border-gray-100 bg-white">
 								<div className="flex gap-3">
-									<input type="text" placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'} value={replyMessage} onChange={(e) => setReplyMessage(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendReply()} className={`flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors`} />
+									<input type="text" placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'} value={replyMessage} onChange={(e) => setReplyMessage(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendReply()} className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors" />
 									<button onClick={handleSendReply} disabled={!replyMessage.trim() || loading} className={`bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 hover:scale-105`}>
 										<Send className="w-5 h-5" />
 										Yuborish

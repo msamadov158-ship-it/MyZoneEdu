@@ -46,21 +46,27 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 
 					<nav className="flex-grow px-4 py-6">
 						<ul className="space-y-2">
-							{menuItems.map((menu, index) => (
-								<motion.li key={menu.href} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: index * 0.1 }}>
-									<button
-										onClick={() => {
-											router.push(menu.href)
-											setIsSidebarOpen(false)
-										}}
-										className={`flex items-center gap-3 w-full p-4 rounded-2xl transition-all duration-300 ${isActuallyActive(menu.href) ? 'bg-myZoneOnline text-white shadow-lg shadow-blue-500/25' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 hover:shadow-md'}`}
-									>
-										{menu.icon}
-										<span className="font-medium">{menu.name}</span>
-										{isActuallyActive(menu.href) && <motion.div layoutId="activeMenu" className="ml-auto w-2 h-2 bg-white rounded-full" />}
-									</button>
-								</motion.li>
-							))}
+							{menuItems.map((menu, index) => {
+								const isDisabled = menu.href.startsWith('#') // hash bilan bosilganda disabled
+								return (
+									<motion.li key={menu.href} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: index * 0.1 }}>
+										<button
+											onClick={() => {
+												if (!isDisabled) {
+													router.push(menu.href)
+													setIsSidebarOpen(false)
+												}
+											}}
+											disabled={isDisabled}
+											className={`flex items-center gap-3 w-full p-4 rounded-2xl transition-all duration-300 ${isActuallyActive(menu.href) ? 'bg-myZoneOnline text-white shadow-lg shadow-blue-500/25' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 hover:shadow-md'}  ${isDisabled ? 'cursor-not-allowed opacity-50 hover:bg-none hover:text-gray-600 hover:shadow-none' : ''}`}
+										>
+											{menu.icon}
+											<span className="font-medium">{menu.name}</span>
+											{isActuallyActive(menu.href) && !isDisabled && <motion.div layoutId="activeMenu" className="ml-auto w-2 h-2 bg-white rounded-full" />}
+										</button>
+									</motion.li>
+								)
+							})}
 						</ul>
 					</nav>
 
