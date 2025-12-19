@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Layout from '@/components/layout/LayoutWrapper'
-import { AdminMenu, StudentMenu, SupportMenu, TeacherMenu } from '@/constants/menu'
+import { StudentMenu, SupportMenu } from '@/constants/menu'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -17,7 +17,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		})
 	}, [])
 
-	const RoleMenu = role === 'ADMIN' ? AdminMenu : role === 'STUDENT' ? StudentMenu : role === 'TEACHER' ? TeacherMenu : role === 'SUPPORT' ? SupportMenu : []
+	const RoleMenu = role === 'SUPPORT' ? SupportMenu : StudentMenu
+
 	return (
 		<div className="min-h-screen relative bg-gradient-to-br from-gray-50 to-gray-100">
 			<Layout menuItems={RoleMenu} />

@@ -69,6 +69,7 @@ export const CreateStudentModal = ({ closeModal, handleCreate }: StudentCreateMo
 						<option value="STUDENT">Talaba</option>
 						<option value="ADMIN">Administrator</option>
 						<option value="TEACHER">O‘qituvchi</option>
+						<option value="SUPPORT">Qo'llab-quvvatlash</option>
 					</select>
 				</div>
 
@@ -154,7 +155,7 @@ export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }:
 
 				<div>
 					<label className="block text-sm font-medium text-gray-700 mb-2">Parol *</label>
-					<input type="password" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Parolni kiriting" />
+					<input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Parolni kiriting" />
 				</div>
 
 				<div>
@@ -163,6 +164,7 @@ export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }:
 						<option value="STUDENT">Talaba</option>
 						<option value="ADMIN">Administrator</option>
 						<option value="TEACHER">O‘qituvchi</option>
+						<option value="SUPPORT">Qo'llab-quvvatlash</option>
 					</select>
 				</div>
 

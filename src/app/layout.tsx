@@ -1,10 +1,9 @@
 'use client'
 import { useEffect } from 'react'
-import type { Metadata } from 'next'
 import { usePathname, useRouter } from 'next/navigation'
 import '@/styles/globals.css'
 import ToastProvider from '@/providers/ToastProvider'
-import { getUserFromStorage } from '@/lib/helpers/userStore'
+import { clearToken, getUserFromStorage } from '@/lib/helpers/userStore'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
@@ -18,8 +17,43 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			return
 		}
 
+		const redirectByRole = (role: string) => {
+			switch (role) {
+				case 'ADMIN':
+					router.replace('/admin')
+					break
+				case 'TEACHER':
+					router.replace('/teacher')
+					break
+				case 'STUDENT':
+					router.replace('/student')
+					break
+				case 'SUPPORT':
+					router.replace('/support')
+					break
+				default:
+					clearToken()
+					router.replace('/')
+			}
+		}
+
 		if (pathname.startsWith('/admin') && user.role !== 'ADMIN') {
-			router.replace('/student')
+			redirectByRole(user.role)
+			return
+		}
+
+		if (pathname.startsWith('/teacher') && user.role !== 'TEACHER') {
+			redirectByRole(user.role)
+			return
+		}
+
+		if (pathname.startsWith('/student') && user.role !== 'STUDENT') {
+			redirectByRole(user.role)
+			return
+		}
+
+		if (pathname.startsWith('/support') && !(user.role === 'SUPPORT' || user.role === 'STUDENT')) {
+			redirectByRole(user.role)
 			return
 		}
 	}, [pathname, router])

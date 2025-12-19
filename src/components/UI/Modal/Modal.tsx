@@ -31,7 +31,7 @@ export const Modal: React.FC<ModalProps> = ({ onClose, title, type, btnTitle = '
 
 					<div className="flex items-center justify-end gap-4 p-6 border-t border-gray-200">
 						<button type="button" onClick={onClose} className="px-6 py-3 text-gray-600 bg-gray-100 rounded-xl hover:text-gray-800 transition-colors cursor-pointer">
-							Cancel
+							Bekor qilish
 						</button>
 						{type === 'DELETE' && (
 							<motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" form={formId} className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-300 shadow-lg flex items-center gap-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed">

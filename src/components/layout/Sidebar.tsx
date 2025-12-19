@@ -69,7 +69,7 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 							<div className="p-2 rounded-xl bg-red-100 group-hover:bg-red-200 transition-colors">
 								<LogOut className="w-4 h-4" />
 							</div>
-							<span className="font-medium">Logout</span>
+							<span className="font-medium">Chiqish</span>
 						</motion.button>
 					</div>
 				</motion.div>

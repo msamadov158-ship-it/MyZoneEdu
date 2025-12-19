@@ -107,7 +107,7 @@ export default function LessonTest() {
 							<button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
 								<ArrowLeft className="w-5 h-5 text-gray-700" />
 							</button>
-							<h1 className="text-2xl font-bold text-gray-900">Lesson Test</h1>
+							<h1 className="text-2xl font-bold text-gray-900">Dars Testi</h1>
 						</div>
 						<div className="text-sm text-gray-500">Savollar: {questions.length}</div>
 					</div>
@@ -134,7 +134,7 @@ export default function LessonTest() {
 						))}
 					</div>
 					<div className="px-6 py-4 bg-gray-50 flex justify-end border-t border-gray-200">
-						<button onClick={handleSubmit} disabled={submitting} className="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+						<button onClick={handleSubmit} disabled={submitting} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
 							{submitting ? (
 								<>
 									<div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

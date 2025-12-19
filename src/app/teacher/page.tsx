@@ -30,11 +30,10 @@ export default function TeacherCourses() {
 	useEffect(() => {
 		const user = getUserFromStorage()
 		if (user?.user_id && user.role === 'TEACHER') {
-			// Assume role check
 			setTeacherId(user.user_id)
 			fetchCourses()
 		} else {
-			toast.error("Teacher ma'lumotlari topilmadi!")
+			toast.error("O'qituvchi ma'lumotlari topilmadi!")
 			router.push('/')
 		}
 	}, [router, fetchCourses])
@@ -70,7 +69,7 @@ export default function TeacherCourses() {
 			window.open(data.meet_url, '_blank')
 			toast.success('Dars boshlandi!')
 		} catch (err) {
-			toast.error('Darsni boshlashda xatolik!')
+			toast.error('Darsni boshlashda xatolik yuz berdi!')
 		} finally {
 			setLoadingMeetings((prev) => ({ ...prev, [courseId]: false }))
 		}
@@ -90,7 +89,7 @@ export default function TeacherCourses() {
 			})
 			toast.success('Dars tugatildi!')
 		} catch (err) {
-			toast.error('Darsni tugatishda xatolik!')
+			toast.error('Darsni tugatishda xatolik yuz berdi!')
 		} finally {
 			setLoadingMeetings((prev) => ({ ...prev, [courseId]: false }))
 		}
@@ -108,8 +107,8 @@ export default function TeacherCourses() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 py-8">
-			<div className="max-w-7xl mx-auto px-6">
+		<div className="min-h-screen ">
+			<div className="max-w-7xl mx-auto">
 				<h1 className="text-3xl font-bold text-gray-900 mb-8">Mening Kurslarim</h1>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{courses.map((course) => {
@@ -125,17 +124,17 @@ export default function TeacherCourses() {
 										<div className="flex gap-4">
 											<button onClick={() => window.open(activeMeetings[course.id].meet_url, '_blank')} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
 												<Video className="w-4 h-4" />
-												Join
+												Qo‘shilish
 											</button>
 											<button onClick={() => handleFinishMeeting(course.id)} disabled={isLoading} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
 												{isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
-												Finish
+												Darsni tugatish
 											</button>
 										</div>
 									) : (
 										<button onClick={() => handleStartMeeting(course.id)} disabled={isLoading} className="w-full px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
 											{isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
-											Start Lesson
+											Darsni boshlash
 										</button>
 									)}
 								</div>

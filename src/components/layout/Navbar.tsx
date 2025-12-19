@@ -15,6 +15,7 @@ export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.D
 			if (storedUser) setUser(storedUser)
 		}, 0)
 	}, [])
+
 	return (
 		<motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full fixed top-0 lg:z-60 bg-white/80 backdrop-blur-xl border-b border-gray-200">
 			<div className="px-6 py-4">
@@ -25,7 +26,7 @@ export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.D
 						</button>
 						<div className="relative hidden md:block">
 							<Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-							<input type="text" placeholder="Search..." className="pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-2xl focus:ring-2 ring-blue-500 transition-all duration-300 w-80" />
+							<input type="text" placeholder="Qidirish..." className="pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-2xl focus:ring-2 ring-blue-500 transition-all duration-300 w-80" />
 						</div>
 					</div>
 
@@ -37,7 +38,7 @@ export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.D
 
 						<motion.div onClick={() => router.push('/profile')} whileHover={{ scale: 1.05 }} className="flex items-center gap-3 p-2 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer transition-all duration-300">
 							<div className="w-8 h-8 bg-myZoneOnline rounded-full flex items-center justify-center">
-								<span className="text-white text-sm font-semibold">A</span>
+								<span className="text-white text-sm font-semibold">{user && user.full_name.slice(0, 1).toLocaleUpperCase()}</span>
 							</div>
 							<div className="hidden md:block">
 								<p className="text-sm font-semibold">{user && user.full_name}</p>

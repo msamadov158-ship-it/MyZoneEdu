@@ -1,4 +1,4 @@
-export type Role = 'STUDENT' | 'ADMIN' | 'TEACHER'
+export type Role = 'STUDENT' | 'ADMIN' | 'TEACHER' | 'SUPPORT'
 
 export interface Student {
     id: string
@@ -183,4 +183,27 @@ export interface QuestionEdit {
     option_d: string;
     correct_option: string;
     lesson_id?: number;
+}
+
+export interface Message {
+    id: number
+    message: string
+    sender_role: Role
+    ticket_id: number
+    created_at: string
+    sender_id: number | string
+
+}
+
+export interface Ticket {
+    id: number;
+    student_id: string;
+    student_name: string;
+    subject: string;
+    status: 'ALL' | 'OPEN' | 'IN_PROGRESS' | 'CLOSED';
+    priority: 'LOW' | 'MEDIUM' | 'HIGH';
+    created_at: string;
+    updated_at: string;
+    last_message: string;
+    unread_count: number;
 }

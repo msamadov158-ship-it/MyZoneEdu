@@ -89,6 +89,8 @@ export const useStudents = () => {
                     return router.push('/student')
                 case 'TEACHER':
                     return router.push('/teacher')
+                case 'SUPPORT':
+                    return router.push('/support')
             }
         } catch (err) {
             handleApiError(err, 'Login yoki parol xato!')

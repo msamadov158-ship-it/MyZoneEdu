@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BookOpen, ChevronDown, CheckCircle, Share2, Bookmark, ArrowLeft, Award, Loader2, Video } from 'lucide-react'
+import { BookOpen, ChevronDown, CheckCircle, Share2, Bookmark, ArrowLeft, Loader2, Video } from 'lucide-react'
 import { CourseEdit } from '@/types'
 import { useCourse } from '@/hooks/useCourse'
 import { useCourses } from '@/hooks/useCourses'
@@ -39,7 +39,6 @@ export default function Courses() {
 	const [course, setCourse] = useState<CourseEdit | null>(null)
 	const [meetingInfo, setMeetingInfo] = useState<MeetingInfo | null>(null)
 	const [meetingLoading, setMeetingLoading] = useState(true)
-
 	const [openId, setOpenId] = useState<string | null>(null)
 
 	const handleToggle = (id: string) => {
@@ -49,9 +48,7 @@ export default function Courses() {
 	useEffect(() => {
 		const loadCourse = async () => {
 			const res = await fetchCourse(courseId)
-			if (res) {
-				setCourse(res)
-			}
+			if (res) setCourse(res)
 		}
 		loadCourse()
 	}, [courseId, fetchCourse])
@@ -79,9 +76,7 @@ export default function Courses() {
 	}, [courseId])
 
 	const handleJoinMeeting = () => {
-		if (meetingInfo?.meet_url) {
-			window.open(meetingInfo.meet_url, '_blank')
-		}
+		if (meetingInfo?.meet_url) window.open(meetingInfo.meet_url, '_blank')
 	}
 
 	if (loading || !course) {
@@ -89,7 +84,7 @@ export default function Courses() {
 			<div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 flex items-center justify-center">
 				<div className="text-center">
 					<div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-					<p className="text-gray-600 text-lg font-medium">Loading course content...</p>
+					<p className="text-gray-600 text-lg font-medium">Kurs mazmuni yuklanmoqda...</p>
 				</div>
 			</div>
 		)
@@ -108,7 +103,7 @@ export default function Courses() {
 							</motion.button>
 							<div>
 								<h1 className="text-xl font-bold text-gray-900 line-clamp-1">{course.title}</h1>
-								<p className="text-gray-600 text-sm">Continue your learning journey</p>
+								<p className="text-gray-600 text-sm">O‘rganishni davom ettiring</p>
 							</div>
 						</div>
 
@@ -116,7 +111,7 @@ export default function Courses() {
 							{meetingInfo?.status === 'ACTIVE' && (
 								<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleJoinMeeting} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2" disabled={meetingLoading}>
 									<Video className="w-4 h-4" />
-									Join Meeting
+									Meetingga qo‘shilish
 								</motion.button>
 							)}
 							<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => toggleSave(courseId)} className={`p-2 rounded-xl transition-colors flex items-center gap-2 ${currentStatus ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`} disabled={saveLoading}>
@@ -143,18 +138,14 @@ export default function Courses() {
 								<h1 className="text-3xl font-bold text-gray-900 mb-4">{course.title}</h1>
 								<p className="text-gray-600 leading-relaxed text-lg">{course.description}</p>
 
-								<div className="grid grid-cols-3 gap-4 mt-6 py-6 border-t border-gray-200">
+								<div className="grid grid-cols-2 gap-4 mt-6 py-6 border-t border-gray-200">
 									<div className="text-center">
 										<div className="text-2xl font-bold text-gray-900">{modules.length}</div>
-										<div className="text-sm text-gray-600">Modules</div>
-									</div>
-									<div className="text-center">
-										<div className="text-2xl font-bold text-gray-900">24</div>
-										<div className="text-sm text-gray-600">Lessons</div>
+										<div className="text-sm text-gray-600">Modullar</div>
 									</div>
 									<div className="text-center">
 										<div className="text-2xl font-bold text-gray-900">{contents.length}</div>
-										<div className="text-sm text-gray-600">Content</div>
+										<div className="text-sm text-gray-600">Kontent</div>
 									</div>
 								</div>
 							</div>
@@ -163,10 +154,9 @@ export default function Courses() {
 						<div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
 							{contents.map((content) => {
 								const isOpen = openId === content.id
-
 								return (
 									<motion.div key={content.id} className="p-4 md:p-6 overflow-hidden">
-										<motion.button layout onClick={() => handleToggle(content.id)} className="w-full flex justify-between items-center  text-left transition">
+										<motion.button layout onClick={() => handleToggle(content.id)} className="w-full flex justify-between items-center text-left transition">
 											<h3 className="text-lg font-semibold text-gray-900">{content.title}</h3>
 											<ChevronDown className={`w-5 h-5 text-gray-500 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
 										</motion.button>
@@ -189,10 +179,10 @@ export default function Courses() {
 							<div className="p-6 border-b border-gray-200">
 								<h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
 									<BookOpen className="w-5 h-5 text-blue-600" />
-									Course Modules
+									Kurs modullari
 								</h2>
 								<p className="text-gray-600 text-sm mt-1">
-									{count.course_module_count} modules • {count.lesson_count} lessons • {count.lesson_total_duration}
+									{count.course_module_count} modul • {count.lesson_count} dars • {count.lesson_total_duration}
 								</p>
 							</div>
 
