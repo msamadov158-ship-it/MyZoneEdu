@@ -23,14 +23,14 @@ interface MeetingInfo {
 export default function TeacherCourses() {
 	const router = useRouter()
 	const { courses, fetchCourses, loading: coursesLoading } = useCourses()
-	const [teacherId, setTeacherId] = useState<string | null>(null)
+	const [teacherId, setTeacherId] = useState<number | null>(null)
 	const [activeMeetings, setActiveMeetings] = useState<Record<string, MeetingInfo>>({})
 	const [loadingMeetings, setLoadingMeetings] = useState<Record<string, boolean>>({})
 
 	useEffect(() => {
 		const user = getUserFromStorage()
 		if (user?.user_id && user.role === 'TEACHER') {
-			setTeacherId(user.user_id)
+			setTeacherId(Number(user.user_id))
 			fetchCourses()
 		} else {
 			toast.error("O'qituvchi ma'lumotlari topilmadi!")
@@ -39,16 +39,19 @@ export default function TeacherCourses() {
 	}, [router, fetchCourses])
 
 	const loadMeetingInfo = async (courseId: string) => {
+		if (teacherId === null) return null
 		try {
 			const res = await API.get(`/api/meeting_lesson/${courseId}`)
-			return res.data.result[0] || null
+			const meetings: MeetingInfo[] = res.data.result || []
+			const activeMeeting = meetings.find((m) => m.teacher_id === teacherId && m.status === 'ACTIVE')
+			return activeMeeting || null
 		} catch (err) {
 			return null
 		}
 	}
 
 	useEffect(() => {
-		if (courses.length > 0) {
+		if (courses.length > 0 && teacherId !== null) {
 			courses.forEach(async (course) => {
 				const meeting = await loadMeetingInfo(course.id)
 				if (meeting) {
@@ -56,10 +59,10 @@ export default function TeacherCourses() {
 				}
 			})
 		}
-	}, [courses])
+	}, [courses, teacherId])
 
 	const handleStartMeeting = async (courseId: string) => {
-		if (!teacherId) return
+		if (teacherId === null) return
 
 		setLoadingMeetings((prev) => ({ ...prev, [courseId]: true }))
 		try {

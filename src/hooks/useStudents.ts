@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState, useCallback, FormEvent, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { studentService } from '@/services/userService'
@@ -9,6 +9,7 @@ import { Student, StudentEdit } from '@/types/index'
 
 export const useStudents = () => {
     const router = useRouter()
+    const pathname = usePathname()
     const [loading, setLoading] = useState(false)
     const [students, setStudents] = useState<Student[]>([])
 
@@ -100,6 +101,7 @@ export const useStudents = () => {
     }
 
     useEffect(() => {
+        if (pathname === '/') return
         fetchStudents()
     }, [fetchStudents])
 

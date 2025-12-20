@@ -198,12 +198,13 @@ export interface Message {
 export interface Ticket {
     id: number;
     student_id: string;
-    student_name: string;
-    subject: string;
-    status: 'ALL' | 'OPEN' | 'IN_PROGRESS' | 'CLOSED';
-    priority: 'LOW' | 'MEDIUM' | 'HIGH';
     created_at: string;
-    updated_at: string;
-    last_message: string;
-    unread_count: number;
+    status: 'ALL' | 'OPEN' | 'CLOSED';
+    student: {
+        type_id: 2
+        role: string
+        username: string
+        full_name: string
+        phone_number: string
+    }
 }

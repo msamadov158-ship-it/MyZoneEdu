@@ -14,7 +14,7 @@ import API from '@/lib/axios'
 import { toast } from 'react-toastify'
 
 interface MeetingInfo {
-	id: 1
+	id: number
 	course_id: number
 	created_at: string
 	ended_at: string
@@ -22,24 +22,26 @@ interface MeetingInfo {
 	started_at: string
 	status: string
 	teacher_id: number
+	teacher: {
+		full_name: string
+		phone_number: string
+	}
 	calendar_event_id: string
 }
 
 export default function Courses() {
 	const router = useRouter()
 	const { courseId } = useParams<{ courseId: string }>()
-
 	const { fetchCourse } = useCourses()
 	const { contents, count } = useCourseContent(courseId)
 	const { modules, fetchModules, loading } = useCourse(courseId)
-
 	const userId = getUserFromStorage()?.user_id
 	const { isSaved, loading: saveLoading, toggleSave } = useCourseSave(userId as string)
-
 	const [course, setCourse] = useState<CourseEdit | null>(null)
-	const [meetingInfo, setMeetingInfo] = useState<MeetingInfo | null>(null)
+	const [meetingInfo, setMeetingInfo] = useState<MeetingInfo[]>([])
 	const [meetingLoading, setMeetingLoading] = useState(true)
 	const [openId, setOpenId] = useState<string | null>(null)
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
 	const handleToggle = (id: string) => {
 		setOpenId((prev) => (prev === id ? null : id))
@@ -65,7 +67,7 @@ export default function Courses() {
 			setMeetingLoading(true)
 			try {
 				const res = await API.get(`/api/meeting_lesson/${courseId}`)
-				setMeetingInfo(res.data.result[0])
+				setMeetingInfo(res.data.result || [])
 			} catch (err) {
 				toast.error("Meeting ma'lumotlarini yuklashda xatolik!")
 			} finally {
@@ -75,8 +77,13 @@ export default function Courses() {
 		loadMeetingInfo()
 	}, [courseId])
 
-	const handleJoinMeeting = () => {
-		if (meetingInfo?.meet_url) window.open(meetingInfo.meet_url, '_blank')
+	const activeMeetings = meetingInfo.filter((meeting) => meeting.status === 'ACTIVE')
+
+	const handleJoinMeeting = (meet_url: string) => {
+		if (meet_url) {
+			window.open(meet_url, '_blank')
+			setIsDropdownOpen(false)
+		}
 	}
 
 	if (loading || !course) {
@@ -106,13 +113,32 @@ export default function Courses() {
 								<p className="text-gray-600 text-sm">O‘rganishni davom ettiring</p>
 							</div>
 						</div>
-
 						<div className="flex items-center gap-3">
-							{meetingInfo?.status === 'ACTIVE' && (
-								<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleJoinMeeting} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2" disabled={meetingLoading}>
-									<Video className="w-4 h-4" />
-									Meetingga qo‘shilish
-								</motion.button>
+							{activeMeetings.length > 0 && (
+								<div className="relative">
+									<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2" disabled={meetingLoading}>
+										<Video className="w-4 h-4" />
+										Meetingga qo‘shilish
+										<ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+									</motion.button>
+									<AnimatePresence>
+										{isDropdownOpen && (
+											<motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
+												<div className="py-1">
+													{activeMeetings.map((meeting) => (
+														<button key={meeting.id} onClick={() => handleJoinMeeting(meeting.meet_url)} className="w-full px-4 py-2 text-left text-gray-900 hover:bg-blue-50 transition-colors flex items-center gap-2 cursor-pointer">
+															<Video className="w-5 h-5 me-2 text-blue-600" />
+															<div className="teacher">
+																<h4 className="text-gray text-md">Ustoz: {meeting?.teacher?.full_name}</h4>
+																<p className="text-gray-400 text-sm">Ustoz Tel: {meeting?.teacher?.phone_number}</p>
+															</div>
+														</button>
+													))}
+												</div>
+											</motion.div>
+										)}
+									</AnimatePresence>
+								</div>
 							)}
 							<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => toggleSave(courseId)} className={`p-2 rounded-xl transition-colors flex items-center gap-2 ${currentStatus ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`} disabled={saveLoading}>
 								{saveLoading ? <Loader2 className="w-5 h-5 animate-spin text-blue-500" /> : currentStatus ? <CheckCircle className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
@@ -124,7 +150,6 @@ export default function Courses() {
 					</div>
 				</div>
 			</motion.header>
-
 			<div className="max-w-7xl mx-auto py-6">
 				<div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
 					<motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="xl:col-span-2 space-y-6">
@@ -133,11 +158,9 @@ export default function Courses() {
 								<Image src={course.image_url} alt={course.title} width={800} height={400} className="w-full h-64 object-cover" />
 								<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
 							</div>
-
 							<div className="p-6">
 								<h1 className="text-3xl font-bold text-gray-900 mb-4">{course.title}</h1>
 								<p className="text-gray-600 leading-relaxed text-lg">{course.description}</p>
-
 								<div className="grid grid-cols-2 gap-4 mt-6 py-6 border-t border-gray-200">
 									<div className="text-center">
 										<div className="text-2xl font-bold text-gray-900">{modules.length}</div>
@@ -150,7 +173,6 @@ export default function Courses() {
 								</div>
 							</div>
 						</div>
-
 						<div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
 							{contents.map((content) => {
 								const isOpen = openId === content.id
@@ -173,7 +195,6 @@ export default function Courses() {
 							})}
 						</div>
 					</motion.div>
-
 					<motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
 						<div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
 							<div className="p-6 border-b border-gray-200">
@@ -185,7 +206,6 @@ export default function Courses() {
 									{count.course_module_count} modul • {count.lesson_count} dars • {count.lesson_total_duration}
 								</p>
 							</div>
-
 							<div className="divide-y divide-gray-200">
 								{modules.map((module, index) => (
 									<motion.div key={module.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.1 }} className="bg-white">

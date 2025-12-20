@@ -1,4 +1,4 @@
-import { BookOpen, Home, LayoutDashboard, Users, Type, Bell, CircleQuestionMarkIcon, Headset } from 'lucide-react'
+import { BookOpen, Home, LayoutDashboard, Users, Type, Bell, CircleQuestionMarkIcon, Headset, Award, BookCheck } from 'lucide-react'
 
 export const AdminMenu = [
 	{ name: 'Boshqaruv paneli', href: '/admin', icon: <LayoutDashboard className="w-5 h-5" /> },
@@ -11,9 +11,9 @@ export const AdminMenu = [
 
 export const StudentMenu = [
 	{ name: 'Bosh sahifa', href: '/student', icon: <Home className="w-5 h-5" /> },
-	{ name: 'Imtihon', href: '#exam', icon: <Home className="w-5 h-5" /> },
-	{ name: 'Mening Sertifikatim', href: '#certification', icon: <Home className="w-5 h-5" /> },
-	{ name: 'Qollab-quvvatlash', href: '/support', icon: <Home className="w-5 h-5" /> },
+	{ name: 'Imtihon', href: '#exam', icon: <BookCheck className="w-5 h-5" /> },
+	{ name: 'Mening Sertifikatim', href: '#certification', icon: <Award className="w-5 h-5" /> },
+	{ name: 'Qollab-quvvatlash', href: '/support', icon: <Headset className="w-5 h-5" /> },
 	{ name: 'Bildirishnomalar', href: '/notification', icon: <Bell className="w-5 h-5" /> },
 ]
 

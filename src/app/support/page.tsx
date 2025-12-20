@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { Message, Ticket } from '@/types'
+import { useEffect, useState } from 'react'
+import { Message, Role, Ticket } from '@/types'
 import { useSupport } from '@/hooks/useSupport'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
-import { AlertCircle, CheckCircle, ChevronLeft, Clock, MessageCircle, Plus, Send, User } from 'lucide-react'
+import { AlertCircle, CheckCircle, ChevronLeft, Clock, MessageCircle, Phone, Plus, Send, User } from 'lucide-react'
 
 const StatusBadge = ({ status }: { status: Ticket['status'] }) => {
 	const config = {
@@ -22,18 +22,7 @@ const StatusBadge = ({ status }: { status: Ticket['status'] }) => {
 	)
 }
 
-const PriorityBadge = ({ priority }: { priority?: Ticket['priority'] }) => {
-	if (!priority) return null
-	const config = {
-		LOW: { bg: 'bg-gray-500/10', text: 'text-gray-500', label: 'Past' },
-		MEDIUM: { bg: 'bg-orange-500/10', text: 'text-orange-500', label: "O'rta" },
-		HIGH: { bg: 'bg-red-500/10', text: 'text-red-500', label: 'Yuqori' },
-	}
-	const { bg, text, label } = config[priority]
-	return <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bg} ${text}`}>{label}</span>
-}
-
-const TicketCard = ({ ticket, onClick, isSelected }: { ticket: Ticket; onClick: () => void; isSelected: boolean }) => {
+const TicketCard = ({ userRole, ticket, onClick, isSelected }: { userRole: Role; ticket: Ticket; onClick: () => void; isSelected: boolean }) => {
 	const timeAgo = (date: string) => {
 		const diff = Date.now() - new Date(date).getTime()
 		const minutes = Math.floor(diff / 60000)
@@ -46,19 +35,24 @@ const TicketCard = ({ ticket, onClick, isSelected }: { ticket: Ticket; onClick: 
 		<div onClick={onClick} className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${isSelected ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md' : 'border-gray-200 bg-white hover:border-purple-300'}`}>
 			<div className="flex items-start justify-between gap-3 mb-3">
 				<div className="flex-1 min-w-0">
-					<h3 className="font-semibold text-gray-900 truncate mb-1">{ticket.subject || `Ariza #${ticket.id}`}</h3>
-					<p className="text-sm text-gray-600 flex items-center gap-2">
-						<User className="w-3.5 h-3.5" />
-						{ticket.student_name || `Student #${ticket.student_id}`}
-					</p>
+					<h3 className="font-semibold text-gray-900 truncate mb-1">Ariza #{ticket.id}</h3>
+					{userRole === 'SUPPORT' && (
+						<div className="flex flex-col items-start gap-1 text-sm text-gray-600 mt-1">
+							<div className="flex items-center gap-2">
+								<User className="w-3.5 h-3.5" />
+								{ticket.student?.full_name}
+							</div>
+							<div className="flex items-center gap-2">
+								<Phone className="w-3.5 h-3.5" />
+								{ticket.student?.phone_number}
+							</div>
+						</div>
+					)}
 				</div>
-				{ticket.unread_count && ticket.unread_count > 0 && <span className="flex-shrink-0 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">{ticket.unread_count}</span>}
 			</div>
-			{ticket.last_message && <p className="text-sm text-gray-600 mb-3 line-clamp-2">{ticket.last_message}</p>}
 			<div className="flex items-center justify-between gap-2">
 				<div className="flex items-center gap-2">
 					<StatusBadge status={ticket.status} />
-					<PriorityBadge priority={ticket.priority} />
 				</div>
 				<span className="text-xs text-gray-500">{timeAgo(ticket.created_at)}</span>
 			</div>
@@ -69,7 +63,8 @@ const TicketCard = ({ ticket, onClick, isSelected }: { ticket: Ticket; onClick: 
 const MessageBubble = ({ message }: { message: Message }) => {
 	const isOwn = getUserFromStorage()?.user_id === message.sender_id
 	const formatTime = (date: string) => {
-		return new Date(date).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
+		const d = new Date(date)
+		return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`
 	}
 	return (
 		<div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4 animate-in slide-in-from-bottom-3 duration-300`}>
@@ -84,12 +79,16 @@ const MessageBubble = ({ message }: { message: Message }) => {
 }
 
 export default function SupportPage() {
-	const user = getUserFromStorage()
+	const [user, setUser] = useState<ReturnType<typeof getUserFromStorage> | null>(null)
+
+	useEffect(() => {
+		setUser(getUserFromStorage())
+	}, [])
+
 	const role = user?.role || 'STUDENT'
 	const userType: 'STUDENT' | 'SUPPORT' = role === 'STUDENT' ? 'STUDENT' : 'SUPPORT'
 	const support = useSupport(userType)
 	const [replyMessage, setReplyMessage] = useState('')
-	const [searchQuery, setSearchQuery] = useState('')
 	const [filterStatus, setFilterStatus] = useState<'ALL' | Ticket['status']>('ALL')
 	const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 	const [newTicketMessage, setNewTicketMessage] = useState('')
@@ -103,17 +102,9 @@ export default function SupportPage() {
 	const messagesGradient = `from-gray-50 to-${primaryColor}-50/30`
 
 	const filteredTickets = tickets.filter((ticket) => {
-		const matchesSearch = (ticket.subject?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (role === 'STUDENT' ? (ticket.last_message?.toLowerCase() || '').includes(searchQuery.toLowerCase()) : (ticket.student_name?.toLowerCase() || '').includes(searchQuery.toLowerCase()))
 		const matchesFilter = filterStatus === 'ALL' || ticket.status === filterStatus
-		return matchesSearch && matchesFilter
+		return matchesFilter
 	})
-
-	const stats = {
-		total: tickets.length,
-		open: tickets.filter((t) => t.status === 'OPEN').length,
-		inProgress: tickets.filter((t) => t.status === 'IN_PROGRESS').length,
-		closed: tickets.filter((t) => t.status === 'CLOSED').length,
-	}
 
 	const handleSendReply = async () => {
 		if (!replyMessage.trim() || !selectedTicket) return
@@ -153,7 +144,7 @@ export default function SupportPage() {
 						))}
 					</div>
 					{role === 'STUDENT' && (
-						<button onClick={() => setShowNewTicketForm(true)} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-4 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 hover:scale-105 mt-3`}>
+						<button onClick={() => setShowNewTicketForm(true)} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-4 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 mt-3`}>
 							<Plus className="w-5 h-5" />
 							Yangi ariza yaratish
 						</button>
@@ -170,7 +161,7 @@ export default function SupportPage() {
 							<p className="text-sm">Arizalar topilmadi</p>
 						</div>
 					) : (
-						filteredTickets.map((ticket) => <TicketCard key={ticket.id} ticket={ticket} onClick={() => handleSelectTicket(ticket)} isSelected={selectedTicket?.id === ticket.id} />)
+						filteredTickets.map((ticket) => <TicketCard key={ticket.id} userRole={role} ticket={ticket} onClick={() => handleSelectTicket(ticket)} isSelected={selectedTicket?.id === ticket.id} />)
 					)}
 				</div>
 			</div>
@@ -191,7 +182,7 @@ export default function SupportPage() {
 							<textarea placeholder="Ariza matnini yozing..." value={newTicketMessage} onChange={(e) => setNewTicketMessage(e.target.value)} className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors resize-none" />
 						</div>
 						<div className="p-4 border-t-2 border-gray-100 bg-white">
-							<button onClick={handleCreateTicket} disabled={!newTicketMessage.trim() || loading} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:scale-105`}>
+							<button onClick={handleCreateTicket} disabled={!newTicketMessage.trim() || loading} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 `}>
 								<Send className="w-5 h-5" />
 								Yaratish
 							</button>
@@ -206,16 +197,23 @@ export default function SupportPage() {
 										<ChevronLeft className="w-5 h-5" />
 									</button>
 									<div>
-										<h2 className="font-bold text-gray-900">{selectedTicket.subject || `Ariza #${selectedTicket.id}`}</h2>
-										<p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
-											<User className="w-3.5 h-3.5" />
-											{selectedTicket.student_name || `Student #${selectedTicket.student_id}`}
-										</p>
+										<h2 className="font-bold text-gray-900">{`Ariza #${selectedTicket.id}`}</h2>
+										{role === 'SUPPORT' && (
+											<div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
+												<div className="flex items-center gap-2">
+													<User className="w-3.5 h-3.5" />
+													{selectedTicket.student?.full_name}
+												</div>
+												<div className="flex items-center gap-2">
+													<Phone className="w-3.5 h-3.5" />
+													{selectedTicket.student?.phone_number}
+												</div>
+											</div>
+										)}
 									</div>
 								</div>
 								<div className="flex items-center gap-2">
 									<StatusBadge status={selectedTicket.status} />
-									<PriorityBadge priority={selectedTicket.priority} />
 								</div>
 							</div>
 							{role === 'SUPPORT' && selectedTicket.status !== 'CLOSED' && (
