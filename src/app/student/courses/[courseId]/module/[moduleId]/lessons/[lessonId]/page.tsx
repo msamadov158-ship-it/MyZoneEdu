@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import LessonVideo from './LessonVideo'
-import MaterialTemplate from './Material'
 import { LessonPayload } from '@/types'
+import MaterialTemplate from './Material'
 import { useLessons } from '@/hooks/useLessons'
 
 export default function LessonDetail() {

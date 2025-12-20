@@ -15,7 +15,7 @@ export default function MaterialTemplate({ lessonId }: { lessonId: string }) {
 	if (!materials) return null
 
 	return (
-		<div className="w-full mx-auto p-6">
+		<div className="w-full mx-auto py-6">
 			<div className="grid grid-cols-1 gap-6">
 				{materials.map((material) => {
 					const fileType = getFileType(material.material_url)
@@ -24,8 +24,8 @@ export default function MaterialTemplate({ lessonId }: { lessonId: string }) {
 						<div key={material.id} className="bg-white transition-all duration-300 overflow-hidden group rounded-2xl shadow border border-gray-200 p-4">
 							{/* PDF Ko‘rinishi */}
 							{fileType === 'pdf' && (
-								<div className="w-full h-[500px] mb-4 overflow-hidden rounded-lg bg-gray-100">
-									<iframe src={`${material.material_url}#toolbar=0&navpanes=0&scrollbar=0`} title={material.title} className="w-full h-full" />
+								<div className="w-full h-[500px] mb-4 rounded-lg bg-gray-100 overflow-hidden">
+									<iframe src={`${material.material_url}#toolbar=0&navpanes=0&view=FitH`} title={material.title} className="w-full h-full" style={{ border: 'none' }} />
 								</div>
 							)}
 

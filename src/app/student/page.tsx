@@ -101,13 +101,7 @@ export default function StudentDashboard() {
 							return (
 								<motion.div key={idx} variants={itemVariants} layout whileHover={{ y: -5, scale: 1.02 }} className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden cursor-pointer ${viewMode === 'list' ? 'flex' : ''}`}>
 									<div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-48 flex-shrink-0' : 'h-48'}`}>
-										<div
-											onClick={() => router.push(`/student/lesson/${course.id}`)}
-											className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-											style={{
-												backgroundImage: `url(${course.image_url})`,
-											}}
-										/>
+										<div onClick={() => router.push(`/student/courses/${course.id}`)} className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${course.image_url})` }} />
 
 										<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -125,7 +119,7 @@ export default function StudentDashboard() {
 									<div className="p-6 flex-1">
 										<span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-2">{course.level || 'Umumiy'}</span>
 
-										<h3 onClick={() => router.push(`/student/lesson/${course.id}`)} className="font-bold text-gray-900 text-lg line-clamp-2 group-hover:text-blue-600 transition-colors">
+										<h3 onClick={() => router.push(`/student/courses/${course.id}`)} className="font-bold text-gray-900 text-lg line-clamp-2 group-hover:text-blue-600 transition-colors">
 											{course.title}
 										</h3>
 
