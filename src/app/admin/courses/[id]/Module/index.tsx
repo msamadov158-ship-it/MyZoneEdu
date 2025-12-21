@@ -13,6 +13,7 @@ export default function CourseModule() {
 	const { id } = useParams<{ id: string }>()
 	const { loading, modules, fetchModule, createModule, updateModule, deleteModule } = useCourse(id)
 	const [expandedModule, setExpandedModule] = useState<string | null>(null)
+	const [lessonCounts, setLessonCounts] = useState<Record<string, number>>({})
 
 	const toggleModule = (moduleId: string) => {
 		setExpandedModule(expandedModule === moduleId ? null : moduleId)
@@ -90,16 +91,18 @@ export default function CourseModule() {
 											<div className="flex-1 min-w-0">
 												<h3 className="text-xl font-bold text-gray-900">{module.title}</h3>
 												<p className="text-gray-600 mt-2">{module.description}</p>
-												<div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
-													<FileText className="w-4 h-4" />
-													<span>{0} darslar</span>
-												</div>
+												{lessonCounts[module.id] && (
+													<div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
+														<FileText className="w-4 h-4" />
+														<span>{lessonCounts[module.id] || 0} darslar</span>
+													</div>
+												)}
 											</div>
 										</div>
 									</div>
 								</div>
 
-								<AnimatePresence initial={false}>{expandedModule === module.id && <Lesson key={module.id} moduleId={module.id} handleOpenEdit={handleOpenEdit} handleOpenDelete={handleOpenDelete} />}</AnimatePresence>
+								<AnimatePresence initial={false}>{expandedModule === module.id && <Lesson key={module.id} onCount={(count) => setLessonCounts((prev) => ({ ...prev, [module.id]: count }))} moduleId={module.id} handleOpenEdit={handleOpenEdit} handleOpenDelete={handleOpenDelete} />}</AnimatePresence>
 							</motion.div>
 						))}
 				</motion.div>

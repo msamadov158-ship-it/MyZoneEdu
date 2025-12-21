@@ -7,14 +7,16 @@ import { useModal } from '@/components/UI/Modal'
 import { Clock, Edit, FileText, Play, Plus, Trash2, Video } from 'lucide-react'
 import { CreateLessonModal, DeleteLessonModal, EditLessonModal } from './modal'
 import MaterilList from '../Material'
+import { useEffect } from 'react'
 
 interface LessonProps {
 	moduleId: string
+	onCount: (count: number) => void
 	handleOpenEdit: (id: string) => void
 	handleOpenDelete: (id: string) => void
 }
 
-export default function Lesson({ moduleId, handleOpenEdit, handleOpenDelete }: LessonProps) {
+export default function Lesson({ moduleId, onCount, handleOpenEdit, handleOpenDelete }: LessonProps) {
 	const { openModal, closeModal } = useModal()
 	const { lessons, fetchLesson, createLesson, updateLesson, deleteLesson } = useLessons(moduleId)
 
@@ -48,14 +50,9 @@ export default function Lesson({ moduleId, handleOpenEdit, handleOpenDelete }: L
 		})
 	}
 
-	const getFileType = (url = '') => {
-		const u = url.toLowerCase()
-
-		if (u.endsWith('.pdf')) return 'pdf'
-		if (u.endsWith('.doc') || u.endsWith('.docx') || u.endsWith('.xls') || u.endsWith('.xlsx')) return 'download'
-
-		return 'other'
-	}
+	useEffect(() => {
+		onCount(lessons.length)
+	}, [moduleId, lessons.length])
 
 	return (
 		<motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="border-t border-gray-100 bg-gray-50">

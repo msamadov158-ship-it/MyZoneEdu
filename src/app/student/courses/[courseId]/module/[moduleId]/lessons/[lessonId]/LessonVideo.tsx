@@ -1,10 +1,10 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import { useScreenProtection } from './useScreenProtection'
-import { getUserFromStorage } from '@/lib/helpers/userStore'
-import { studentService } from '@/services/userService'
 import { Student, StudentEdit } from '@/types'
+import { studentService } from '@/services/userService'
+import { getUserFromStorage } from '@/lib/helpers/userStore'
+import { useScreenProtection } from '@/hooks/useScreenProtection'
 
 export default function LessonVideo({ lesson }: any) {
 	const userId = getUserFromStorage()?.user_id as string

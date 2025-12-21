@@ -3,7 +3,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState, useCallback, FormEvent, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { studentService } from '@/services/userService'
-import { setToken } from '@/lib/helpers/userStore'
+import { getUserFromStorage, setToken } from '@/lib/helpers/userStore'
 import { handleApiError } from '@/lib/helpers/handleApiError'
 import { Student, StudentEdit } from '@/types/index'
 
@@ -102,8 +102,11 @@ export const useStudents = () => {
 
     useEffect(() => {
         if (pathname === '/') return
-        fetchStudents()
-    }, [fetchStudents])
+
+        if (getUserFromStorage()?.role === "ADMIN") {
+            fetchStudents()
+        }
+    }, [fetchStudents, getUserFromStorage])
 
     return {
         loading,

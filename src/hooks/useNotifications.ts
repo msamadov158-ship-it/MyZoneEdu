@@ -4,9 +4,10 @@ import { handleApiError } from '@/lib/helpers/handleApiError'
 import { Notification, NotificationPayload } from '@/types'
 import { toast } from 'react-toastify'
 import { useStudents } from './useStudents'
+import { getUserFromStorage } from '@/lib/helpers/userStore'
 
 export const useNotifications = () => {
-    const {students} = useStudents()
+    const { students } = useStudents()
     const [loading, setLoading] = useState(false)
     const [notifications, setNotifications] = useState<Notification[]>([])
 
@@ -82,10 +83,9 @@ export const useNotifications = () => {
         } finally {
             setLoading(false)
         }
-    },[fetchNotifications, students, setLoading])
+    }, [fetchNotifications, students, setLoading])
 
-
-    const updateNotification = useCallback( async (id: string, data: NotificationPayload) => {
+    const updateNotification = useCallback(async (id: string, data: NotificationPayload) => {
         if (!id || !data) return
         setLoading(true)
         try {
@@ -97,7 +97,7 @@ export const useNotifications = () => {
         } finally {
             setLoading(false)
         }
-    },[fetchNotifications])
+    }, [fetchNotifications])
 
     const deleteNotification = useCallback(async (id: string) => {
         if (!id) return
@@ -113,7 +113,7 @@ export const useNotifications = () => {
         }
     }, [fetchNotifications])
 
-    const readNotificationUser = useCallback( async (userId: string, data: { notification_id: string }) => {
+    const readNotificationUser = useCallback(async (userId: string, data: { notification_id: string }) => {
         if (!userId || !data) return
         setLoading(true)
         try {
@@ -125,7 +125,7 @@ export const useNotifications = () => {
         } finally {
             setLoading(false)
         }
-    },[fetchNotifications])
+    }, [fetchNotifications])
 
     const getNotificationsByUser = useCallback(async (userId: string) => {
         setLoading(true)
@@ -138,7 +138,7 @@ export const useNotifications = () => {
         }
     }, [])
 
-      const createNotificationUser = useCallback(async (data: {notification_id: string, user_id: string}) => {
+    const createNotificationUser = useCallback(async (data: { notification_id: string, user_id: string }) => {
         setLoading(true)
         try {
             await notificationService.createNotificationUser(data)
@@ -152,8 +152,10 @@ export const useNotifications = () => {
     }, [fetchNotifications])
 
     useEffect(() => {
-        fetchNotifications()
-    }, [fetchNotifications])
+        if (getUserFromStorage()?.role === "ADMIN") {
+            fetchNotifications()
+        }
+    }, [fetchNotifications, getUserFromStorage])
 
     return {
         loading,
