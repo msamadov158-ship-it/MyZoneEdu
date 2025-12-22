@@ -25,7 +25,7 @@ export default function MaterialTemplate({ lessonId }: { lessonId: string }) {
 					return (
 						<div key={material.id} className="bg-white transition-all duration-300 overflow-hidden group rounded-2xl shadow border border-gray-200 p-4">
 							{/* PDF Ko‘rinishi */}
-							{fileType === 'pdf' && <div className="w-full h-[500px] mb-4 rounded-lg bg-gray-100 overflow-hidden">{isIOS ? <object data={material.material_url} type="application/pdf" className="w-full h-full" /> : <iframe src={`${material.material_url}#toolbar=0&navpanes=0&view=FitH`} title={material.title} className="w-full h-full" style={{ border: 'none' }} />}</div>}
+							{/* {fileType === 'pdf' && <div className="w-full h-[500px] mb-4 rounded-lg bg-gray-100 overflow-hidden">{isIOS ? <object data={material.material_url} type="application/pdf" className="w-full h-full" /> : <iframe src={`${material.material_url}#toolbar=0&navpanes=0&view=FitH`} title={material.title} className="w-full h-full" style={{ border: 'none' }} />}</div>} */}
 
 							{/* Material Ma’lumotlari */}
 							<div className="flex flex-col gap-3">
