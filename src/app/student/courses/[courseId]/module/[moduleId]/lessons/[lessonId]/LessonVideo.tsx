@@ -31,7 +31,7 @@ export default function LessonVideo({ lesson }: any) {
 	return (
 		<div className="relative w-full aspect-video bg-black overflow-hidden rounded-xl">
 			{/* ref={videoRef}  ${blocked ? 'blur-xl brightness-50' : ''} */}
-			<video src={lesson?.video_url} controls playsInline webkit-playsinline="true" controlsList="nodownload noplaybackrate" disablePictureInPicture onContextMenu={(e) => e.preventDefault()} className={`w-full h-full object-contain`} />
+			<video src={lesson?.video_url} poster={lesson.cover_url} controls playsInline webkit-playsinline="true" controlsList="nodownload noplaybackrate" disablePictureInPicture onContextMenu={(e) => e.preventDefault()} className={`w-full h-full object-contain`} />
 
 			{/* WATERMARK */}
 			{user?.phone_number && (
