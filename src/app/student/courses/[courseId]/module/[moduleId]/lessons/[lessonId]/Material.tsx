@@ -7,8 +7,8 @@ export default function MaterialTemplate({ lessonId }: { lessonId: string }) {
 
 	const getFileType = (url = '') => {
 		const u = url.toLowerCase()
-		if (u.includes('.pdf')) return 'pdf'
-		if (u.includes('.doc') || u.includes('.docx') || u.includes('.xls') || u.includes('.xlsx')) return 'download'
+		// if (u.includes('.pdf')) return 'pdf'
+		if (u.includes('.pdf') || u.includes('.doc') || u.includes('.docx') || u.includes('.xls') || u.includes('.xlsx')) return 'download'
 		return 'other'
 	}
 
