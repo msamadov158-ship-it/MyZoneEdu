@@ -43,9 +43,11 @@ export default function Lessons() {
 									</div>
 								</div>
 
-								<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => router.push(`lessons/${lesson.id}`)} className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 bg-blue-100 text-blue-700 hover:bg-blue-200">
-									Boshlash
-								</motion.button>
+								{lesson.lesson_test_progress !== null && (
+									<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => router.push(`lessons/${lesson.id}`)} className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 bg-blue-100 text-blue-700 hover:bg-blue-200">
+										Boshlash
+									</motion.button>
+								)}
 							</motion.div>
 						))}
 					</div>

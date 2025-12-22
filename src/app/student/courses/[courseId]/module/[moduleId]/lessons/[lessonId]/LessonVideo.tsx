@@ -1,22 +1,24 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
-import { Student, StudentEdit } from '@/types'
+import { useEffect, useState } from 'react'
+import { StudentEdit } from '@/types'
 import { studentService } from '@/services/userService'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
-import { useScreenProtection } from '@/hooks/useScreenProtection'
+// import { useScreenProtection } from '@/hooks/useScreenProtection'
+// import { detectPlatform } from '@/lib/helpers/detectPlatform'
 
 export default function LessonVideo({ lesson }: any) {
 	const userId = getUserFromStorage()?.user_id as string
-	const videoRef = useRef<HTMLVideoElement>(null)
-	const blocked = useScreenProtection()
+	// const videoRef = useRef<HTMLVideoElement>(null)
+	// const platform = detectPlatform()
+	// const blocked = useScreenProtection(videoRef)
 	const [user, setUser] = useState<StudentEdit | null>(null)
 
-	useEffect(() => {
-		if (blocked && videoRef.current) {
-			videoRef.current.pause()
-		}
-	}, [blocked])
+	// useEffect(() => {
+	// 	if (blocked && videoRef.current) {
+	// 		videoRef.current.pause()
+	// 	}
+	// }, [blocked])
 
 	useEffect(() => {
 		const load = async () => {
@@ -27,14 +29,19 @@ export default function LessonVideo({ lesson }: any) {
 	}, [userId])
 
 	return (
-		<div className="relative w-full aspect-video bg-black overflow-hidden">
-			<video ref={videoRef} src={lesson?.video_url} controls controlsList="nodownload noplaybackrate" disablePictureInPicture className={`w-full h-full object-contain ${blocked ? 'blur-xl brightness-50' : ''}`} onContextMenu={(e) => e.preventDefault()} />
+		<div className="relative w-full aspect-video bg-black overflow-hidden rounded-xl">
+			{/* ref={videoRef}  ${blocked ? 'blur-xl brightness-50' : ''} */}
+			<video src={lesson?.video_url} controls playsInline webkit-playsinline="true" controlsList="nodownload noplaybackrate" disablePictureInPicture onContextMenu={(e) => e.preventDefault()} className={`w-full h-full object-contain`} />
 
-			<div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center opacity-70">
-				<p className="rotate-[-25deg] text-white text-4xl font-bold">{user && user.phone_number}</p>
-			</div>
+			{/* WATERMARK */}
+			{user?.phone_number && (
+				<div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center opacity-70">
+					<p className="rotate-[-25deg] text-white text-4xl font-bold select-none">{user.phone_number}</p>
+				</div>
+			)}
 
-			{blocked && <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/80 text-white text-xl font-bold">🚫 Video himoyalangan</div>}
+			{/* BLOCK MESSAGE */}
+			{/* {blocked && <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/80 text-white text-xl font-bold">🚫 Video himoyalangan</div>} */}
 		</div>
 	)
 }
