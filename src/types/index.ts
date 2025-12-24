@@ -187,12 +187,12 @@ export interface QuestionEdit {
 
 export interface Message {
     id: number
+    is_read: boolean
     message: string
     sender_role: Role
     ticket_id: number
     created_at: string
     sender_id: number | string
-
 }
 
 export interface Ticket {
@@ -207,4 +207,5 @@ export interface Ticket {
         full_name: string
         phone_number: string
     }
+    unread_count: number
 }

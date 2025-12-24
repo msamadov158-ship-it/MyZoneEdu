@@ -30,10 +30,6 @@ API.interceptors.request.use(
         if (config.data && containsFiles(config.data)) config.headers['Content-Type'] = 'multipart/form-data'
         else config.headers['Content-Type'] = 'application/json'
 
-        if (typeof window !== 'undefined') {
-            config.headers['Frontend-Path'] = window.location.pathname
-        }
-
         return config
     },
     (error) => Promise.reject(error)

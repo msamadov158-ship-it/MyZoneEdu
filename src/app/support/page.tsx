@@ -35,7 +35,7 @@ const TicketCard = ({ userRole, ticket, onClick, isSelected }: { userRole: Role;
 		<div onClick={onClick} className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${isSelected ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md' : 'border-gray-200 bg-white hover:border-purple-300'}`}>
 			<div className="flex items-start justify-between gap-3 mb-3">
 				<div className="flex-1 min-w-0">
-					<h3 className="font-semibold text-gray-900 truncate mb-1">Ariza #{ticket.id}</h3>
+					<h3 className="font-semibold text-gray-900 truncate mb-1">Savol #{ticket.id}</h3>
 					{userRole === 'SUPPORT' && (
 						<div className="flex flex-col items-start gap-1 text-sm text-gray-600 mt-1">
 							<div className="flex items-center gap-2">
@@ -64,8 +64,10 @@ const MessageBubble = ({ message }: { message: Message }) => {
 	const isOwn = getUserFromStorage()?.user_id === message.sender_id
 	const formatTime = (date: string) => {
 		const d = new Date(date)
+		d.setHours(d.getHours() + 5)
 		return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`
 	}
+
 	return (
 		<div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4 animate-in slide-in-from-bottom-3 duration-300`}>
 			<div className={`max-w-[70%] ${isOwn ? 'order-2' : 'order-1'}`}>
@@ -146,7 +148,7 @@ export default function SupportPage() {
 					{role === 'STUDENT' && (
 						<button onClick={() => setShowNewTicketForm(true)} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-4 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 mt-3`}>
 							<Plus className="w-5 h-5" />
-							Yangi ariza yaratish
+							Yangi Savol yaratish
 						</button>
 					)}
 				</div>
@@ -158,7 +160,7 @@ export default function SupportPage() {
 					) : filteredTickets.length === 0 ? (
 						<div className="flex flex-col items-center justify-center h-full text-gray-400">
 							<MessageCircle className="w-12 h-12 mb-3 opacity-50" />
-							<p className="text-sm">Arizalar topilmadi</p>
+							<p className="text-sm">Savollar topilmadi</p>
 						</div>
 					) : (
 						filteredTickets.map((ticket) => <TicketCard key={ticket.id} userRole={role} ticket={ticket} onClick={() => handleSelectTicket(ticket)} isSelected={selectedTicket?.id === ticket.id} />)
@@ -174,12 +176,12 @@ export default function SupportPage() {
 									<button onClick={() => setShowNewTicketForm(false)} className="p-2 hover:bg-white rounded-lg transition-colors">
 										<ChevronLeft className="w-5 h-5" />
 									</button>
-									<h2 className="font-bold text-gray-900">Yangi ariza</h2>
+									<h2 className="font-bold text-gray-900">Yangi Savol</h2>
 								</div>
 							</div>
 						</div>
 						<div className={`flex-1 p-6 bg-gradient-to-br ${messagesGradient}`}>
-							<textarea placeholder="Ariza matnini yozing..." value={newTicketMessage} onChange={(e) => setNewTicketMessage(e.target.value)} className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors resize-none" />
+							<textarea placeholder="Savol matnini yozing..." value={newTicketMessage} onChange={(e) => setNewTicketMessage(e.target.value)} className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors resize-none" />
 						</div>
 						<div className="p-4 border-t-2 border-gray-100 bg-white">
 							<button onClick={handleCreateTicket} disabled={!newTicketMessage.trim() || loading} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 `}>
@@ -197,7 +199,8 @@ export default function SupportPage() {
 										<ChevronLeft className="w-5 h-5" />
 									</button>
 									<div>
-										<h2 className="font-bold text-gray-900">{`Ariza #${selectedTicket.id}`}</h2>
+										<h2 className="font-bold text-gray-900">{`Savol #${selectedTicket.id}`}</h2>
+										<p className="text-gray-400">Support (10:00 - 20:00)</p>
 										{role === 'SUPPORT' && (
 											<div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
 												<div className="flex items-center gap-2">
@@ -254,33 +257,12 @@ export default function SupportPage() {
 					<div className="flex-1 flex items-center justify-center text-gray-400">
 						<div className="text-center">
 							<MessageCircle className="w-20 h-20 mx-auto mb-4 opacity-50" />
-							<p className="text-lg font-medium">Arizani tanlang</p>
-							<p className="text-sm mt-1">{role === 'STUDENT' ? 'Suhbatni boshlash uchun chap tarafdan ariza tanlang' : 'Javob berish uchun chap tarafdan ariza tanlang'}</p>
+							<p className="text-lg font-medium">Savolni tanlang</p>
+							<p className="text-sm mt-1">{role === 'STUDENT' ? 'Suhbatni boshlash uchun chap tarafdan Savol tanlang' : 'Javob berish uchun chap tarafdan Savol tanlang'}</p>
 						</div>
 					</div>
 				)}
 			</div>
 		</div>
 	)
-}
-
-{
-	/* {role === 'SUPPORT' && (
-				<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-					{[
-						{ label: 'Jami', value: stats.total, color: 'from-blue-500 to-cyan-500', icon: MessageCircle },
-						{ label: 'Ochiq', value: stats.open, color: 'from-yellow-500 to-orange-500', icon: Clock },
-						{ label: 'Jarayonda', value: stats.inProgress, color: 'from-purple-500 to-pink-500', icon: AlertCircle },
-						{ label: 'Yopilgan', value: stats.closed, color: 'from-green-500 to-emerald-500', icon: CheckCircle },
-					].map((stat, i) => (
-						<div key={i} className="bg-white rounded-2xl p-4 shadow-lg border-2 border-gray-100 hover:shadow-xl transition-shadow">
-							<div className={`bg-gradient-to-r ${stat.color} p-2 rounded-xl w-fit mb-3`}>
-								<stat.icon className="w-5 h-5 text-white" />
-							</div>
-							<p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-							<p className="text-sm text-gray-600">{stat.label}</p>
-						</div>
-					))}
-				</div>
-			)} */
 }

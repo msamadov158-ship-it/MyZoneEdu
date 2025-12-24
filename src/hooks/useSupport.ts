@@ -19,7 +19,7 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
             const data = userType === 'SUPPORT' ? await supportService.getInbox() : await supportService.getTickets();
             setTickets(data);
         } catch (err) {
-            setError('Arizalarni yuklashda xatolik yuz berdi');
+            setError('Savollarni yuklashda xatolik yuz berdi');
         } finally {
             setLoading(false);
         }
@@ -48,7 +48,7 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
             return true;
         } catch (err) {
             console.error('Xatolik:', err);
-            setError('Ariza yaratishda xatolik yuz berdi');
+            setError('Savol yaratishda xatolik yuz berdi');
             return false;
         } finally {
             setLoading(false);
@@ -87,7 +87,7 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
             setSelectedTicket(null);
             return true;
         } catch (err) {
-            setError('Arizani yopishda xatolik yuz berdi');
+            setError('Savolni yopishda xatolik yuz berdi');
             return false;
         } finally {
             setLoading(false);

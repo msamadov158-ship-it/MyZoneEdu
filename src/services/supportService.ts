@@ -4,12 +4,12 @@ import { Message, Ticket } from "@/types";
 export const supportService = {
     async getTickets(): Promise<Ticket[]> {
         const res = await API.get(`/api/support/ticket/`);
-        return res.data.result;
+        return res.data.result.tickets;
     },
 
     async getInbox(): Promise<Ticket[]> {
         const res = await API.get(`/api/support/ticket/inbox`);
-        return res.data.result;
+        return res.data.result.tickets;
     },
 
     async getMessages(ticketId: number): Promise<Message[]> {
