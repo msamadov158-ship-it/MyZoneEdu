@@ -24,13 +24,17 @@ const StatusBadge = ({ status }: { status: Ticket['status'] }) => {
 
 const TicketCard = ({ userRole, ticket, onClick, isSelected }: { userRole: Role; ticket: Ticket; onClick: () => void; isSelected: boolean }) => {
 	const timeAgo = (date: string) => {
-		const diff = Date.now() - new Date(date).getTime()
+		console.log(date)
+		const FIVE_HOURS = 5 * 60 * 60 * 1000
+		const dateWithOffset = new Date(new Date(date).getTime() + FIVE_HOURS)
+		const diff = Date.now() - dateWithOffset.getTime()
 		const minutes = Math.floor(diff / 60000)
 		if (minutes < 60) return `${minutes} daqiqa oldin`
 		const hours = Math.floor(minutes / 60)
 		if (hours < 24) return `${hours} soat oldin`
 		return `${Math.floor(hours / 24)} kun oldin`
 	}
+
 	return (
 		<div onClick={onClick} className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${isSelected ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md' : 'border-gray-200 bg-white hover:border-purple-300'}`}>
 			<div className="flex items-start justify-between gap-3 mb-3">
