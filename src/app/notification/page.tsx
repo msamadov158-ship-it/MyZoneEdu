@@ -101,7 +101,7 @@ export default function NotificationList() {
 								<div>
 									<h3 className="font-semibold text-gray-900">{noti.title}</h3>
 									<p className="text-gray-700 mt-1 text-sm">{noti.message}</p>
-									<span className="text-xs text-gray-500 mt-2 block">{new Date(noti.created_at).toLocaleString()}</span>
+									<span className="text-xs text-gray-500 mt-2 block">{new Date(new Date(noti.created_at).getTime() + 5 * 60 * 60 * 1000).toLocaleString()}</span>
 								</div>
 
 								{isRead ? (

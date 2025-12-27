@@ -4,16 +4,24 @@ import { motion } from 'framer-motion'
 import { StoredAuth } from '@/types'
 import { Bell, Menu, Search } from 'lucide-react'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
+import { useNotifications } from '@/hooks/useNotifications'
 
 export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
 	const router = useRouter()
 	const [user, setUser] = useState<StoredAuth | null>(null)
+	const [notificationCount, setNotificationCount] = useState<number>(0)
+	const { getNotificationsByUser } = useNotifications()
 
 	useEffect(() => {
-		const storedUser = getUserFromStorage()
-		setTimeout(() => {
-			if (storedUser) setUser(storedUser)
-		}, 0)
+		const load = async () => {
+			const storedUser = getUserFromStorage()
+			if (storedUser) {
+				setUser(storedUser)
+				const count = await getNotificationsByUser(storedUser?.user_id)
+				setNotificationCount(count?.not_read_count as number)
+			}
+		}
+		load()
 	}, [])
 
 	return (
@@ -31,10 +39,12 @@ export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.D
 					</div>
 
 					<div className="flex items-center gap-4">
-						<button onClick={() => router.push('/notification')} className="relative p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-							<Bell className="w-5 h-5" />
-							<span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white "></span>
-						</button>
+						{notificationCount !== 0 && (
+							<button onClick={() => router.push('/notification')} className="relative p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+								<Bell className="w-5 h-5" />
+								<span className="absolute -top-3 -right-3 w-6 h-6 text-white bg-red-500 rounded-full border-2 border-white flex items-center justify-center">{notificationCount}</span>
+							</button>
+						)}
 
 						<motion.div onClick={() => router.push('/profile')} whileHover={{ scale: 1.05 }} className="flex items-center gap-3 p-2 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer transition-all duration-300">
 							<div className="w-8 h-8 bg-myZoneOnline rounded-full flex items-center justify-center">
