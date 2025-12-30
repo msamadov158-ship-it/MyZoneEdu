@@ -100,6 +100,7 @@ export default function Students() {
 									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Telefon</th>
 									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Roli</th>
 									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Tur</th>
+									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Holat</th>
 									<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Amal</th>
 								</tr>
 							</thead>
@@ -121,6 +122,9 @@ export default function Students() {
 											</td>
 											<td className="px-6 py-4">
 												<div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">{type?.title || '—'}</div>
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap">
+												<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${student.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{student.is_active ? 'Faol' : 'Faol emas'}</span>
 											</td>
 											<td className="px-6 py-4 flex gap-4 whitespace-nowrap">
 												<button onClick={() => handleOpenEdit(student.id)} className="text-indigo-600 hover:text-indigo-800">
