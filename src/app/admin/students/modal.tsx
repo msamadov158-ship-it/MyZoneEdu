@@ -72,6 +72,14 @@ export const CreateStudentModal = ({ closeModal, handleCreate }: StudentCreateMo
 						<option value="SUPPORT">Qo'llab-quvvatlash</option>
 					</select>
 				</div>
+				<div>
+					<label className="block text-sm font-medium text-gray-700 mb-2">Holati</label>
+					<select value={formData.is_active.toString()} onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' ? true : false })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+						<option value="">--Holatini tanlang--</option>
+						<option value="true">Faol</option>
+						<option value="false">Nofaol</option>
+					</select>
+				</div>
 
 				<div>
 					<label className="block text-sm font-medium text-gray-700 mb-2">Tur</label>
@@ -165,6 +173,14 @@ export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }:
 						<option value="ADMIN">Administrator</option>
 						<option value="TEACHER">O‘qituvchi</option>
 						<option value="SUPPORT">Qo'llab-quvvatlash</option>
+					</select>
+				</div>
+				<div>
+					<label className="block text-sm font-medium text-gray-700 mb-2">Holati</label>
+					<select value={formData.is_active.toString()} onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' ? true : false })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+						<option value="">--Holatini tanlang--</option>
+						<option value="true">Faol</option>
+						<option value="false">Nofaol</option>
 					</select>
 				</div>
 
