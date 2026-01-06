@@ -166,10 +166,10 @@ export default function Courses() {
 										<div className="text-2xl font-bold text-gray-900">{modules.length}</div>
 										<div className="text-sm text-gray-600">Modullar</div>
 									</div>
-									<div className="text-center">
+									{/* <div className="text-center">
 										<div className="text-2xl font-bold text-gray-900">{contents.length}</div>
 										<div className="text-sm text-gray-600">Kontent</div>
-									</div>
+									</div> */}
 								</div>
 							</div>
 						</div>
@@ -203,7 +203,7 @@ export default function Courses() {
 									Kurs modullari
 								</h2>
 								<p className="text-gray-600 text-sm mt-1">
-									{count.course_module_count} modul • {count.lesson_count} dars • {count.lesson_total_duration}
+									{count.course_module_count} modul
 								</p>
 							</div>
 							<div className="divide-y divide-gray-200">
