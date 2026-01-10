@@ -55,27 +55,30 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
         }
     }, [userType, studentId, fetchTickets]);
 
-    const sendMessage = useCallback(async (ticketId: number, message: string, overrideStudentId?: string) => {
+    const sendMessage = useCallback(async (ticketId: number, message: string, overrideStudentId?: string, file_path?: string) => {
         const idToUse = overrideStudentId ?? studentId;
         if (!idToUse) return false;
+
         setLoading(true);
         setError(null);
+
         try {
             if (userType === 'SUPPORT') {
-                await supportService.sendReply(ticketId, message, idToUse);
+                await supportService.sendReply(ticketId, message, idToUse, file_path);
             } else {
-                await supportService.sendMessage(ticketId, message, idToUse);
+                await supportService.sendMessage(ticketId, message, idToUse, file_path);
             }
+
             await fetchMessages(ticketId);
             return true;
-        } catch (err) {
-            console.error('Xatolik:', err);
+        } catch {
             setError('Xabar yuborishda xatolik yuz berdi');
             return false;
         } finally {
             setLoading(false);
         }
     }, [userType, studentId, fetchMessages]);
+
 
     const closeTicket = useCallback(async (ticketId: number) => {
         if (userType !== 'SUPPORT') return false;

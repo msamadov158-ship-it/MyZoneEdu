@@ -22,13 +22,13 @@ export const supportService = {
         return res.data.result;
     },
 
-    async sendMessage(ticketId: number, message: string, studentId: string): Promise<number> {
-        const res = await API.post(`/api/support/ticket/${ticketId}/messages`, { message, student_id: studentId });
+    async sendMessage(ticketId: number, message: string, studentId: string, file_path?: string,): Promise<number> {
+        const res = await API.post(`/api/support/ticket/${ticketId}/messages`, { message, file_path, student_id: studentId });
         return res.data.result;
     },
 
-    async sendReply(ticketId: number, message: string, studentId: string): Promise<number> {
-        const res = await API.post(`/api/support/ticket/${ticketId}/reply`, { message, student_id: studentId });
+    async sendReply(ticketId: number, message: string,  studentId: string, file_path?: string): Promise<number> {
+        const res = await API.post(`/api/support/ticket/${ticketId}/reply`, { message, file_path, student_id: studentId });
         return res.data.result;
     },
 

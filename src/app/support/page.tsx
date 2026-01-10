@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { Message, Role, Ticket } from '@/types'
 import { useSupport } from '@/hooks/useSupport'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
-import { AlertCircle, CheckCircle, ChevronLeft, Clock, MessageCircle, Phone, Plus, Send, User } from 'lucide-react'
+import { FileUploader } from '@/components/UI/SupportFileUploader'
+import { AlertCircle, CheckCircle, ChevronLeft, Clock, File, FileIcon, Loader2, MessageCircle, Phone, Play, Plus, Send, UploadIcon, User, X } from 'lucide-react'
 
 const StatusBadge = ({ status }: { status: Ticket['status'] }) => {
 	const config = {
@@ -24,7 +25,6 @@ const StatusBadge = ({ status }: { status: Ticket['status'] }) => {
 
 const TicketCard = ({ userRole, ticket, onClick, isSelected }: { userRole: Role; ticket: Ticket; onClick: () => void; isSelected: boolean }) => {
 	const timeAgo = (date: string) => {
-		console.log(date)
 		const FIVE_HOURS = 5 * 60 * 60 * 1000
 		const dateWithOffset = new Date(new Date(date).getTime() + FIVE_HOURS)
 		const diff = Date.now() - dateWithOffset.getTime()
@@ -64,25 +64,52 @@ const TicketCard = ({ userRole, ticket, onClick, isSelected }: { userRole: Role;
 	)
 }
 
-const MessageBubble = ({ message }: { message: Message }) => {
-	const isOwn = getUserFromStorage()?.user_id === message.sender_id
-	const formatTime = (date: string) => {
-		const d = new Date(date)
-		d.setHours(d.getHours() + 5)
-		return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`
+export const MessageFileRenderer = ({ file_path }: { file_path?: string }) => {
+	const getFileType = (url: string) => {
+		if (url?.match(/\.(png|jpg|jpeg|webp)$/i)) return 'image';
+		if (url?.match(/\.(mp4|webm|ogg)$/i)) return 'video';
+		return 'document';
+	};
+
+	const type = getFileType(file_path as string);
+
+	if (type === 'image') {
+		return (
+			<img src={file_path} alt="image" className="rounded-xl max-h-60 cursor-pointer hover:opacity-90" onClick={() => window.open(file_path, '_blank')} />
+		);
+	}
+
+	if (type === 'video') {
+		return (
+			<video src={file_path} controls className="rounded-xl max-h-64 w-full" />
+		);
 	}
 
 	return (
-		<div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4 animate-in slide-in-from-bottom-3 duration-300`}>
-			<div className={`max-w-[70%] ${isOwn ? 'order-2' : 'order-1'}`}>
-				<div className={`px-4 py-3 rounded-2xl shadow-sm ${isOwn ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-br-md' : 'bg-white border-2 border-gray-200 text-gray-800 rounded-bl-md'}`}>
-					<p className="text-sm leading-relaxed">{message.message}</p>
-					<p className={`text-xs mt-2 ${isOwn ? 'text-purple-100' : 'text-gray-500'}`}>{formatTime(message.created_at)}</p>
-				</div>
+		<a href={file_path} download target="_blank" className="flex items-center gap-3 border rounded-xl p-3 cursor-pointer">
+			<File className="w-5 h-5 text-blue-500" />
+			<span className="text-sm">Faylni yuklab olish</span>
+		</a>
+	);
+};
+
+const MessageBubble = ({ message }: { message: Message }) => {
+	const isOwn = getUserFromStorage()?.user_id === message.sender_id;
+
+	console.log("message.file_path", message.file_path)
+	return (
+		<div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
+			<div className={`max-w-[70%] rounded-2xl px-3 py-2 ${isOwn ? 'bg-purple-500 text-white' : 'bg-white border'}`}>
+
+				{message.message && (
+					<p className="text-sm mb-2">{message.message}</p>
+				)}
+				{message.file_path && <MessageFileRenderer file_path={message.file_path} />}
+
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 export default function SupportPage() {
 	const [user, setUser] = useState<ReturnType<typeof getUserFromStorage> | null>(null)
@@ -98,6 +125,8 @@ export default function SupportPage() {
 	const [filterStatus, setFilterStatus] = useState<'ALL' | Ticket['status']>('ALL')
 	const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 	const [newTicketMessage, setNewTicketMessage] = useState('')
+	const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
+
 
 	const { tickets, loading, selectedTicket, messages, setSelectedTicket, fetchTickets, fetchMessages, createTicket, sendMessage, closeTicket } = support
 
@@ -113,13 +142,20 @@ export default function SupportPage() {
 	})
 
 	const handleSendReply = async () => {
-		if (!replyMessage.trim() || !selectedTicket) return
-		const studentIdToUse = role === 'STUDENT' ? undefined : selectedTicket.student_id
-		const success = await sendMessage(selectedTicket.id, replyMessage, studentIdToUse)
-		if (success) {
-			setReplyMessage('')
-		}
-	}
+		if (!selectedTicket) return;
+
+		await sendMessage(
+			selectedTicket.id,
+			replyMessage,
+			undefined,
+			uploadedFileUrl || undefined
+		);
+
+		setReplyMessage('');
+		setUploadedFileUrl(null);
+	};
+
+
 
 	const handleCreateTicket = async () => {
 		if (!newTicketMessage.trim()) return
@@ -133,6 +169,45 @@ export default function SupportPage() {
 		setSelectedTicket(ticket)
 		await fetchMessages(ticket.id)
 	}
+
+	const getFileTypeFromUrl = (url: string) => {
+		if (url.match(/\.(png|jpg|jpeg|webp)$/i)) return 'image';
+		if (url.match(/\.(mp4|webm|ogg)$/i)) return 'video';
+		return 'document';
+	};
+
+	const uploadedFilePreview = () => {
+		if (!uploadedFileUrl) return
+		const type = getFileTypeFromUrl(uploadedFileUrl);
+
+		return (
+			<div className="relative w-20 h-20 mb-3 rounded-xl  bg-gray-50">
+				<button onClick={() => setUploadedFileUrl(null)} className="absolute -top-2 -right-2 z-100 bg-white rounded-full p-1 shadow cursor-pointer">
+					<X className="w-4 h-4 text-gray-600" />
+				</button>
+
+				{type === 'image' && (
+					<img src={uploadedFileUrl} alt="preview" className="w-full h-full object-cover" />
+				)}
+
+				{type === 'video' && (
+					<div className="w-full h-full relative flex items-center justify-center bg-black">
+						<video src={uploadedFileUrl} className="w-full h-full object-cover" muted />
+						<Play className="absolute w-6 h-6 text-white opacity-80" />
+					</div>
+				)}
+
+				{type === 'document' && (
+					<div className="w-full h-full flex flex-col items-center justify-center text-gray-500">
+						<FileIcon className="w-6 h-6" />
+						<span className="text-[10px] mt-1 text-center">
+							Fayl
+						</span>
+					</div>
+				)}
+			</div>
+		);
+	};
 
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:h-full">
@@ -247,15 +322,19 @@ export default function SupportPage() {
 						</div>
 						{selectedTicket.status !== 'CLOSED' && (
 							<div className="p-4 border-t-2 border-gray-100 bg-white">
-								<div className="flex gap-3">
-									<input type="text" placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'} value={replyMessage} onChange={(e) => setReplyMessage(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleSendReply()} className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors" />
-									<button onClick={handleSendReply} disabled={!replyMessage.trim() || loading} className={`bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 hover:scale-105`}>
+								{uploadedFilePreview()}
+								<div className="flex gap-3 items-center">
+									<input type="text" placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'} value={replyMessage} onChange={(e) => setReplyMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSendReply()} className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none" />
+
+									<FileUploader folder="support-chat" onUploaded={(url) => setUploadedFileUrl(url)} />
+
+									<button onClick={handleSendReply} disabled={loading || (!replyMessage.trim() && !uploadedFileUrl)} className={`bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg transition-all disabled:opacity-50`}>
 										<Send className="w-5 h-5" />
-										Yuborish
 									</button>
 								</div>
 							</div>
 						)}
+
 					</>
 				) : (
 					<div className="flex-1 flex items-center justify-center text-gray-400">

@@ -192,6 +192,7 @@ export interface Message {
     sender_role: Role
     ticket_id: number
     created_at: string
+    file_path?: string
     sender_id: number | string
 }
 
