@@ -142,14 +142,13 @@ export default function SupportPage() {
 	})
 
 	const handleSendReply = async () => {
-		if (!selectedTicket) return;
+		if (!replyMessage.trim() || !selectedTicket) return
 
-		await sendMessage(
-			selectedTicket.id,
-			replyMessage,
-			undefined,
-			uploadedFileUrl || undefined
-		);
+		const studentIdToUse = role === 'STUDENT' ? undefined : selectedTicket.student_id
+		const success = await sendMessage(selectedTicket.id, replyMessage, studentIdToUse, uploadedFileUrl || undefined)
+		if (success) {
+			setReplyMessage('')
+		}
 
 		setReplyMessage('');
 		setUploadedFileUrl(null);
