@@ -23,7 +23,7 @@ export default function Login() {
 					<div className="w-full max-w-md space-y-8 bg-white rounded-xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
 						<div>
 							<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900">Xush kelibsiz</h2>
-							<p className="mt-2 text-center text-sm text-slate-600">Dashboardingizga davom etish uchun tizimga kiring.</p>
+							<p className="mt-2 text-center text-sm text-slate-600">Tizimga kirish uchun login va parolingizni kiriting.</p>
 						</div>
 
 						<form onSubmit={(e) => loginSubmit(e, user.username, user.password)} className="mt-8 space-y-6">

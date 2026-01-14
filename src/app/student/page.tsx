@@ -25,13 +25,6 @@ export default function StudentDashboard() {
 		fetchCourses()
 	}, [fetchCourses])
 
-	const stats = {
-		enrolled: 12,
-		completed: 3,
-		inProgress: 5,
-		hoursSpent: 48,
-	}
-
 	const { isSaved, loading: saveLoading, toggleSave } = useCourseSave(userId as string)
 
 	const filteredCourses = selectedCategory === 'saved' ? savedCourses : courses?.filter((course) => course.type_id === selectedCategory && course.type_id === typeId)
@@ -56,7 +49,6 @@ export default function StudentDashboard() {
 				</div>
 			</motion.div>
 
-			{/* Qidiruv va kategoriyalar */}
 			<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
 				<div className="flex flex-col sm:flex-row gap-4 flex-1 w-full">
 					<div className="relative flex-1 max-w-md">
@@ -64,14 +56,14 @@ export default function StudentDashboard() {
 						<input type="text" placeholder="Kurslarni qidirish..." className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 shadow-sm" />
 					</div>
 
-					<div className="flex items-center gap-2 overflow-x-auto pb-2">
-						<button onClick={() => setSelectedCategory('saved')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === 'saved' ? 'bg-myZoneOnline text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'}`}>
+					<div className="flex items-center gap-2 overflow-x-auto">
+						{/* <button onClick={() => setSelectedCategory('saved')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === 'saved' ? 'bg-myZoneOnline text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'}`}>
 							Saqlanganlar
-						</button>
+						</button> */}
 
-						{types.map((type) => (
-							<button key={type.id} onClick={() => setSelectedCategory(type.id)} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === type.id ? 'bg-myZoneOnline text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'}`}>
-								{type.title}
+						{types.filter((type) => type.id === typeId).map((t) => (
+							<button key={t.id} onClick={() => setSelectedCategory(t.id)} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === t.id ? 'bg-myZoneOnline text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'}`}>
+								{t.title}
 							</button>
 						))}
 					</div>

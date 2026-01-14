@@ -102,7 +102,7 @@ export default function ProfilePage() {
 									{isEditMode ? <input type="text" value={userData?.full_name} onChange={(e) => handleChange('full_name', e.target.value)} className="w-full px-4 py-3 border rounded-xl" /> : <p className="px-4 py-3 bg-gray-50 rounded-xl">{userData?.full_name}</p>}
 								</div>
 
-								<div>
+								{/* <div>
 									<label className="block text-sm font-medium mb-2">Foydalanuvchi nomi</label>
 									{isEditMode ? <input type="text" value={userData?.username} onChange={(e) => handleChange('username', e.target.value)} className="w-full px-4 py-3 border rounded-xl" /> : <p className="px-4 py-3 bg-gray-50 rounded-xl">@{userData?.username}</p>}
 								</div>
@@ -124,7 +124,7 @@ export default function ProfilePage() {
 									) : (
 										<p className="px-4 py-3 bg-gray-50 rounded-xl">••••••••</p>
 									)}
-								</div>
+								</div> */}
 							</div>
 						</motion.div>
 					</div>

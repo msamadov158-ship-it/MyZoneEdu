@@ -216,13 +216,13 @@ export default function SupportPage() {
 						<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
 						<input type="text" placeholder="Qidirish..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors`} />
 					</div> */}
-					<div className="flex gap-2">
+					{/* <div className="flex gap-2">
 						{(['ALL', 'OPEN', 'CLOSED'] as const).map((status) => (
 							<button key={status} onClick={() => setFilterStatus(status)} className={`flex-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${filterStatus === status ? `bg-myZoneOnline text-white shadow-md` : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
 								{status === 'ALL' ? 'Hammasi' : status === 'OPEN' ? 'Ochiq' : 'Yopilgan'}
 							</button>
 						))}
-					</div>
+					</div> */}
 					{role === 'STUDENT' && (
 						<button onClick={() => setShowNewTicketForm(true)} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-4 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 mt-3`}>
 							<Plus className="w-5 h-5" />

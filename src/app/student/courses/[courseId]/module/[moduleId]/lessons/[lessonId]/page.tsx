@@ -35,7 +35,7 @@ export default function LessonDetail() {
 			<div className="flex items-center justify-center min-h-screen bg-gray-50">
 				<div className="text-center">
 					<div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-					<p className="text-gray-600 font-medium">Loading lesson...</p>
+					<p className="text-gray-600 font-medium">Darslarni yuklanmoqda...</p>
 				</div>
 			</div>
 		)
@@ -44,7 +44,7 @@ export default function LessonDetail() {
 	if (!lesson) {
 		return (
 			<div className="flex items-center justify-center min-h-screen bg-gray-50">
-				<p className="text-gray-600 font-medium">Lesson not found.</p>
+				<p className="text-gray-600 font-medium">Darslar topilmadi</p>
 			</div>
 		)
 	}
@@ -72,7 +72,7 @@ export default function LessonDetail() {
 
 						<button onClick={() => router.push(`${lessonId}/test`)} className="relative overflow-hidden group px-6 py-4 rounded-xl font-semibold text-md text-white bg-myZoneOnline shadow-[0_10px_25px_rgba(79,70,229,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_15px_35px_rgba(79,70,229,0.45)] active:scale-[0.98]">
 							<span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
-							<span className="relative z-10 flex items-center gap-2">🧠 Lesson Test</span>
+							<span className="relative z-10 flex items-center gap-2">Dars yakuniy testi</span>
 						</button>
 
 						<MaterialTemplate lessonId={lessonId} />

@@ -38,18 +38,18 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
         }
     }, []);
 
-    const createTicket = useCallback(async (message: string) => {
-        if (userType !== 'STUDENT' || !studentId) return false;
+    const createTicket = useCallback(async (message: string): Promise<number | null> => {
+        if (userType !== 'STUDENT' || !studentId) return null;
         setLoading(true);
         setError(null);
         try {
-            await supportService.createTicket(message, studentId);
+            const res = await supportService.createTicket(message, studentId);
             await fetchTickets();
-            return true;
+            await fetchMessages(res)
+            return res;
         } catch (err) {
-            console.error('Xatolik:', err);
             setError('Savol yaratishda xatolik yuz berdi');
-            return false;
+            return null;
         } finally {
             setLoading(false);
         }
