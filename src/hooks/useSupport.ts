@@ -38,14 +38,14 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
         }
     }, []);
 
-    const createTicket = useCallback(async (message: string): Promise<number | null> => {
+    const createTicket = useCallback(async (message: string, file_path?: string): Promise<number | null> => {
         if (userType !== 'STUDENT' || !studentId) return null;
         setLoading(true);
         setError(null);
         try {
-            const res = await supportService.createTicket(message, studentId);
+            const res = await supportService.createTicket(message, studentId, file_path);
             await fetchTickets();
-            await fetchMessages(res)
+            await fetchMessages(res);
             return res;
         } catch (err) {
             setError('Savol yaratishda xatolik yuz berdi');
@@ -53,7 +53,7 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
         } finally {
             setLoading(false);
         }
-    }, [userType, studentId, fetchTickets]);
+    }, [userType, studentId, fetchTickets, fetchMessages]);
 
     const sendMessage = useCallback(async (ticketId: number, message: string, overrideStudentId?: string, file_path?: string) => {
         const idToUse = overrideStudentId ?? studentId;
@@ -70,6 +70,7 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
             }
 
             await fetchMessages(ticketId);
+            await fetchTickets(); // Ticketlarni yangilash
             return true;
         } catch {
             setError('Xabar yuborishda xatolik yuz berdi');
@@ -77,8 +78,38 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
         } finally {
             setLoading(false);
         }
-    }, [userType, studentId, fetchMessages]);
+    }, [userType, studentId, fetchMessages, fetchTickets]);
 
+    const editMessage = useCallback(async (messageId: number, ticketId: number, newMessage: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            await supportService.editMessage(messageId, newMessage);
+            await fetchMessages(ticketId);
+            return true;
+        } catch (err) {
+            setError('Xabarni tahrirlashda xatolik yuz berdi');
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, [fetchMessages]);
+
+    const deleteMessage = useCallback(async (messageId: number, ticketId: number) => {
+        setLoading(true);
+        setError(null);
+        try {
+            await supportService.deleteMessage(messageId);
+            await fetchMessages(ticketId);
+            await fetchTickets(); // Ticketlarni yangilash
+            return true;
+        } catch (err) {
+            setError('Xabarni o\'chirishda xatolik yuz berdi');
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, [fetchMessages, fetchTickets]);
 
     const closeTicket = useCallback(async (ticketId: number) => {
         if (userType !== 'SUPPORT') return false;
@@ -112,6 +143,8 @@ export const useSupport = (userType: 'STUDENT' | 'SUPPORT') => {
         fetchMessages,
         createTicket,
         sendMessage,
+        editMessage,
+        deleteMessage,
         closeTicket,
     };
 };

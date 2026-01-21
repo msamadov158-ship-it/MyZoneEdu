@@ -5,7 +5,7 @@ import { Message, Role, Ticket } from '@/types'
 import { useSupport } from '@/hooks/useSupport'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
 import { FileUploader } from '@/components/UI/SupportFileUploader'
-import { AlertCircle, CheckCircle, ChevronLeft, Clock, File, FileIcon, Loader2, MessageCircle, Phone, Play, Plus, Send, UploadIcon, User, X } from 'lucide-react'
+import { AlertCircle, CheckCircle, ChevronLeft, Clock, Edit2, File, Phone, Play, Plus, Send, X, Check, Trash2 } from 'lucide-react'
 
 const StatusBadge = ({ status }: { status: Ticket['status'] }) => {
 	const config = {
@@ -43,7 +43,7 @@ const TicketCard = ({ userRole, ticket, onClick, isSelected }: { userRole: Role;
 					{userRole === 'SUPPORT' && (
 						<div className="flex flex-col items-start gap-1 text-sm text-gray-600 mt-1">
 							<div className="flex items-center gap-2">
-								<User className="w-3.5 h-3.5" />
+								<span className="w-3.5 h-3.5">👤</span>
 								{ticket.student?.full_name}
 							</div>
 							<div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ const TicketCard = ({ userRole, ticket, onClick, isSelected }: { userRole: Role;
 				<div className="flex items-center gap-2">
 					<StatusBadge status={ticket.status} />
 				</div>
-				<span className="text-xs text-gray-500">{timeAgo(ticket.created_at)}</span>
+				<span className="text-xs text-gray-500">{timeAgo(ticket.updated_at || ticket.created_at)}</span>
 			</div>
 		</div>
 	)
@@ -93,19 +93,33 @@ export const MessageFileRenderer = ({ file_path }: { file_path?: string }) => {
 	);
 };
 
-const MessageBubble = ({ message }: { message: Message }) => {
+const MessageBubble = ({ message, onEdit, onDelete }: { message: Message; onEdit: (msg: Message) => void; onDelete: (msg: Message) => void }) => {
 	const isOwn = getUserFromStorage()?.user_id === message.sender_id;
 
-	console.log("message.file_path", message.file_path)
 	return (
-		<div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4`}>
-			<div className={`max-w-[70%] rounded-2xl px-3 py-2 ${isOwn ? 'bg-purple-500 text-white' : 'bg-white border'}`}>
-
+		<div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-4 group`}>
+			<div className={`max-w-[70%] rounded-2xl px-3 py-2 relative ${isOwn ? 'bg-purple-500 text-white' : 'bg-white border'}`}>
 				{message.message && (
 					<p className="text-sm mb-2">{message.message}</p>
 				)}
 				{message.file_path && <MessageFileRenderer file_path={message.file_path} />}
 
+				{isOwn && (
+					<div className="absolute -left-20 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+						<button
+							onClick={() => onEdit(message)}
+							className="p-1.5 rounded-lg hover:bg-gray-100"
+						>
+							<Edit2 className="w-4 h-4 text-gray-500" />
+						</button>
+						<button
+							onClick={() => onDelete(message)}
+							className="p-1.5 rounded-lg hover:bg-red-50"
+						>
+							<Trash2 className="w-4 h-4 text-red-500" />
+						</button>
+					</div>
+				)}
 			</div>
 		</div>
 	);
@@ -122,13 +136,13 @@ export default function SupportPage() {
 	const userType: 'STUDENT' | 'SUPPORT' = role === 'STUDENT' ? 'STUDENT' : 'SUPPORT'
 	const support = useSupport(userType)
 	const [replyMessage, setReplyMessage] = useState('')
-	const [filterStatus, setFilterStatus] = useState<'ALL' | Ticket['status']>('ALL')
 	const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 	const [newTicketMessage, setNewTicketMessage] = useState('')
 	const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
+	const [editingMessage, setEditingMessage] = useState<Message | null>(null);
+	const [editMessageText, setEditMessageText] = useState('');
 
-
-	const { tickets, loading, selectedTicket, messages, setSelectedTicket, fetchTickets, fetchMessages, createTicket, sendMessage, closeTicket } = support
+	const { tickets, loading, selectedTicket, messages, setSelectedTicket, fetchMessages, createTicket, sendMessage, closeTicket, editMessage, deleteMessage } = support
 
 	const primaryColor = role === 'STUDENT' ? 'purple' : 'indigo'
 	const spinnerBorder = `border-${primaryColor}-500`
@@ -136,38 +150,77 @@ export default function SupportPage() {
 	const headerGradient = role === 'STUDENT' ? 'from-purple-50 to-pink-50' : 'from-indigo-50 to-purple-50'
 	const messagesGradient = `from-gray-50 to-${primaryColor}-50/30`
 
-	const filteredTickets = tickets.filter((ticket) => {
-		const matchesFilter = filterStatus === 'ALL' || ticket.status === filterStatus
-		return matchesFilter
-	})
+	// Ticketlarni eng oxirgi message created_at bo'yicha saralash
+	const sortedTickets = [...tickets].sort((a, b) => {
+		// Har bir ticketning eng oxirgi message vaqtini topish
+		const getLastMessageTime = (ticketId: number) => {
+			const ticketMessages = messages.filter(m => m.ticket_id === ticketId);
+			if (ticketMessages.length === 0) return new Date(a.created_at).getTime();
+			const lastMsg = ticketMessages[ticketMessages.length - 1];
+			return new Date(lastMsg.created_at).getTime();
+		};
+
+		// Agar selectedTicket bo'lsa, uning messagelaridan foydalanish
+		// Aks holda ticket'ning o'zidagi updated_at yoki created_at
+		const timeA = a.updated_at ? new Date(a.updated_at).getTime() : new Date(a.created_at).getTime();
+		const timeB = b.updated_at ? new Date(b.updated_at).getTime() : new Date(b.created_at).getTime();
+
+		return timeB - timeA; // Eng yangi birinchi
+	});
 
 	const handleSendReply = async () => {
-		if (!replyMessage.trim() || !selectedTicket) return
+		if ((!replyMessage.trim() && !uploadedFileUrl) || !selectedTicket) return
 
 		const studentIdToUse = role === 'STUDENT' ? undefined : selectedTicket.student_id
 		const success = await sendMessage(selectedTicket.id, replyMessage, studentIdToUse, uploadedFileUrl || undefined)
 		if (success) {
 			setReplyMessage('')
+			setUploadedFileUrl(null);
 		}
-
-		setReplyMessage('');
-		setUploadedFileUrl(null);
 	};
 
-
-
 	const handleCreateTicket = async () => {
-		if (!newTicketMessage.trim()) return
-		await createTicket(newTicketMessage)
-		setNewTicketMessage('')
-		setShowNewTicketForm(false)
-		await fetchTickets()
+		if (!newTicketMessage.trim() && !uploadedFileUrl) return
+		const ticketId = await createTicket(newTicketMessage, uploadedFileUrl || undefined)
+		if (ticketId) {
+			setNewTicketMessage('')
+			setUploadedFileUrl(null)
+			setShowNewTicketForm(false)
+
+			// Yangi yaratilgan ticketni tanlash
+			const newTicket = tickets.find(t => t.id === ticketId)
+			if (newTicket) {
+				setSelectedTicket(newTicket)
+				await fetchMessages(ticketId)
+			}
+		}
 	}
 
 	const handleSelectTicket = async (ticket: Ticket) => {
 		setSelectedTicket(ticket)
 		await fetchMessages(ticket.id)
 	}
+
+	const handleEditMessage = (msg: Message) => {
+		setEditingMessage(msg)
+		setEditMessageText(msg.message)
+	}
+
+	const handleSaveEdit = async () => {
+		if (!editingMessage || !selectedTicket) return
+		const success = await editMessage(editingMessage.id, selectedTicket.id, editMessageText)
+		if (success) {
+			setEditingMessage(null)
+			setEditMessageText('')
+		}
+	}
+
+	const handleDeleteMessage = async (msg: Message) => {
+		if (!selectedTicket) return;
+		if (!confirm('Xabarni o\'chirmoqchimisiz?')) return;
+
+		await deleteMessage(msg.id, selectedTicket.id);
+	};
 
 	const getFileTypeFromUrl = (url: string) => {
 		if (url.match(/\.(png|jpg|jpeg|webp)$/i)) return 'image';
@@ -180,17 +233,17 @@ export default function SupportPage() {
 		const type = getFileTypeFromUrl(uploadedFileUrl);
 
 		return (
-			<div className="relative w-20 h-20 mb-3 rounded-xl  bg-gray-50">
+			<div className="relative w-20 h-20 mb-3 rounded-xl bg-gray-50">
 				<button onClick={() => setUploadedFileUrl(null)} className="absolute -top-2 -right-2 z-100 bg-white rounded-full p-1 shadow cursor-pointer">
 					<X className="w-4 h-4 text-gray-600" />
 				</button>
 
 				{type === 'image' && (
-					<img src={uploadedFileUrl} alt="preview" className="w-full h-full object-cover" />
+					<img src={uploadedFileUrl} alt="preview" className="w-full h-full object-cover rounded-xl" />
 				)}
 
 				{type === 'video' && (
-					<div className="w-full h-full relative flex items-center justify-center bg-black">
+					<div className="w-full h-full relative flex items-center justify-center bg-black rounded-xl overflow-hidden">
 						<video src={uploadedFileUrl} className="w-full h-full object-cover" muted />
 						<Play className="absolute w-6 h-6 text-white opacity-80" />
 					</div>
@@ -198,10 +251,8 @@ export default function SupportPage() {
 
 				{type === 'document' && (
 					<div className="w-full h-full flex flex-col items-center justify-center text-gray-500">
-						<FileIcon className="w-6 h-6" />
-						<span className="text-[10px] mt-1 text-center">
-							Fayl
-						</span>
+						<File className="w-6 h-6" />
+						<span className="text-[10px] mt-1 text-center">Fayl</span>
 					</div>
 				)}
 			</div>
@@ -212,19 +263,8 @@ export default function SupportPage() {
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:h-full">
 			<div className="lg:col-span-1 bg-white rounded-2xl shadow-xl min-h-[400px] h-full overflow-hidden flex flex-col">
 				<div className="p-4 border-b-2 border-gray-100">
-					{/* <div className="relative mb-3">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-						<input type="text" placeholder="Qidirish..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors`} />
-					</div> */}
-					{/* <div className="flex gap-2">
-						{(['ALL', 'OPEN', 'CLOSED'] as const).map((status) => (
-							<button key={status} onClick={() => setFilterStatus(status)} className={`flex-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${filterStatus === status ? `bg-myZoneOnline text-white shadow-md` : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-								{status === 'ALL' ? 'Hammasi' : status === 'OPEN' ? 'Ochiq' : 'Yopilgan'}
-							</button>
-						))}
-					</div> */}
 					{role === 'STUDENT' && (
-						<button onClick={() => setShowNewTicketForm(true)} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-4 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 mt-3`}>
+						<button onClick={() => setShowNewTicketForm(true)} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-4 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2`}>
 							<Plus className="w-5 h-5" />
 							Yangi Savol yaratish
 						</button>
@@ -235,16 +275,17 @@ export default function SupportPage() {
 						<div className="flex items-center justify-center h-full">
 							<div className={`animate-spin rounded-full h-8 w-8 border-4 ${spinnerBorder} border-t-transparent`}></div>
 						</div>
-					) : filteredTickets.length === 0 ? (
+					) : sortedTickets.length === 0 ? (
 						<div className="flex flex-col items-center justify-center h-full text-gray-400">
-							<MessageCircle className="w-12 h-12 mb-3 opacity-50" />
+							<span className="text-4xl mb-3">💬</span>
 							<p className="text-sm">Savollar topilmadi</p>
 						</div>
 					) : (
-						filteredTickets.map((ticket) => <TicketCard key={ticket.id} userRole={role} ticket={ticket} onClick={() => handleSelectTicket(ticket)} isSelected={selectedTicket?.id === ticket.id} />)
+						sortedTickets.map((ticket) => <TicketCard key={ticket.id} userRole={role} ticket={ticket} onClick={() => handleSelectTicket(ticket)} isSelected={selectedTicket?.id === ticket.id} />)
 					)}
 				</div>
 			</div>
+
 			<div className="lg:col-span-2 bg-white rounded-2xl shadow-xl min-h-[400px] h-full overflow-auto flex flex-col">
 				{role === 'STUDENT' && showNewTicketForm ? (
 					<>
@@ -259,13 +300,18 @@ export default function SupportPage() {
 							</div>
 						</div>
 						<div className={`flex-1 p-6 bg-gradient-to-br ${messagesGradient}`}>
-							<textarea placeholder="Savol matnini yozing..." value={newTicketMessage} onChange={(e) => setNewTicketMessage(e.target.value)} className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl ${focusBorder} focus:outline-none transition-colors resize-none" />
+							<textarea placeholder="Savol matnini yozing..." value={newTicketMessage} onChange={(e) => setNewTicketMessage(e.target.value)} className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none transition-colors resize-none" />
 						</div>
+
 						<div className="p-4 border-t-2 border-gray-100 bg-white">
-							<button onClick={handleCreateTicket} disabled={!newTicketMessage.trim() || loading} className={`w-full bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 `}>
-								<Send className="w-5 h-5" />
-								Yaratish
-							</button>
+							{uploadedFilePreview()}
+							<div className="flex gap-3 items-center">
+								<FileUploader folder="support-chat" onUploaded={(url) => setUploadedFileUrl(url)} />
+								<button onClick={handleCreateTicket} disabled={(!newTicketMessage.trim() && !uploadedFileUrl) || loading} className={`flex-1 bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2`}>
+									<Send className="w-5 h-5" />
+									Yuborish
+								</button>
+							</div>
 						</div>
 					</>
 				) : selectedTicket ? (
@@ -282,7 +328,7 @@ export default function SupportPage() {
 										{role === 'SUPPORT' && (
 											<div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
 												<div className="flex items-center gap-2">
-													<User className="w-3.5 h-3.5" />
+													<span>👤</span>
 													{selectedTicket.student?.full_name}
 												</div>
 												<div className="flex items-center gap-2">
@@ -306,6 +352,7 @@ export default function SupportPage() {
 								</div>
 							)}
 						</div>
+
 						<div className={`flex-1 overflow-y-auto p-6 bg-gradient-to-br ${messagesGradient}`}>
 							{loading && messages.length === 0 ? (
 								<div className="flex items-center justify-center h-full">
@@ -316,29 +363,58 @@ export default function SupportPage() {
 									<p>Xabarlar topilmadi</p>
 								</div>
 							) : (
-								messages.map((message) => <MessageBubble key={message.id} message={message} />)
+								messages.map((message) => (
+									editingMessage?.id === message.id ? (
+										<div key={message.id} className="mb-4">
+											<div className="flex justify-end">
+												<div className="max-w-[70%] bg-purple-500 rounded-2xl px-3 py-2">
+													<input
+														type="text"
+														value={editMessageText}
+														onChange={(e) => setEditMessageText(e.target.value)}
+														className="w-full bg-white/20 text-white px-3 py-2 rounded-lg focus:outline-none mb-2"
+														autoFocus
+													/>
+													<div className="flex gap-2 justify-end">
+														<button onClick={() => setEditingMessage(null)} className="px-3 py-1 bg-white/20 text-white rounded-lg text-sm">
+															<X className="w-4 h-4" />
+														</button>
+														<button onClick={handleSaveEdit} className="px-3 py-1 bg-white text-purple-500 rounded-lg text-sm">
+															<Check className="w-4 h-4" />
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									) : (
+										<MessageBubble key={message.id} message={message} onEdit={handleEditMessage} onDelete={handleDeleteMessage} />
+									)
+								))
 							)}
 						</div>
+
 						{selectedTicket.status !== 'CLOSED' && (
 							<div className="p-4 border-t-2 border-gray-100 bg-white">
 								{uploadedFilePreview()}
-								<div className="flex gap-3 items-center">
+								<div className="flex gap-3 sm:items-center flex-col sm:flex-row">
 									<input type="text" placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'} value={replyMessage} onChange={(e) => setReplyMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSendReply()} className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none" />
 
-									<FileUploader folder="support-chat" onUploaded={(url) => setUploadedFileUrl(url)} />
+									<div className='flex gap-3 items-center'>
+										<FileUploader folder="support-chat" onUploaded={(url) => setUploadedFileUrl(url)} />
 
-									<button onClick={handleSendReply} disabled={loading || (!replyMessage.trim() && !uploadedFileUrl)} className={`bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg transition-all disabled:opacity-50`}>
-										<Send className="w-5 h-5" />
-									</button>
+										<button onClick={handleSendReply} disabled={loading || (!replyMessage.trim() && !uploadedFileUrl)} className={`bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg transition-all disabled:opacity-50`}>
+											<Send className="w-5 h-5" />
+										</button>
+									</div>
+
 								</div>
 							</div>
 						)}
-
 					</>
 				) : (
 					<div className="flex-1 flex items-center justify-center text-gray-400">
 						<div className="text-center">
-							<MessageCircle className="w-20 h-20 mx-auto mb-4 opacity-50" />
+							<span className="text-6xl mb-4 block">💬</span>
 							<p className="text-lg font-medium">Savolni tanlang</p>
 							<p className="text-sm mt-1">{role === 'STUDENT' ? 'Suhbatni boshlash uchun chap tarafdan Savol tanlang' : 'Javob berish uchun chap tarafdan Savol tanlang'}</p>
 						</div>

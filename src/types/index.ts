@@ -192,6 +192,7 @@ export interface Message {
     sender_role: Role
     ticket_id: number
     created_at: string
+    updated_at: string;
     file_path?: string
     sender_id: number | string
 }
@@ -200,6 +201,7 @@ export interface Ticket {
     id: number;
     student_id: string;
     created_at: string;
+    updated_at: string;
     status: 'ALL' | 'OPEN' | 'CLOSED';
     student: {
         type_id: 2

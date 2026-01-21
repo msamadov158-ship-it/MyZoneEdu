@@ -1,135 +1,218 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { StudentEdit } from '@/types'
-import { studentService } from '@/services/userService'
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { Lock } from 'lucide-react'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
+import { studentService } from '@/services/userService'
+import { StudentEdit } from '@/types'
 
 type Watermark = {
 	id: number
 	top: number
 	left: number
+	rotate: number
 }
-
-const WATERMARK_COUNT = 5
-const MIN_DISTANCE = 15 // foizlarda (bir-biriga yaqinlashmasligi uchun)
 
 export default function LessonVideo({ lesson }: any) {
 	const userId = getUserFromStorage()?.user_id as string
+
+	const videoRef = useRef<HTMLVideoElement>(null)
+	const containerRef = useRef<HTMLDivElement>(null)
+	const lastTimeRef = useRef(0)
+
 	const [user, setUser] = useState<StudentEdit | null>(null)
-	const [visible, setVisible] = useState(true)
-	const [marks, setMarks] = useState<Watermark[]>([])
-	const [opacity, setOpacity] = useState(0)
+	const [isBlocked, setIsBlocked] = useState(false)
+	const [reason, setReason] = useState('')
+	const [mark, setMark] = useState<Watermark | null>(null)
 
-
+	// ================= USER LOAD =================
 	useEffect(() => {
-		const load = async () => {
+		; (async () => {
+			if (!userId) return
 			const res = await studentService.getById(userId)
 			setUser(res)
-		}
-		load()
+		})()
 	}, [userId])
 
-	// 🔢 Masofa tekshiruvi
-	const isFarEnough = (x: number, y: number, list: Watermark[]) => {
-		return list.every(
-			(m) =>
-				Math.abs(m.top - x) > MIN_DISTANCE ||
-				Math.abs(m.left - y) > MIN_DISTANCE
-		)
+	// ================= BLOCK =================
+	const handleBlock = useCallback((msg: string) => {
+		if (videoRef.current) {
+			lastTimeRef.current = videoRef.current.currentTime
+			videoRef.current.pause()
+		}
+		setIsBlocked(true)
+		setReason(msg)
+	}, [])
+
+	// ================= UNBLOCK + AUTO RESUME =================
+	const handleUnblock = useCallback(async () => {
+		setIsBlocked(false)
+		setReason('')
+
+		const video = videoRef.current
+		const container = containerRef.current
+		if (!video) return
+
+		// Fullscreen qayta tekshirish
+		if (!document.fullscreenElement && container) {
+			try {
+				await container.requestFullscreen()
+			} catch { }
+		}
+
+		// Oldingi joyiga qaytarish
+		video.currentTime = lastTimeRef.current
+
+		// Avtomatik davom ettirish
+		try {
+			await video.play()
+		} catch {
+			// autoplay restriction bo‘lishi mumkin
+		}
+	}, [])
+
+	// ================= FORCE FULLSCREEN =================
+	const handlePlay = async () => {
+		if (!document.fullscreenElement && containerRef.current) {
+			try {
+				await containerRef.current.requestFullscreen()
+			} catch { }
+		}
 	}
 
-	// 🎲 Random watermark generator
-	const generateMarks = () => {
-		const result: Watermark[] = []
+	// ================= SECURITY DETECTION =================
+	useEffect(() => {
+		const checkSecurity = () => {
+			if (document.hidden) {
+				handleBlock('Xavfsizlik: Tab faol emas')
+			}
 
-		while (result.length < WATERMARK_COUNT) {
-			const top = Math.random() * 80 + 5
-			const left = Math.random() * 80 + 5
-
-			if (isFarEnough(top, left, result)) {
-				result.push({
-					id: Date.now() + Math.random(),
-					top,
-					left,
-				})
+			if (!document.hasFocus()) {
+				handleBlock('Xavfsizlik: Ekran yozish aniqlandi')
 			}
 		}
 
-		setMarks(result)
-	}
+		const handleBlur = () => {
+			handleBlock('Xavfsizlik: Video oynasi faol emas')
+		}
 
+		const handleFocus = () => {
+			// ❗ hech qachon unblock qilmaydi
+		}
+
+		document.addEventListener('visibilitychange', checkSecurity)
+		window.addEventListener('blur', handleBlur)
+		window.addEventListener('focus', handleFocus)
+
+		return () => {
+			document.removeEventListener('visibilitychange', checkSecurity)
+			window.removeEventListener('blur', handleBlur)
+			window.removeEventListener('focus', handleFocus)
+		}
+	}, [handleBlock])
+
+	// ================= SCREENSHOT / DEVTOOLS BLOCK =================
+	useEffect(() => {
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (
+				e.key === 'PrintScreen' ||
+				(e.ctrlKey && e.shiftKey) ||
+				(e.metaKey && e.shiftKey)
+			) {
+				e.preventDefault()
+				handleBlock('Screenshot yoki recording taqiqlangan')
+			}
+		}
+
+		window.addEventListener('keydown', onKeyDown)
+		return () => window.removeEventListener('keydown', onKeyDown)
+	}, [handleBlock])
+
+	// ================= DYNAMIC WATERMARK =================
 	useEffect(() => {
 		if (!user?.phone_number) return
 
-		generateMarks()
-		setVisible(true)
-		setOpacity(0)
-
-		const loop = setInterval(() => {
-			// 1️⃣ Fade In
-			setVisible(true)
-			generateMarks()
-			requestAnimationFrame(() => {
-				setOpacity(0.6)
+		const move = () => {
+			setMark({
+				id: Date.now(),
+				top: Math.random() * 70 + 15,
+				left: Math.random() * 70 + 15,
+				rotate: Math.random() * 40 - 20,
 			})
+		}
 
-			// 2️⃣ 1.5s ko‘rinib turadi
-			setTimeout(() => {
-				// 3️⃣ Fade Out
-				setOpacity(0)
-			}, 3000)
-
-		}, 5000)
-
-		return () => clearInterval(loop)
+		move()
+		const interval = setInterval(move, 3000)
+		return () => clearInterval(interval)
 	}, [user])
 
+	// ================= PUBLIC VIEW =================
 	if (!user?.phone_number) {
 		return (
-			<div className="relative w-full aspect-video bg-black rounded-xl">
-				<video
-					src={lesson?.video_url}
-					poster={lesson.cover_url}
-					controls
-					className="w-full h-full object-contain"
-				/>
-			</div>
+			<div className="w-full aspect-video bg-gray-300 animate-pulse rounded-xl" />
 		)
 	}
 
+	// ================= PROTECTED VIDEO =================
 	return (
-		<div className="relative w-full aspect-video bg-black overflow-hidden rounded-xl">
+		<div
+			ref={containerRef}
+			onContextMenu={(e) => e.preventDefault()}
+			className="relative w-full aspect-video bg-black rounded-xl overflow-hidden select-none"
+			style={{
+				filter: isBlocked ? 'blur(20px)' : 'none',
+				WebkitUserSelect: 'none',
+			} as any}
+		>
 			<video
+				ref={videoRef}
 				src={lesson?.video_url}
-				poster={lesson.cover_url}
+				poster={lesson?.cover_url}
 				controls
-				playsInline
 				controlsList="nodownload noplaybackrate"
 				disablePictureInPicture
-				onContextMenu={(e) => e.preventDefault()}
+				disableRemotePlayback
+				onPlay={handlePlay}
 				className="w-full h-full object-contain"
 			/>
 
-			{visible &&
-				marks.map((m) => (
-					<div
-						key={m.id}
-						className="absolute z-20 pointer-events-none select-none"
-						style={{
-							top: `${m.top}%`,
-							left: `${m.left}%`,
-							transform: 'translate(-50%, -50%) rotate(-25deg)',
-							opacity,
-							transition: 'opacity 1.5s ease-in-out',
-						}}
-					>
-						<span className="text-white text-2xl font-bold whitespace-nowrap">
-							{user.phone_number}
-						</span>
+			{/* WATERMARK */}
+			{mark && !isBlocked && (
+				<div
+					className="absolute pointer-events-none z-10 transition-all duration-1000"
+					style={{
+						top: `${mark.top}%`,
+						left: `${mark.left}%`,
+						transform: `translate(-50%, -50%) rotate(${mark.rotate}deg)`,
+						opacity: 0.3,
+					}}
+				>
+					<div className="text-white font-bold text-sm md:text-[36px] drop-shadow-lg">
+						{user.phone_number}
 					</div>
-				))}
+				</div>
+			)}
 
+			{/* BLOCK OVERLAY */}
+			{isBlocked && (
+				<div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-6">
+					<div className="text-center max-w-sm">
+						<div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+							<Lock className="w-10 h-10 text-red-500" />
+						</div>
+						<h2 className="text-white text-2xl font-bold mb-2">
+							Video bloklandi
+						</h2>
+						<p className="text-gray-400 mb-6">{reason}</p>
+						<button
+							onClick={handleUnblock}
+							className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition"
+						>
+							Davom etish
+						</button>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }
