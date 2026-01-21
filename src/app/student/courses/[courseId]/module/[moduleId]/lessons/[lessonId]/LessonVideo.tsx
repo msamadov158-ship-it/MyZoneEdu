@@ -11,6 +11,7 @@ type Watermark = {
 	top: number
 	left: number
 	rotate: number
+	visible: boolean
 }
 
 export default function LessonVideo({ lesson }: any) {
@@ -132,18 +133,39 @@ export default function LessonVideo({ lesson }: any) {
 	useEffect(() => {
 		if (!user?.phone_number) return
 
-		const move = () => {
+		let showTimeout: ReturnType<typeof setTimeout>
+		let hideTimeout: ReturnType<typeof setTimeout>
+		let cycle: ReturnType<typeof setInterval>
+
+		const cycleWatermark = () => {
+			// 1️⃣ Avval YO‘Q holatda yangi joy beramiz
 			setMark({
 				id: Date.now(),
 				top: Math.random() * 70 + 15,
 				left: Math.random() * 70 + 15,
-				rotate: Math.random() * 40 - 20,
+				rotate: Math.random() * 30 - 15,
+				visible: false,
 			})
+
+			// 2️⃣ Sekin chiqadi
+			showTimeout = setTimeout(() => {
+				setMark((prev) => (prev ? { ...prev, visible: true } : prev))
+			}, 120)
+
+			// 3️⃣ Sekin yo‘qoladi
+			hideTimeout = setTimeout(() => {
+				setMark((prev) => (prev ? { ...prev, visible: false } : prev))
+			}, 2800)
 		}
 
-		move()
-		const interval = setInterval(move, 3000)
-		return () => clearInterval(interval)
+		cycleWatermark()
+		cycle = setInterval(cycleWatermark, 4000)
+
+		return () => {
+			clearInterval(cycle)
+			clearTimeout(showTimeout)
+			clearTimeout(hideTimeout)
+		}
 	}, [user])
 
 	// ================= PUBLIC VIEW =================
@@ -176,15 +198,14 @@ export default function LessonVideo({ lesson }: any) {
 				className="w-full h-full object-contain"
 			/>
 
-			{/* WATERMARK */}
-			{mark && !isBlocked && (
+			{mark && (
 				<div
-					className="absolute pointer-events-none z-10 transition-all duration-1000"
+					className="absolute pointer-events-none z-10 transition-opacity duration-[1200ms] ease-in-out"
 					style={{
 						top: `${mark.top}%`,
 						left: `${mark.left}%`,
 						transform: `translate(-50%, -50%) rotate(${mark.rotate}deg)`,
-						opacity: 0.3,
+						opacity: mark.visible ? 0.35 : 0,
 					}}
 				>
 					<div className="text-white font-bold text-sm md:text-[36px] drop-shadow-lg">
