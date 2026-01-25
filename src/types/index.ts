@@ -210,5 +210,15 @@ export interface Ticket {
         full_name: string
         phone_number: string
     }
-    unread_count: number
+    last_message: {
+        created_at: string
+        file_path: string
+        id: number
+        is_read: boolean
+        message: string
+        sender_id: number
+        sender_role: Role
+        ticket_id: number
+        unread_count: number
+    }
 }

@@ -1,6 +1,5 @@
 'use client'
-import { useRouter } from 'next/navigation'
-import { useState, useCallback, FormEvent, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { questionService } from '@/services/questionService'
 import { handleApiError } from '@/lib/helpers/handleApiError'

@@ -1,10 +1,15 @@
 'use client'
+import { Metadata } from 'next'
 import { useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import '@/styles/globals.css'
 import ToastProvider from '@/providers/ToastProvider'
 import { clearToken, getUserFromStorage } from '@/lib/helpers/userStore'
 import { ToastContainer } from 'react-toastify'
+
+const metadata: Metadata = {
+	title: "MyZone Online Platform"
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
@@ -60,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	}, [pathname, router])
 
 	return (
-		<html lang="en" className="dark">
+		<html lang="en" className="dark" >
 			<body>
 				<ToastContainer />
 				{children}

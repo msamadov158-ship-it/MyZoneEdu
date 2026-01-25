@@ -4,57 +4,67 @@ let socket: Socket | null = null
 
 export const getSocket = () => {
     if (!socket) {
-        const wsUrl = 'https://aiconnect-api.uz'
-
+        const wsUrl = 'http://192.168.1.100:8080'
         socket = io(wsUrl, {
             transports: ['websocket', 'polling'],
             reconnection: true,
             reconnectionDelay: 1000,
             reconnectionDelayMax: 5000,
-            reconnectionAttempts: 5,
+            reconnectionAttempts: 10,
             timeout: 20000,
             autoConnect: true,
+            forceNew: false,
+            upgrade: true,
+            rememberUpgrade: true,
         })
 
-        // Connection events
         socket.on('connect', () => {
-            console.log('✅ WebSocket Connected - ID:', socket?.id)
+            // console.log('WebSocket Connected - ID:', socket?.id)
+            // console.log('Transport:', socket?.io.engine.transport.name);
         })
 
         socket.on('disconnect', (reason) => {
-            console.log('❌ WebSocket Disconnected:', reason)
+            // console.log('WebSocket Disconnected:', reason)
 
-            // Auto reconnect on certain disconnect reasons
             if (reason === 'io server disconnect') {
-                // Server disconnected, try to reconnect manually
                 socket?.connect()
             }
         })
 
         socket.on('connect_error', (error) => {
-            console.error('❌ WebSocket Connection Error:', error.message)
+            // console.error('WebSocket Connection Error:', error.message)
+            // console.error('Error details:', error);
         })
 
         socket.on('reconnect', (attemptNumber) => {
-            console.log('🔄 WebSocket Reconnected after', attemptNumber, 'attempts')
+            console.log('WebSocket Reconnected after', attemptNumber, 'attempts')
         })
 
         socket.on('reconnect_attempt', (attemptNumber) => {
-            console.log('🔄 WebSocket Reconnection Attempt:', attemptNumber)
+            console.log('WebSocket Reconnection Attempt:', attemptNumber)
         })
 
         socket.on('reconnect_error', (error) => {
-            console.error('❌ WebSocket Reconnection Error:', error.message)
+            console.error('WebSocket Reconnection Error:', error.message)
         })
 
         socket.on('reconnect_failed', () => {
-            console.error('❌ WebSocket Reconnection Failed')
+            console.error('WebSocket Reconnection Failed')
         })
 
-        // Error handling
         socket.on('error', (error) => {
-            console.error('❌ WebSocket Error:', error)
+            console.error('WebSocket Error:', error)
         })
+
+        // Listen for server events
+        socket.on('connected', (data) => {
+            // console.log('Server says:', data);
+        });
+
+        // Debug all events
+        socket.onAny((eventName, ...args) => {
+            // console.log(`Event received: ${eventName}`, args);
+        });
     }
 
     return socket
@@ -64,7 +74,7 @@ export const disconnectSocket = () => {
     if (socket) {
         socket.disconnect()
         socket = null
-        console.log('🔌 WebSocket Disconnected Manually')
+        // console.log('🔌 WebSocket Disconnected Manually')
     }
 }
 
