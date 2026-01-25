@@ -1,2 +1,2 @@
-export const HOST = 'http://192.168.1.100:8080'
+export const HOST = 'https://aiconnect-api.uz'
 

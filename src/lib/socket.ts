@@ -4,7 +4,7 @@ let socket: Socket | null = null
 
 export const getSocket = () => {
     if (!socket) {
-        const wsUrl = 'http://192.168.1.100:8080'
+        const wsUrl = 'https://aiconnect-api.uz'
         socket = io(wsUrl, {
             transports: ['websocket', 'polling'],
             reconnection: true,
