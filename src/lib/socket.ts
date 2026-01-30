@@ -4,7 +4,7 @@ let socket: Socket | null = null
 
 export const getSocket = () => {
     if (!socket) {
-        const wsUrl = 'https://aiconnect-api.uz'
+        const wsUrl = 'https://aiconnect-api.uz' // 'http://192.168.1.106:8080'
         socket = io(wsUrl, {
             transports: ['websocket', 'polling'],
             reconnection: true,
@@ -19,20 +19,18 @@ export const getSocket = () => {
         })
 
         socket.on('connect', () => {
-            // console.log('WebSocket Connected - ID:', socket?.id)
-            // console.log('Transport:', socket?.io.engine.transport.name);
+            console.log('WebSocket Connected - ID:', socket?.id)
+            console.log('Transport:', socket?.io.engine.transport.name);
         })
 
         socket.on('disconnect', (reason) => {
-            // console.log('WebSocket Disconnected:', reason)
-
             if (reason === 'io server disconnect') {
                 socket?.connect()
             }
         })
 
         socket.on('connect_error', (error) => {
-            // console.error('WebSocket Connection Error:', error.message)
+            console.error('WebSocket Connection Error:', error.message)
             // console.error('Error details:', error);
         })
 
@@ -56,14 +54,12 @@ export const getSocket = () => {
             console.error('WebSocket Error:', error)
         })
 
-        // Listen for server events
         socket.on('connected', (data) => {
-            // console.log('Server says:', data);
+            console.log('Server says:', data);
         });
 
-        // Debug all events
         socket.onAny((eventName, ...args) => {
-            // console.log(`Event received: ${eventName}`, args);
+            console.log(`Event received: ${eventName}`, args);
         });
     }
 
@@ -74,7 +70,6 @@ export const disconnectSocket = () => {
     if (socket) {
         socket.disconnect()
         socket = null
-        // console.log('🔌 WebSocket Disconnected Manually')
     }
 }
 

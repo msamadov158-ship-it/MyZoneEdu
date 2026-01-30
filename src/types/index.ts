@@ -222,3 +222,34 @@ export interface Ticket {
         unread_count: number
     }
 }
+
+export type FetchTicketsResponse =
+    | {
+        status: 'ok'
+        tickets: Ticket[]
+        unread_count: number
+    }
+    | {
+        status: 'error'
+        message: string
+    }
+
+export type FetchTicketsResponse2 =
+    | {
+        status: 'ok'
+        ticket_id: number
+    }
+    | {
+        status: 'error'
+        message: string
+    }
+
+export type FetchMessagesResponse =
+    | {
+        status: 'ok'
+        messages: Message[]
+    }
+    | {
+        status: 'error'
+        message: string
+    }
