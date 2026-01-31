@@ -20,7 +20,6 @@ export default function Dashboard() {
 
 	return (
 		<motion.div variants={staggeredList} initial="hidden" animate="visible" className="space-y-8">
-			{/* HERO */}
 			<motion.div variants={fadeUp} className="relative overflow-hidden rounded-3xl bg-myZoneOnline p-8 text-white shadow-2xl">
 				<div className="relative z-10">
 					<h1 className="text-3xl font-bold mb-2">Xush kelibsiz, Admin! 👋</h1>
@@ -31,7 +30,6 @@ export default function Dashboard() {
 				<div className="absolute -right-5 -bottom-5 w-20 h-20 bg-white/10 rounded-full"></div>
 			</motion.div>
 
-			{/* STATS */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<motion.div onClick={() => router.push('/admin/students')} variants={fadeUp} className="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 cursor-pointer">
 					<div className="flex items-center justify-between mb-4">
@@ -54,7 +52,6 @@ export default function Dashboard() {
 				</motion.div>
 			</div>
 
-			{/* STUDENTS */}
 			{loading ? (
 				<motion.div variants={fadeUp} className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-lg">
 					<div className="text-center">

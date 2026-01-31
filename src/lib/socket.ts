@@ -19,8 +19,8 @@ export const getSocket = () => {
         })
 
         socket.on('connect', () => {
-            console.log('WebSocket Connected - ID:', socket?.id)
-            console.log('Transport:', socket?.io.engine.transport.name);
+            // console.log('WebSocket Connected - ID:', socket?.id)
+            // console.log('Transport:', socket?.io.engine.transport.name);
         })
 
         socket.on('disconnect', (reason) => {
@@ -30,24 +30,24 @@ export const getSocket = () => {
         })
 
         socket.on('connect_error', (error) => {
-            console.error('WebSocket Connection Error:', error.message)
+            // console.error('WebSocket Connection Error:', error.message)
             // console.error('Error details:', error);
         })
 
         socket.on('reconnect', (attemptNumber) => {
-            console.log('WebSocket Reconnected after', attemptNumber, 'attempts')
+            // console.log('WebSocket Reconnected after', attemptNumber, 'attempts')
         })
 
         socket.on('reconnect_attempt', (attemptNumber) => {
-            console.log('WebSocket Reconnection Attempt:', attemptNumber)
+            // console.log('WebSocket Reconnection Attempt:', attemptNumber)
         })
 
         socket.on('reconnect_error', (error) => {
-            console.error('WebSocket Reconnection Error:', error.message)
+            // console.error('WebSocket Reconnection Error:', error.message)
         })
 
         socket.on('reconnect_failed', () => {
-            console.error('WebSocket Reconnection Failed')
+            // console.error('WebSocket Reconnection Failed')
         })
 
         socket.on('error', (error) => {
@@ -55,11 +55,11 @@ export const getSocket = () => {
         })
 
         socket.on('connected', (data) => {
-            console.log('Server says:', data);
+            // console.log('Server says:', data);
         });
 
         socket.onAny((eventName, ...args) => {
-            console.log(`Event received: ${eventName}`, args);
+            // console.log(`Event received: ${eventName}`, args);
         });
     }
 

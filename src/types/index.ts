@@ -175,15 +175,26 @@ export interface Question {
     lesson_id: number;
 }
 
-export interface QuestionEdit {
-    question_text: string;
-    option_a: string;
-    option_b: string;
-    option_c: string;
-    option_d: string;
-    correct_option: string;
-    lesson_id?: number;
+type QuestionBase = {
+  question_text: string
+  option_a: string
+  option_b: string
+  option_c: string
+  option_d: string
+  correct_option: string
 }
+
+type QuestionWithLesson = QuestionBase & {
+  lesson_id: number
+  module_id?: never
+}
+
+type QuestionWithModule = QuestionBase & {
+  module_id: number
+  lesson_id?: never
+}
+
+export type QuestionEdit = QuestionWithLesson | QuestionWithModule
 
 export interface Message {
     id: number

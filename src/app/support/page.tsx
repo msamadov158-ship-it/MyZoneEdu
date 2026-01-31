@@ -20,7 +20,7 @@ export default function SupportPage() {
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 	const messagesContainerRef = useRef<HTMLDivElement>(null)
 	const [showNewTicketForm, setShowNewTicketForm] = useState(false)
-
+	const [isMobile, setIsMobile] = useState(false)
 	const [newTicketMessage, setNewTicketMessage] = useState('')
 
 	useEffect(() => {
@@ -32,6 +32,13 @@ export default function SupportPage() {
 		return () => {
 			window.removeEventListener('storage', syncUser)
 		}
+	}, [])
+
+	useEffect(() => {
+		const check = () => setIsMobile(window.innerWidth < 1024)
+		check()
+		window.addEventListener('resize', check)
+		return () => window.removeEventListener('resize', check)
 	}, [])
 
 	const role = user?.role || 'STUDENT'
@@ -48,12 +55,13 @@ export default function SupportPage() {
 	const headerGradient = role === 'STUDENT' ? 'from-purple-50 to-pink-50' : 'from-indigo-50 to-purple-50'
 	const messagesGradient = `from-gray-50 to-${primaryColor}-50/30`
 
+	// Desktop uchun: birinchi ticketni avtomatik tanlash
 	useEffect(() => {
-		if (tickets.length > 0 && !selectedTicket) {
+		if (!isMobile && tickets.length > 0 && !selectedTicket) {
 			setSelectedTicket(tickets[0])
 			fetchMessages(tickets[0].id)
 		}
-	}, [selectedTicket, tickets, setSelectedTicket, fetchMessages])
+	}, [tickets, selectedTicket, isMobile, setSelectedTicket, fetchMessages])
 
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -64,16 +72,6 @@ export default function SupportPage() {
 			scrollToBottom()
 		}
 	}, [messages])
-
-	useEffect(() => {
-		const shouldShowForm = tickets.length === 0 && role === 'STUDENT'
-		if (shouldShowForm && !showNewTicketForm) {
-			setTimeout(() => {
-				setShowNewTicketForm(true)
-				setSelectedTicket(null)
-			}, 0)
-		}
-	}, [tickets.length, role, setSelectedTicket, showNewTicketForm, setShowNewTicketForm])
 
 	const handleCreateTicket = async () => {
 		if ((!newTicketMessage.trim() && !uploadedFileUrl) || loading) return
@@ -152,11 +150,21 @@ export default function SupportPage() {
 
 	const shouldShowTyping = typingUserId != null && user && typingUserId !== user.user_id
 
+	// Mobil uchun: ticket/inbox list yoki ticket form ko'rsatish
+	const showMobileList = isMobile && !selectedTicket && !showNewTicketForm
+
 	return (
-		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
-			<div className="bg-white rounded-2xl shadow-xl p-4 h-full">
-				{role === 'STUDENT' && tickets.length === 0 && (
-					<button onClick={() => setShowNewTicketForm(true)} className="mb-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-xl flex justify-center gap-2">
+		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full overflow-y-auto scroll-none rounded-2xl">
+			{/* Chap panel - Ticket list (desktopda doim, mobilida faqat list ko'rsatilganda) */}
+			<div className={`bg-white rounded-2xl shadow-xl p-4 h-full overflow-y-auto scroll-none min-h-[500px] ${isMobile && (selectedTicket || showNewTicketForm) ? 'hidden' : ''}`}>
+				{role === 'STUDENT' && (
+					<button
+						onClick={() => {
+							setShowNewTicketForm(true)
+							setSelectedTicket(null)
+						}}
+						className="mb-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-xl flex justify-center gap-2"
+					>
 						<Plus className="w-5 h-5" />
 						Yangi Savol
 					</button>
@@ -169,15 +177,16 @@ export default function SupportPage() {
 					currentUserId={user?.user_id as string}
 					loading={loading}
 					onSelectTicket={(t) => {
-						setShowNewTicketForm(false)
 						setSelectedTicket(t)
+						setShowNewTicketForm(false)
 						fetchMessages(t.id)
 					}}
 				/>
 			</div>
 
-			<div className="lg:col-span-2 bg-white rounded-2xl overflow-hidden shadow-xl flex flex-col h-full">
-				{role === 'STUDENT' && showNewTicketForm && tickets.length === 0 ? (
+			{/* O'ng panel - Ticket form yoki chat */}
+			<div className={`lg:col-span-2 bg-white rounded-2xl overflow-hidden shadow-xl flex flex-col h-full min-h-[500px] ${showMobileList ? 'hidden lg:flex' : ''}`}>
+				{showNewTicketForm ? (
 					<>
 						<div className={`p-4 border-b-2 border-gray-100 bg-gradient-to-r ${headerGradient}`}>
 							<div className="flex items-center justify-between">
@@ -185,9 +194,9 @@ export default function SupportPage() {
 									<button
 										onClick={() => {
 											setShowNewTicketForm(false)
-											setUploadedFileUrl(null)
+											setSelectedTicket(null)
 										}}
-										className="p-2 hover:bg-white rounded-lg transition-colors"
+										className="p-2 hover:bg-white rounded-lg transition-colors lg:hidden"
 									>
 										<ChevronLeft className="w-5 h-5" />
 									</button>
@@ -232,7 +241,13 @@ export default function SupportPage() {
 						<div className={`p-4 border-b-2 border-gray-100 bg-gradient-to-r ${headerGradient}`}>
 							<div className="flex items-center justify-between mb-3">
 								<div className="flex items-center gap-3">
-									<button onClick={() => setSelectedTicket(null)} className="lg:hidden p-2 hover:bg-white rounded-lg transition-colors">
+									<button
+										onClick={() => {
+											setSelectedTicket(null)
+											setShowNewTicketForm(false)
+										}}
+										className="lg:hidden p-2 hover:bg-white rounded-lg transition-colors"
+									>
 										<ChevronLeft className="w-5 h-5" />
 									</button>
 									<div>

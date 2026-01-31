@@ -30,7 +30,7 @@ export default function Questions() {
 					<div className="flex items-center justify-between">
 						<div>
 							<h2 className="text-2xl font-bold text-gray-900">Barcha kurslar</h2>
-							<p className="text-gray-600 mt-1">Ta'lim kontentingizni boshqaring</p>
+							<p className="text-gray-600 mt-1">Ta&apos;lim kontentingizni boshqaring</p>
 						</div>
 					</div>
 

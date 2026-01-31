@@ -4,12 +4,12 @@ import { Trash2 } from 'lucide-react'
 import { QuestionEdit } from '@/types'
 
 interface QuestionCreateModalProps {
-	lessonId: string
+	moduleId: string
 	closeModal: () => void
 	handleCreate(data: QuestionEdit): Promise<void>
 }
 
-export const CreateQuestionModal = ({ lessonId, closeModal, handleCreate }: QuestionCreateModalProps) => {
+export const CreateQuestionModal = ({ moduleId, closeModal, handleCreate }: QuestionCreateModalProps) => {
 	const [formData, setFormData] = useState<QuestionEdit>({
 		question_text: '',
 		option_a: '',
@@ -17,13 +17,14 @@ export const CreateQuestionModal = ({ lessonId, closeModal, handleCreate }: Ques
 		option_c: '',
 		option_d: '',
 		correct_option: 'A',
-		lesson_id: Number(lessonId),
+		module_id: Number(moduleId),
 	})
 
 	return (
 		<form
 			onSubmit={async (e) => {
 				e.preventDefault()
+				console.log("formData", formData)
 				await handleCreate(formData)
 				closeModal()
 			}}

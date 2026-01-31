@@ -1,75 +1,47 @@
-'use client'
-import { Metadata } from 'next'
-import { useEffect } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import type { Metadata } from 'next'
 import '@/styles/globals.css'
-import ToastProvider from '@/providers/ToastProvider'
-import { clearToken, getUserFromStorage } from '@/lib/helpers/userStore'
-import { ToastContainer } from 'react-toastify'
 
-const metadata: Metadata = {
-	title: "MyZone Online Platform"
+export const metadata: Metadata = {
+	title: {
+		default: 'My Zone Online — Bugalteriya va 1C Kurslari',
+		template: '%s | My Zone Online'
+	},
+	description:
+		'My Zone Online — bu bugalteriya va 1C (1C: Бухгалтерия) bo‘yicha professional onlayn ta’lim platformasi. Amaliy darslar, real keyslar, tajribali mutaxassislar va sertifikat bilan kasbingizni rivojlantiring.',
+	keywords: [
+		'bugalteriya kurslari',
+		'1C kurslari',
+		'1C бухгалтерия',
+		'onlayn bugalteriya',
+		'1C o‘rganish',
+		'hisobchi kurslari',
+		'myzone online'
+	],
+	authors: [{ name: 'My Zone Online Team' }],
+	creator: 'My Zone Online',
+	publisher: 'My Zone Online',
+	robots: {
+		index: true,
+		follow: true
+	},
+	openGraph: {
+		title: 'My Zone Online — Bugalteriya va 1C Kurslari',
+		description: 'Bugalteriya va 1C bo‘yicha zamonaviy onlayn kurslar. Amaliy bilim, real loyiha va sertifikat.',
+		type: 'website',
+		locale: 'uz_UZ',
+		siteName: 'MyZone Online'
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'My Zone Online — Bugalteriya va 1C Kurslari',
+		description: 'Bugalteriya va 1C bo‘yicha professional onlayn kurslar. Noldan mutaxassisgacha.'
+	}
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-	const router = useRouter()
-	const pathname = usePathname()
-
-	useEffect(() => {
-		const user = getUserFromStorage()
-
-		if (!user) {
-			router.replace('/')
-			return
-		}
-
-		const redirectByRole = (role: string) => {
-			switch (role) {
-				case 'ADMIN':
-					router.replace('/admin')
-					break
-				case 'TEACHER':
-					router.replace('/teacher')
-					break
-				case 'STUDENT':
-					router.replace('/student')
-					break
-				case 'SUPPORT':
-					router.replace('/support')
-					break
-				default:
-					clearToken()
-					router.replace('/')
-			}
-		}
-
-		if (pathname.startsWith('/admin') && user.role !== 'ADMIN') {
-			redirectByRole(user.role)
-			return
-		}
-
-		if (pathname.startsWith('/teacher') && user.role !== 'TEACHER') {
-			redirectByRole(user.role)
-			return
-		}
-
-		if (pathname.startsWith('/student') && user.role !== 'STUDENT') {
-			redirectByRole(user.role)
-			return
-		}
-
-		if (pathname.startsWith('/support') && !(user.role === 'SUPPORT' || user.role === 'STUDENT')) {
-			redirectByRole(user.role)
-			return
-		}
-	}, [pathname, router])
-
 	return (
-		<html lang="en" className="dark" >
-			<body>
-				<ToastContainer />
-				{children}
-			</body>
+		<html lang="uz" className="dark">
+			<body>{children}</body>
 		</html>
 	)
 }
