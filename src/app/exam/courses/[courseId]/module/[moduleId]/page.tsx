@@ -8,7 +8,7 @@ import { Question } from '@/types/index'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
 
 interface Answer {
-    lesson_test_id: number
+    module_test_id: number
     result: string
 }
 
@@ -60,15 +60,17 @@ export default function LessonTest() {
         setSubmitting(true)
         try {
             const answerList: Answer[] = questions.map((q) => ({
-                lesson_test_id: Number(q.id),
+                module_test_id: Number(q.id),
                 result: answers[Number(q.id)] || '',
             }))
+
+            console.log("lesson_test_id", answerList)
 
             const res = await API.post(`/api/module_test/action/${moduleId}`, { answer_list: answerList })
             const data: TestResponse = res.data.result
 
             if (studentId && data.correct_count !== undefined) {
-                await API.get(`/api​/module_test​/finish​/action​/${studentId}/${moduleId}/${data.correct_count}`)
+                await API.get(`/api/module_test/finish/action/${studentId}/${moduleId}/${data.correct_count}`)
                 setScore({ correct: data.correct_count, total: questions.length })
                 setShowResultModal(true)
                 toast.success('Test muvaffaqiyatli yakunlandi!')
