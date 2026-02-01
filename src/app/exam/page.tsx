@@ -1,18 +1,22 @@
 'use client'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { BookOpen, Play} from 'lucide-react'
+import { BookOpen, Play } from 'lucide-react'
 import { useCourses } from '@/hooks/useCourses'
 import { motion, AnimatePresence } from 'framer-motion'
 import { containerVariants, itemVariants } from '@/lib/motion'
+import { getUserFromStorage } from '@/lib/helpers/userStore'
 
 export default function StudentDashboard() {
 	const router = useRouter()
+	const typeId = getUserFromStorage()?.type_id
 	const { courses, loading, fetchCourses } = useCourses()
 
 	useEffect(() => {
 		fetchCourses()
 	}, [fetchCourses])
+
+	const filteredCourses = courses?.filter((course) => course.type_id === typeId)
 
 	return (
 		<div className="max-w-7xl mx-auto space-y-8">
@@ -23,7 +27,7 @@ export default function StudentDashboard() {
 						<p className="text-gray-600">Kurslaringiz yuklanmoqda...</p>
 					</div>
 				</motion.div>
-			) : courses && courses.length === 0 ? (
+			) : filteredCourses && filteredCourses.length === 0 ? (
 				<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 bg-white rounded-2xl shadow-lg">
 					<BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
 					<h3 className="text-lg font-semibold text-gray-900 mb-2">Kurslar topilmadi</h3>
@@ -32,7 +36,7 @@ export default function StudentDashboard() {
 			) : (
 				<motion.div variants={containerVariants} animate="visible" className={'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'}>
 					<AnimatePresence>
-						{courses?.map((course, idx) => {
+						{filteredCourses?.map((course, idx) => {
 							return (
 								<motion.div key={idx} variants={itemVariants} layout whileHover={{ y: -5, scale: 1.02 }} className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden cursor-pointer`}>
 									<div className='relative overflow-hidden h-48'>

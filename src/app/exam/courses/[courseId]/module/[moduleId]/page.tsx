@@ -2,7 +2,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
-import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowLeft, BookOpen, CheckCircle, XCircle } from 'lucide-react'
+
 import API from '@/lib/axios'
 import { Question } from '@/types/index'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
@@ -30,7 +32,7 @@ export default function LessonTest() {
     const fetchTest = useCallback(async () => {
         setLoading(true)
         try {
-            const res = await API.get(`/api/module_test/module/${moduleId}`)
+            const res = await API.get(`/api/module_test/action/${moduleId}`)
             setQuestions(res.data.result || [])
         } catch (err) {
             toast.error('Testni yuklashda xatolik yuz berdi!')
@@ -63,8 +65,6 @@ export default function LessonTest() {
                 module_test_id: Number(q.id),
                 result: answers[Number(q.id)] || '',
             }))
-
-            console.log("lesson_test_id", answerList)
 
             const res = await API.post(`/api/module_test/action/${moduleId}`, { answer_list: answerList })
             const data: TestResponse = res.data.result
@@ -117,41 +117,59 @@ export default function LessonTest() {
             </header>
 
             <main className="max-w-4xl mx-auto py-8 px-4">
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                    <div className="p-6 space-y-8">
-                        {questions.map((question, index) => (
-                            <div key={question.id} className="border-b border-gray-200 last:border-0 pb-6 last:pb-0">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                                    {index + 1}. {question.question_text}
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {['A', 'B', 'C', 'D'].map((opt) => (
-                                        <button key={opt} onClick={() => handleSelectAnswer(Number(question.id), opt)} className={`p-4 rounded-xl border transition-all duration-300 text-left ${answers[Number(question.id)] === opt ? 'border-blue-500 bg-blue-50 text-blue-900' : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'}`}>
-                                            <span className="font-medium mr-2">{opt}.</span>
-                                            {question[`option_${opt.toLowerCase()}` as keyof Question]}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
+                {loading ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-lg">
+                        <div className="text-center">
+                            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                            <p className="text-gray-600">Kurslaringiz yuklanmoqda...</p>
+                        </div>
+                    </motion.div>
+                ) : questions && questions.length === 0 ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 bg-white rounded-2xl shadow-lg">
+                        <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Testlar topilmadi</h3>
+                        <p className="text-gray-600">Qidiruvni o‘zgartiring yoki yangi testladni ko‘rib chiqing</p>
+                    </motion.div>
+                ) : (
+                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                        <div className="p-6 space-y-8">
+                            {
+                                questions.map((question, index) => (
+                                    <div key={question.id} className="border-b border-gray-200 last:border-0 pb-6 last:pb-0">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                                            {index + 1}. {question.question_text}
+                                        </h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            {['A', 'B', 'C', 'D'].map((opt) => (
+                                                <button key={opt} onClick={() => handleSelectAnswer(Number(question.id), opt)} className={`p-4 rounded-xl border transition-all duration-300 text-left ${answers[Number(question.id)] === opt ? 'border-blue-500 bg-blue-50 text-blue-900' : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'}`}>
+                                                    <span className="font-medium mr-2">{opt}.</span>
+                                                    {question[`option_${opt.toLowerCase()}` as keyof Question]}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </div>
-                    <div className="px-6 py-4 bg-gray-50 flex justify-end border-t border-gray-200">
-                        <button onClick={handleSubmit} disabled={submitting} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-                            {submitting ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                    Yuborilmoqda...
-                                </>
-                            ) : (
-                                <>
-                                    <CheckCircle className="w-4 h-4" />
-                                    Testni yuborish
-                                </>
-                            )}
-                        </button>
-                    </div>
+
+                )}
+                <div className="px-6 py-4 bg-gray-50 flex justify-end border-t border-gray-200">
+                    {questions && questions.length > 0 && (<button onClick={handleSubmit} disabled={submitting} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        {submitting ? (
+                            <>
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                Yuborilmoqda...
+                            </>
+                        ) : (
+                            <>
+                                <CheckCircle className="w-4 h-4" />
+                                Testni yuborish
+                            </>
+                        )}
+                    </button>)}
                 </div>
-            </main>
+            </main >
 
             {showResultModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
@@ -171,6 +189,6 @@ export default function LessonTest() {
                     </div>
                 </div>
             )}
-        </div>
+        </div >
     )
 }

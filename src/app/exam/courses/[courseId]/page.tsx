@@ -1,51 +1,20 @@
 'use client'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { BookOpen, ChevronDown, CheckCircle, Share2, Bookmark, ArrowLeft, Loader2, Video, Play } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { BookOpen, Play } from 'lucide-react'
 import { CourseEdit } from '@/types'
 import { useCourse } from '@/hooks/useCourse'
 import { useCourses } from '@/hooks/useCourses'
-import { useCourseSave } from '@/hooks/useCourseSave'
 import { useCourseContent } from '@/hooks/useCourseContent'
-import { getUserFromStorage } from '@/lib/helpers/userStore'
-import API from '@/lib/axios'
-import { toast } from 'react-toastify'
-
-interface MeetingInfo {
-	id: number
-	course_id: number
-	created_at: string
-	ended_at: string
-	meet_url: string
-	started_at: string
-	status: string
-	teacher_id: number
-	teacher: {
-		full_name: string
-		phone_number: string
-	}
-	calendar_event_id: string
-}
 
 export default function Courses() {
 	const router = useRouter()
 	const { courseId } = useParams<{ courseId: string }>()
 	const { fetchCourse } = useCourses()
-	const { contents, count } = useCourseContent(courseId)
+	const { count } = useCourseContent(courseId)
 	const { modules, fetchModules, loading } = useCourse(courseId)
-	const userId = getUserFromStorage()?.user_id
-	const { isSaved, loading: saveLoading, toggleSave } = useCourseSave(userId as string)
 	const [course, setCourse] = useState<CourseEdit | null>(null)
-	const [meetingInfo, setMeetingInfo] = useState<MeetingInfo[]>([])
-	const [meetingLoading, setMeetingLoading] = useState(true)
-	const [openId, setOpenId] = useState<string | null>(null)
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-
-	const handleToggle = (id: string) => {
-		setOpenId((prev) => (prev === id ? null : id))
-	}
 
 	useEffect(() => {
 		const loadCourse = async () => {
@@ -61,21 +30,6 @@ export default function Courses() {
 		}
 		loadModules()
 	}, [courseId, fetchModules])
-
-	useEffect(() => {
-		const loadMeetingInfo = async () => {
-			setMeetingLoading(true)
-			try {
-				const res = await API.get(`/api/meeting_lesson/${courseId}`)
-				setMeetingInfo(res.data.result || [])
-			} catch (err) {
-				toast.error("Meeting ma'lumotlarini yuklashda xatolik!")
-			} finally {
-				setMeetingLoading(false)
-			}
-		}
-		loadMeetingInfo()
-	}, [courseId])
 
 	if (loading || !course) {
 		return (
