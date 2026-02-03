@@ -38,16 +38,18 @@ API.interceptors.request.use(
 API.interceptors.response.use(
     (response) => response,
     (error) => {
+        console.log("errorrr", error)
         if (error.response && error.response.status === 401) {
-            const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
-            if (currentPath.startsWith('/')) {
-                return Promise.reject(error)
-            }
-            clearToken()
+            // const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
+            // if (currentPath.startsWith('/')) {
+            //     return Promise.reject(error)
+            // }
 
-            if (typeof window !== 'undefined') {
-                window.location.href = '/'
-            }
+            // if (typeof window !== 'undefined') {
+            //     window.location.href = '/'
+            // }
+
+            clearToken()
 
             return Promise.reject(error)
         }
