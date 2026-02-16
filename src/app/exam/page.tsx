@@ -6,15 +6,20 @@ import { useCourses } from '@/hooks/useCourses'
 import { motion, AnimatePresence } from 'framer-motion'
 import { containerVariants, itemVariants } from '@/lib/motion'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
+import API from '@/lib/axios'
 
 export default function StudentDashboard() {
 	const router = useRouter()
 	const typeId = getUserFromStorage()?.type_id
-	const { courses, loading, fetchCourses } = useCourses()
+	const { courses, loading } = useCourses()
 
 	useEffect(() => {
-		fetchCourses()
-	}, [fetchCourses])
+        async function response () {
+            const res = await API.get("/api/module_test/list/action")
+            console.log("res", res)
+        }
+        response()
+	}, [])
 
 	const filteredCourses = courses?.filter((course) => course.type_id === typeId)
 

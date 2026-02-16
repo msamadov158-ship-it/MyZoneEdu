@@ -176,22 +176,22 @@ export interface Question {
 }
 
 type QuestionBase = {
-  question_text: string
-  option_a: string
-  option_b: string
-  option_c: string
-  option_d: string
-  correct_option: string
+    question_text: string
+    option_a: string
+    option_b: string
+    option_c: string
+    option_d: string
+    correct_option: string
 }
 
 type QuestionWithLesson = QuestionBase & {
-  lesson_id: number
-  module_id?: never
+    lesson_id: number
+    module_id?: never
 }
 
 type QuestionWithModule = QuestionBase & {
-  module_id: number
-  lesson_id?: never
+    module_id: number
+    lesson_id?: never
 }
 
 export type QuestionEdit = QuestionWithLesson | QuestionWithModule
@@ -264,3 +264,23 @@ export type FetchMessagesResponse =
         status: 'error'
         message: string
     }
+
+
+export interface News {
+    id: string
+    title: string,
+    content: string,
+    file_url: string,
+    image_url: string,
+    description: string,
+    created_at: string,
+    updated_at: string,
+}
+
+export interface NewsEdit {
+    content: string,
+    description: string,
+    file_url: string,
+    image_url: string,
+    title: string
+}

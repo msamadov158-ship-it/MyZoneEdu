@@ -1,12 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Trash2, Users } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { Trash2 } from 'lucide-react'
 import { StudentEdit, Role } from '@/types'
 import { useTypes } from '@/hooks/useTypes'
-import { useStudents } from '@/hooks/useStudents'
-import { useModal } from '@/components/UI/Modal'
-import { fadeUp, staggeredList } from '@/lib/motion'
 
 // ---------------- Create Student Modal ----------------
 interface StudentCreateModalProps {

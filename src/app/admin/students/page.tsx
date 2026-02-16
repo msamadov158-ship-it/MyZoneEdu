@@ -1,12 +1,12 @@
 'use client'
+import { useState } from 'react'
 import { Users } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { useStudents } from '@/hooks/useStudents'
+import { useTypes } from '@/hooks/useTypes'
 import { useModal } from '@/components/UI/Modal'
+import { useStudents } from '@/hooks/useStudents'
 import { fadeUp, staggeredList } from '@/lib/motion'
 import { CreateStudentModal, DeleteStudentModal, EditStudentModal } from './modal'
-import { useTypes } from '@/hooks/useTypes'
-import { useMemo, useState } from 'react'
 
 export default function Students() {
 	const { types } = useTypes()

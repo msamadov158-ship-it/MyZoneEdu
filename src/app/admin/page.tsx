@@ -1,12 +1,12 @@
 'use client'
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useTypes } from '@/hooks/useTypes'
+import { useRouter } from 'next/navigation'
 import { useCourses } from '@/hooks/useCourses'
 import { useStudents } from '@/hooks/useStudents'
 import { fadeUp, staggeredList } from '@/lib/motion'
 import { Users, BookOpen, ChevronRight } from 'lucide-react'
-import { useTypes } from '@/hooks/useTypes'
-import { useRouter } from 'next/navigation'
 
 export default function Dashboard() {
 	const router = useRouter()

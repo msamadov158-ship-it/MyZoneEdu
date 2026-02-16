@@ -44,7 +44,7 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 						</motion.h1>
 					</div>
 
-					<nav className="flex-grow px-4 py-6">
+					<nav className="flex-grow px-4 py-6 overflow-auto">
 						<ul className="space-y-2">
 							{menuItems.map((menu, index) => {
 								const isDisabled = menu.href.startsWith('#') // hash bilan bosilganda disabled
