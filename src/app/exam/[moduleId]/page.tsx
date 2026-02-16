@@ -101,8 +101,8 @@ export default function LessonTest() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 relative">
-            <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="min-h-screen relative">
+            <header className="bg-white shadow-sm border-b border-gray-200 rounded-2xl">
                 <div className="max-w-4xl mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ export default function LessonTest() {
                 </div>
             </header>
 
-            <main className="max-w-4xl mx-auto py-8 px-4">
+            <main className="w-full mt-4">
                 {loading ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-lg">
                         <div className="text-center">
@@ -131,7 +131,7 @@ export default function LessonTest() {
                         <p className="text-gray-600">Qidiruvni o‘zgartiring yoki yangi testladni ko‘rib chiqing</p>
                     </motion.div>
                 ) : (
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="rounded-2xl shadow-lg overflow-hidden border border-gray-100">
                         <div className="p-6 space-y-8">
                             {
                                 questions.map((question, index) => (
@@ -150,25 +150,26 @@ export default function LessonTest() {
                                     </div>
                                 ))
                             }
+
+                            <div className="flex justify-end">
+                                {questions && questions.length > 0 && (
+                                    <button onClick={handleSubmit} disabled={submitting} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                                        {submitting ? (
+                                            <>
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                Yuborilmoqda...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <CheckCircle className="w-4 h-4" />
+                                                Testni yuborish
+                                            </>
+                                        )}
+                                    </button>)}
+                            </div>
                         </div>
                     </div>
-
                 )}
-                <div className="px-6 py-4 bg-gray-50 flex justify-end border-t border-gray-200">
-                    {questions && questions.length > 0 && (<button onClick={handleSubmit} disabled={submitting} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-                        {submitting ? (
-                            <>
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                Yuborilmoqda...
-                            </>
-                        ) : (
-                            <>
-                                <CheckCircle className="w-4 h-4" />
-                                Testni yuborish
-                            </>
-                        )}
-                    </button>)}
-                </div>
             </main >
 
             {showResultModal && (
