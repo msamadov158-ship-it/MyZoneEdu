@@ -1,93 +1,86 @@
 'use client'
 
-import { useRef } from 'react'
-import { toPng } from 'html-to-image'
+import { useEffect, useState } from 'react'
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
+import { Download } from 'lucide-react'
 
-interface CertificateProps {
-    fullName: string
-    score: number
-}
+export default function CertificationPage() {
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null)
 
-export default function Certificate({ fullName, score }: CertificateProps) {
-    const ref = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        const generateCertificate = async () => {
+            try {
+                const existingPdfBytes = await fetch('/certificate.pdf').then(res =>
+                    res.arrayBuffer()
+                )
 
-    const downloadPNG = async () => {
-        if (!ref.current) return
+                const pdfDoc = await PDFDocument.load(existingPdfBytes)
+                const page = pdfDoc.getPages()[0]
 
-        const dataUrl = await toPng(ref.current, {
-            width: 1123,
-            height: 794,
-            pixelRatio: 2,
-        })
+                const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+                const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
 
-        const link = document.createElement('a')
-        link.download = `${fullName}-certificate.png`
-        link.href = dataUrl
-        link.click()
-    }
+                const { width, height } = page.getSize()
+
+                // 🔹 Keyinchalik API’dan keladi
+                const fullName = 'Mirabzal Ozodov'
+                const score = 30
+
+                const fontSize = 32
+                const textWidth = fontBold.widthOfTextAtSize(
+                    fullName.toUpperCase(),
+                    fontSize
+                )
+
+                // Ism markazga
+                page.drawText(fullName.toUpperCase(), {
+                    x: (width - textWidth) / 2,
+                    y: height / 2 + 40,
+                    size: fontSize,
+                    font: fontBold,
+                    color: rgb(0, 0, 0),
+                })
+
+                // Score
+                page.drawText(`${score} / 50`, {
+                    x: width / 4 - 50,
+                    y: height / 4 - 78,
+                    size: 20,
+                    font,
+                    color: rgb(0, 0, 0),
+                })
+
+                const pdfBytes = await pdfDoc.save()
+
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+                const url = URL.createObjectURL(blob)
+
+                setPdfUrl(url)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        generateCertificate()
+    }, [])
 
     return (
-        <div className="space-y-6">
-            {/* CERTIFICATE */}
-            <div
-                ref={ref}
-                className="relative bg-white overflow-hidden"
-                style={{ width: 1123, height: 794 }}
-            >
-                {/* BORDER */}
-                <div className="absolute inset-6 border-4 border-black" />
+        <div className='h-screen w-full'>
+            {/* PDF Preview full screen */}
+            {pdfUrl && (
+                <iframe src={`${pdfUrl}#toolbar=0`} className='w-full h-full border-0' />
+            )}
 
-                {/* TITLE */}
-                <h1 className="absolute top-16 w-full text-center text-5xl font-extrabold tracking-widest">
-                    SERTIFIKAT
-                </h1>
-
-                <p className="absolute top-32 w-full text-center text-lg tracking-widest">
-                    “MY ZONE” MCHJ
-                </p>
-
-                {/* NAME */}
-                <div className="absolute top-[260px] w-full text-center">
-                    <p className="text-6xl font-[cursive] italic text-[#7A1E1E]">
-                        {fullName}
-                    </p>
-                </div>
-
-                {/* DESCRIPTION */}
-                <p className="absolute top-[360px] w-full text-center text-xl">
-                    2021 yil 12 yanvardan 2021 yil 2 aprelgacha
-                </p>
-
-                <p className="absolute top-[410px] w-full text-center text-2xl">
-                    Buxgalteriya va 1C amaliyoti kursini{' '}
-                    <span className="font-bold text-red-600">{score} ball</span> bilan
-                    muvaffaqiyatli yakunladi.
-                </p>
-
-                {/* SIGNATURES */}
-                <div className="absolute bottom-32 left-24 text-center">
-                    <p className="font-semibold">D.S. Alimardonov</p>
-                    <p className="text-sm">Direktor</p>
-                </div>
-
-                <div className="absolute bottom-32 right-24 text-center">
-                    <p className="font-semibold">D.S. Alimardonov</p>
-                    <p className="text-sm">Kurs rahbari</p>
-                </div>
-
-                {/* REG NUMBER */}
-                <p className="absolute bottom-20 left-24 text-sm">
-                    Reg №: 50
-                </p>
-            </div>
-
-            {/* BUTTON */}
-            <button
-                onClick={downloadPNG}
-                className="px-6 py-3 bg-black text-white rounded-lg"
-            >
-                PNG yuklab olish
-            </button>
+            {/* Fixed Download Button */}
+            {pdfUrl && (
+                <a
+                    href={pdfUrl}
+                    download="Mirabzal_Ozodov_certificate.pdf"
+                    className='size-15 fixed bg-black text-white rounded-full text-bold flex items-center justify-center bottom-15 right-15 z-100 shadow'
+                >
+                    <Download className='size-7' />
+                </a>
+            )}
         </div>
     )
 }
