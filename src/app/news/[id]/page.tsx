@@ -8,12 +8,22 @@ import { format, formatDistanceToNow } from 'date-fns'
 import { CalendarDays, Download, ArrowLeft, Clock } from 'lucide-react'
 import { useNews } from '@/hooks/useNews'
 
+interface NewsItem {
+    id: string
+    title: string
+    description?: string
+    content?: string
+    image_url?: string
+    file_url?: string
+    created_at?: string
+}
+
 export default function NewsDetailPage() {
     const { id } = useParams()
     const router = useRouter()
     const { fetchNewsItem } = useNews()
 
-    const [news, setNews] = useState<any>(null)
+    const [news, setNews] = useState<NewsItem | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -23,7 +33,7 @@ export default function NewsDetailPage() {
             setLoading(true)
             try {
                 const data = await fetchNewsItem(id as string)
-                setNews(data)
+                setNews(data as NewsItem)
             } catch (err) {
                 console.error(err)
             } finally {

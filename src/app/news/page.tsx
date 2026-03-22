@@ -1,11 +1,11 @@
 'use client'
-import Image from 'next/image'
 import Link from 'next/link'
+import Image from 'next/image'
+import { uz } from 'date-fns/locale'
 import { motion } from 'framer-motion'
+import { formatDistanceToNow } from 'date-fns'
 import { CalendarDays, ChevronRight, FileText, Newspaper } from 'lucide-react'
 import { useNews } from '@/hooks/useNews'
-import { formatDistanceToNow } from 'date-fns'
-import { uz } from 'date-fns/locale'
 
 export default function NewsPage() {
     const { loading, newsList } = useNews()
@@ -28,10 +28,10 @@ export default function NewsPage() {
         <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight">
-                    Yangiliklar va e'lonlar
+                    Yangiliklar va e&apos;lonlar
                 </h1>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Eng so'nggi yangiliklar, voqealar va muhim ma'lumotlar bilan tanishing
+                    Eng so&apos;nggi yangiliklar, voqealar va muhim ma&apos;lumotlar bilan tanishing
                 </p>
             </div>
 
@@ -39,7 +39,7 @@ export default function NewsPage() {
                 <div className="text-center py-24">
                     <Newspaper className="w-20 h-20 text-gray-300 mx-auto mb-6" />
                     <h2 className="text-2xl font-semibold text-gray-700 mb-3">
-                        Hozircha yangiliklar yo'q
+                        Hozircha yangiliklar yo&apos;q
                     </h2>
                     <p className="text-gray-500">Tez orada yangi maqolalar bilan qaytamiz!</p>
                 </div>

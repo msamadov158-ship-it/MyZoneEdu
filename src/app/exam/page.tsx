@@ -1,11 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BookOpen, Play, CheckCircle, Lock, Clock } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { BookOpen, Play, CheckCircle, Lock, Clock } from 'lucide-react'
 import { containerVariants, itemVariants } from '@/lib/motion'
-import { getUserFromStorage } from '@/lib/helpers/userStore'
 import API from '@/lib/axios'
 
 interface ModuleTestItem {
@@ -24,14 +23,10 @@ interface ModuleTestItem {
 
 export default function ModuleTestList() {
     const router = useRouter()
-    const typeId = getUserFromStorage()?.type_id
 
     const [moduleTests, setModuleTests] = useState<ModuleTestItem[]>([])
     const [loading, setLoading] = useState(true)
 
-    // ===============================
-    // FETCH DATA
-    // ===============================
     useEffect(() => {
         let mounted = true
 
@@ -57,16 +52,6 @@ export default function ModuleTestList() {
         }
     }, [])
 
-    // ===============================
-    // DERIVED VALUE (STATE EMAS)
-    // ===============================
-    const finished = useMemo(() => {
-        return moduleTests.some(item => item.module.order === 5)
-    }, [moduleTests])
-
-    // ===============================
-    // LOADING UI
-    // ===============================
     if (loading) {
         return (
             <div className="max-w-7xl mx-auto py-12">
@@ -82,33 +67,27 @@ export default function ModuleTestList() {
         )
     }
 
-    // ===============================
-    // EMPTY UI
-    // ===============================
     if (!loading && moduleTests.length === 0) {
         return (
             <div className="max-w-7xl mx-auto py-12">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-100">
                     <BookOpen className="w-20 h-20 text-gray-400 mx-auto mb-6" />
                     <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                        Hozircha test modullari yo'q
+                        Hozircha test modullari yo&apos;q
                     </h3>
                     <p className="text-gray-600 text-lg">
-                        Tez orada yangi modullar qo'shiladi
+                        Tez orada yangi modullar qo&apos;shiladi
                     </p>
                 </motion.div>
             </div>
         )
     }
 
-    // ===============================
-    // MAIN UI
-    // ===============================
     return (
         <div className="max-w-7xl mx-auto space-y-4">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900">
-                    {finished ? 'Oraliq nazorat imtixoni' : 'Yakuniy nazorat imtixoni'}
+                    Imtihonlar
                 </h1>
 
                 <span className="text-sm text-gray-500 bg-gray-100 px-4 py-2 rounded-full">
@@ -141,7 +120,7 @@ export default function ModuleTestList() {
 
                                 <div className="p-6">
                                     <h3 className="font-bold text-xl text-gray-900 mb-2 line-clamp-2">
-                                        {module.title}
+                                        {module.title} <span className="text-sm text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full ml-2">{module.order === 5 ? 'Oraliq nazorat imtihoni' : 'Yakuniy nazorat imtihoni'}</span>
                                     </h3>
 
                                     <p className="text-gray-600 text-sm mb-5 line-clamp-3">
@@ -164,14 +143,9 @@ export default function ModuleTestList() {
                                                 Muvaffaqiyatli!
                                             </div>
                                         ) : is_open ? (
-                                            <motion.button
-                                                whileHover={{ scale: 1.05 }}
-                                                whileTap={{ scale: 0.95, }}
-                                                onClick={() => router.push(`/exam/${module.id}`)}
-                                                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center gap-2 font-medium"
-                                            >
+                                            <motion.button  whileHover={{ scale: 1.05 }}  whileTap={{ scale: 0.95, }}  onClick={() => router.push(`/exam/${module.id}`)}  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center gap-2 font-medium">
                                                 <Play className="w-4 h-4" />
-                                                Testga o'tish
+                                                Testga o&apos;tish
                                             </motion.button>
                                         ) : (
                                             <button disabled className="px-6 py-3 bg-gray-300 text-gray-500 rounded-xl cursor-not-allowed flex items-center gap-2 font-medium">
