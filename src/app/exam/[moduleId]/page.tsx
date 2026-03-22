@@ -38,7 +38,7 @@ export default function LessonTest() {
   // =========================
   useEffect(() => {
     const TIMER_KEY = `exam_timer_${moduleId}`;
-    const EXAM_DURATION = 60 * 2; // 1 soat
+    const EXAM_DURATION = 60 * 60; // 1 soat
 
     let startTime = localStorage.getItem(TIMER_KEY);
 
