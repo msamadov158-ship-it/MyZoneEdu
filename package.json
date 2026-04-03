@@ -11,6 +11,7 @@
     "dependencies": {
         "@headlessui/react": "^2.2.9",
         "@hookform/resolvers": "^5.2.2",
+        "@pdf-lib/fontkit": "^1.1.1",
         "@radix-ui/react-dialog": "^1.1.15",
         "axios": "^1.12.2",
         "clsx": "^2.1.1",
