@@ -22,7 +22,9 @@ export default function CertificationPage() {
 
                 if (!studentId || !courseId) return;
 
-                const response = await API.get(`/api/certificate/${courseId}/${studentId}`, { validateStatus: () => true });
+                const response = await API.get(`/api/certificate/${courseId}/${studentId}`, {
+                    validateStatus: () => true,
+                });
 
                 if (response.status === 404) {
                     setHasCertificate(false);
@@ -43,21 +45,22 @@ export default function CertificationPage() {
                 const fullName = String(data?.student?.full_name || 'Unknown');
                 const score = Number(data?.best_score ?? 0);
                 const courseTitle = String(data?.cource?.title || '');
-                const createdAt = String(data?.created_at || '');
+                const completedAt = String(data?.completed_at || '');
+                const regNumber = String(data?.reg_number || '0000');
+
+                // sana formatlash (chiroyli qilish)
+                const formattedDate = new Date(completedAt).toLocaleDateString('uz-UZ');
 
                 // =========================
-                // 🔥 LOAD TEMPLATE
+                // 🔥 TEMPLATE LOAD
                 // =========================
                 const existingPdfBytes = await fetch('/certificate.pdf').then((res) => res.arrayBuffer());
 
                 const pdfDoc = await PDFDocument.load(existingPdfBytes);
-
-                // 🔥 FONTKIT REGISTER
                 pdfDoc.registerFontkit(fontkit);
 
-                // 🔥 LOAD FONTS
+                // 🔥 FONTLAR
                 const fontBytes = await fetch('/fonts/Roboto-Regular.ttf').then((res) => res.arrayBuffer());
-
                 const boldBytes = await fetch('/fonts/Roboto-Bold.ttf').then((res) => res.arrayBuffer());
 
                 const font = await pdfDoc.embedFont(fontBytes);
@@ -67,7 +70,7 @@ export default function CertificationPage() {
                 const { width, height } = page.getSize();
 
                 // =========================
-                // 🔹 NAME (CENTER)
+                // 🔹 NAME
                 // =========================
                 const nameFontSize = 32;
                 const safeName = fullName.toUpperCase();
@@ -100,16 +103,13 @@ export default function CertificationPage() {
                 const startX = (width - totalWidth) / 2;
                 const y = height / 2 - 20;
 
-                // part1
                 page.drawText(part1, {
                     x: startX,
                     y,
                     size: fontSize,
                     font: fontBold,
-                    color: rgb(0, 0, 0),
                 });
 
-                // part2 (highlight)
                 page.drawText(part2, {
                     x: startX + width1,
                     y,
@@ -118,23 +118,40 @@ export default function CertificationPage() {
                     color: rgb(1, 0, 0),
                 });
 
-                // part3
                 page.drawText(part3, {
                     x: startX + width1 + width2,
                     y,
                     size: fontSize,
                     font,
-                    color: rgb(0, 0, 0),
                 });
 
                 // =========================
-                // 🔹 DATE
+                // 🔹 REG + DATE (MUHIM QISM)
                 // =========================
-                page.drawText(createdAt, {
-                    x: 50,
-                    y: 50,
-                    size: 12,
+
+                const regText = `${regNumber}`;
+
+                const regFontSize = 18;
+
+                page.drawText(regText, {
+                    x: 160, // markazga
+                    y: 70, // pastki joy
+                    size: regFontSize,
                     font,
+                    color: rgb(0, 0, 0),
+                });
+
+                const dateText = `Sana: ${formattedDate}`;
+
+                const dateFontSize = 16;
+
+                const dateWidth = font.widthOfTextAtSize(dateText, dateFontSize);
+
+                page.drawText(dateText, {
+                    x: (width - dateWidth) / 2, // markazga
+                    y: 70, // pastki joy
+                    size: dateFontSize,
+                    font: fontBold,
                     color: rgb(0, 0, 0),
                 });
 
@@ -143,9 +160,9 @@ export default function CertificationPage() {
                 // =========================
                 const pdfBytes = await pdfDoc.save();
 
-               const blob = new Blob([pdfBytes as unknown as BlobPart], {
-                   type: 'application/pdf',
-               });
+                const blob = new Blob([pdfBytes as unknown as BlobPart], {
+                    type: 'application/pdf',
+                });
 
                 const url = URL.createObjectURL(blob);
                 setPdfUrl(url);
@@ -162,14 +179,17 @@ export default function CertificationPage() {
     }
 
     return (
-        <div className="w-full h-full overflow-hidden relative">
-            {pdfUrl && <iframe src={`${pdfUrl}#toolbar=0&view=FitBH`} className="border-0 bg-white absolute top-0 left-0 w-full h-full" />}
+        <div className="w-full h-full relative">
 
             {pdfUrl && (
-                <a href={pdfUrl} download="certificate.pdf" className="size-14 fixed bg-black text-white rounded-full flex items-center justify-center bottom-6 right-6 z-50 shadow-lg">
-                    <Download className="size-6" />
+                <a href={pdfUrl} download="certificate.pdf" className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg mb-4 w-fit">
+                    <Download className="w-5 h-5" />
+                    Sertifikatni yuklab olish
                 </a>
             )}
+
+            {/* PDF VIEW */}
+            {pdfUrl && <iframe src={`${pdfUrl}#toolbar=0&view=FitBH`} className="border-0 bg-white w-full h-full" />}
         </div>
     );
 }
