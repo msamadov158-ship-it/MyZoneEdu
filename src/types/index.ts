@@ -20,6 +20,7 @@ export interface StudentEdit {
     is_active: boolean
     active_term: number
     phone_number: string
+    access?: boolean
 }
 
 export interface Course {
