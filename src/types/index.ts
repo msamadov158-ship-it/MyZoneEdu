@@ -12,15 +12,16 @@ export interface Student {
 }
 
 export interface StudentEdit {
-    role: Role
-    type_id: string
-    username: string
-    password: string
-    full_name: string
-    is_active: boolean
-    active_term: number
-    phone_number: string
-    access?: boolean
+    role: Role;
+    type_id: string;
+    username: string;
+    password: string;
+    full_name: string;
+    is_active: boolean;
+    active_term: number;
+    phone_number: string;
+    access?: boolean;
+    open_lesson_count: number
 }
 
 export interface Course {

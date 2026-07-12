@@ -21,6 +21,7 @@ export const CreateStudentModal = ({ closeModal, handleCreate }: StudentCreateMo
         type_id: '',
         is_active: true,
         access: false,
+        open_lesson_count: 1,
     });
     const { types } = useTypes();
 
@@ -87,6 +88,16 @@ export const CreateStudentModal = ({ closeModal, handleCreate }: StudentCreateMo
                         {types.map((type) => (
                             <option key={type.id} value={type.id}>
                                 {type.title}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Darslar Soni</label>
+                    <select value={formData.open_lesson_count} onChange={(e) => setFormData({ ...formData, open_lesson_count: Number(e.target.value) })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                        {Array.from({ length: 39 }, (_, i) => i + 1).map((count) => (
+                            <option key={count} value={count}>
+                                {count}
                             </option>
                         ))}
                     </select>
@@ -194,6 +205,16 @@ export const EditStudentModal = ({ id, closeModal, fetchStudent, handleUpdate }:
                         {types.map((type) => (
                             <option key={type.id} value={type.id}>
                                 {type.title}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Darslar Soni</label>
+                    <select value={formData.open_lesson_count} onChange={(e) => setFormData({ ...formData, open_lesson_count: Number(e.target.value) })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                        {Array.from({ length: 39 }, (_, i) => i + 1).map((count) => (
+                            <option key={count} value={count}>
+                                {count}
                             </option>
                         ))}
                     </select>
