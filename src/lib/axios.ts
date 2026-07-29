@@ -49,7 +49,7 @@ API.interceptors.response.use(
             //     window.location.href = '/'
             // }
 
-            clearToken()
+            // clearToken()
 
             return Promise.reject(error)
         }

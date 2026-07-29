@@ -21,7 +21,7 @@ export const clearToken = () => {
     redirectToLogin()
 }
 
-export const setToken = (tokenData: unknown): void => {
+export const    setToken = (tokenData: unknown): void => {
     localStorage.setItem(TOKEN_KEY, JSON.stringify(tokenData))
 }
 
