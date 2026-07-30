@@ -12,10 +12,10 @@ export const AdminMenu = [
 ]
 
 export const StudentMenu = [
-	{ name: 'Bosh sahifa', href: '/student', icon: <Home className="w-5 h-5" /> },
+	{ name: 'Bosh sahifa', href: '/student', icon: <LayoutDashboard className="w-5 h-5" /> },
 	{ name: 'Imtihon', href: '/exam', icon: <BookCheck className="w-5 h-5" /> },
 	{ name: 'Mening Sertifikatim', href: '/certification', icon: <Award className="w-5 h-5" /> },
-	{ name: 'Qollab-quvvatlash', href: '/support', icon: <Headset className="w-5 h-5" /> },
+	// { name: 'Qollab-quvvatlash', href: '/support', icon: <Headset className="w-5 h-5" /> },
     { name: 'Yangiliklar', href: '/news', icon: <Newspaper className="w-5 h-5" /> },
 	{ name: 'Bildirishnomalar', href: '/notification', icon: <Bell className="w-5 h-5" /> },
 ]

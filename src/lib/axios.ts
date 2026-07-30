@@ -20,15 +20,25 @@ API.interceptors.request.use(
     (config) => {
         let token: string = ''
 
-        if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MY_ZONE_ONLINE_TOKEN) {
-            const stored = localStorage.getItem(process.env.NEXT_PUBLIC_MY_ZONE_ONLINE_TOKEN)
-            token = stored ? JSON.parse(stored)?.access_token || '' : ''
+        // const token = typeof window !== 'undefined' ? localStorage.getItem('MY_ZONE_ONLINE_TOKEN') : null
+
+        if(typeof window !== 'undefined'){
+            const rawStored = localStorage.getItem('MY_ZONE_ONLINE_TOKEN') || (process.env.NEXT_PUBLIC_MY_ZONE_ONLINE_TOKEN ? localStorage.getItem(process.env.NEXT_PUBLIC_MY_ZONE_ONLINE_TOKEN) : null)
+
+            if(rawStored){
+                try{
+                        const parsed = JSON.parse(rawStored)
+                        token  =token = parsed?.access_token || parsed?.token || rawStored
+                } catch{
+                    token = rawStored
+                }
+            }
         }
 
         if (token) config.headers.Authorization = `Bearer ${token}`
 
-        if (config.data && containsFiles(config.data)) config.headers['Content-Type'] = 'multipart/form-data'
-        else config.headers['Content-Type'] = 'application/json'
+        if (config.data && containsFiles(config.data)) {config.headers['Content-Type'] = 'multipart/form-data'}
+        else {config.headers['Content-Type'] = 'application/json'}
 
         return config
     },

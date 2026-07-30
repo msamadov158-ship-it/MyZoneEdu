@@ -25,12 +25,13 @@ export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.D
 	}, [])
 
 	return (
-		<motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full fixed top-0 lg:z-60 bg-white/80 backdrop-blur-xl border-b border-gray-200">
-			<div className="px-6 py-4">
+		<motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="fixed top-0 w-full bg-white/80 backdrop-blur-xl border-b border-gray-200 lg:hidden">
+			<div className="px-6 py-4 ">
 				<div className="flex items-center justify-between">
+					{/* side bar ochib yopgich */}
 					<div className="flex items-center gap-4">
-						<button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-							<Menu className="w-5 h-5 cursor-pointer" />
+						<button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-white  transition-all duration-300">
+							<Menu className="w-6 h-6 cursor-pointer" />
 						</button>
 						<div className="relative hidden md:block">
 							<Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -40,21 +41,29 @@ export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.D
 
 					<div className="flex items-center gap-4">
 						{notificationCount !== 0 && (
-							<button onClick={() => router.push('/notification')} className="relative p-2 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-								<Bell className="w-5 h-5" />
+							<button onClick={() => router.push('/notification')} className="relative flex justify-center items-center p-2 rounded-xl bg-white  transition-all duration-300">
+								<Bell className="w-5 h-5 " />
 								<span className="absolute -top-3 -right-3 w-6 h-6 text-white bg-red-500 rounded-full border-2 border-white flex items-center justify-center">{notificationCount}</span>
-							</button>
+							</button>	
 						)}
 
-						<motion.div onClick={() => router.push('/profile')} whileHover={{ scale: 1.05 }} className="flex items-center gap-3 p-2 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer transition-all duration-300">
-							<div className="w-8 h-8 bg-myZoneOnline rounded-full flex items-center justify-center">
-								<span className="text-white text-sm font-semibold">{user && user.full_name.slice(0, 1).toLocaleUpperCase()}</span>
+						<motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-sm px-sm pl-5 pb-2 mb-xl">
+						<div onClick={() => router.push('/profile')}  className="flex w-[90%] items-center gap-3 p-2 rounded-2xl  cursor-pointer transition-all duration-300">
+							<div className="w-10 h-10  rounded-full flex items-center justify-center">
+								{/* <span className="text-white text-sm font-semibold">{user && user.full_name.slice(0, 1).toLocaleUpperCase()}</span> */}
+								<img
+									alt="Institution logo"
+									
+									className="w-full h-full rounded-full object-cover"
+									src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBvq26wOg0Zi4H-gLYQKJsHN1IhEoteb3j2cn9u__ifA&s=10"
+									/>
 							</div>
-							<div className="hidden md:block">
-								<p className="text-sm font-semibold">{user && user.full_name}</p>
-								<p className="text-xs text-gray-500">{user && user.role}</p>
+							<div className="hidden lg:block">
+								<h1 className="font-headline-md text-headline-md font-bold text-primary">{user && user.full_name}</h1>
+								<p className="font-label-sm text-label-sm text-text-secondary mt-1">{user && user.role}</p>
 							</div>
-						</motion.div>
+						</div>
+					</motion.div>
 					</div>
 				</div>
 			</div>
