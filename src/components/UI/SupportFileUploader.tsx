@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Loader2, Paperclip } from 'lucide-react';
+import { Loader2,CirclePlus } from 'lucide-react';
 import { uploadFileToFirebase } from '@/lib/helpers/uploadImage';
 
 interface FileUploaderProps {
@@ -31,11 +31,11 @@ export const FileUploader = ({ folder, onUploaded }: FileUploaderProps) => {
 
     return (
         <>
-            <button type="button" onClick={handleSelectFile} disabled={uploading} className="p-3 rounded-xl border border-gray-200 hover:bg-gray-100 transition" >
+            <button type="button" onClick={handleSelectFile} disabled={uploading} className="p-3 rounded-full border-0 border-gray-200 hover:bg-gray-100 transition" >
                 {uploading ? (
                     <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
                 ) : (
-                    <Paperclip className="w-5 h-5 text-gray-600" />
+                    <CirclePlus className="w-5 h-5 text-gray-600" />
                 )}
             </button>
 

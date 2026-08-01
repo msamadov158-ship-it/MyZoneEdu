@@ -122,6 +122,17 @@ export interface TypeEdit {
     description: string
 }
 
+export interface Course {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+  rating: string;
+  reviews: number;
+  price: number;
+  imageUrl: string;
+}
+
 export interface CourseContent {
     id: string
     title: string

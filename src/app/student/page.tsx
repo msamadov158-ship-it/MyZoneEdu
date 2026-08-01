@@ -99,7 +99,7 @@ export default function StudentDashboard() {
         {/* Stat Cards (Col 1 & 2) */}
         <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Stat Card 1 */}
-          <div className="bg-white rounded-[18px] border border-[#ECECEC] p-6 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+          <div className="bg-white rounded-2xl border-gray-50 p-6 flex flex-col justify-between shadow-xs  transition-all duration-300  hover:-translate-y-0.5 hover:shadow-xl hover:bg-white relative overflow-hidden cursor-pointer">
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 rounded-full bg-[#fff0ee] flex items-center justify-center text-[#a20000]">
                 <ListTodo size={20} />
@@ -113,7 +113,7 @@ export default function StudentDashboard() {
           </div>
  
           {/* Stat Card 2 */}
-          <div className="bg-white rounded-[18px] border border-[#ECECEC] p-6 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+          <div className="bg-white rounded-2xl border-gray-50 p-6 flex flex-col justify-between shadow-xs  transition-all duration-300  hover:-translate-y-0.5 hover:shadow-xl hover:bg-white relative overflow-hidden cursor-pointer">
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 rounded-full bg-[#fff0ee] flex items-center justify-center text-[#a20000]">
                 <Clock size={20} />
@@ -129,7 +129,7 @@ export default function StudentDashboard() {
           </div>
  
           {/* Stat Card 3 */}
-          <div className="bg-white rounded-[18px] border border-[#ECECEC] p-6 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-transform hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden group">
+          <div onClick={() => router.push('/certification')} title="Sertifikatlarni ko'rish" className="bg-white rounded-2xl border-gray-50 p-6 flex flex-col justify-between shadow-xs  transition-all duration-300  hover:-translate-y-0.5 hover:shadow-xl hover:bg-white relative overflow-hidden cursor-pointer">
             <div className="absolute inset-0 bg-[#a20000] opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
             <div className="flex items-center justify-between mb-4 relative z-10">
               <div className="w-10 h-10 rounded-full bg-[#fff0ee] flex items-center justify-center text-[#a20000]">
@@ -154,7 +154,7 @@ export default function StudentDashboard() {
         key={day}
         className={`  rounded-lg flex flex-col items-center justify-center p-1.5 py-5 hover:scale-105 cursor-pointer transition duration-300 ${
           isToday
-            ? "bg-gradient-to-b from-[#D00000] via-[#CD0000] to-[#C30000]"
+            ? "bg-linear-to-b from-[#D00000] via-[#CD0000] to-[#C30000]"
             : "bg-[#e8bdb6]"
         }`}
       >
@@ -190,8 +190,8 @@ export default function StudentDashboard() {
                 className="bg-white rounded-[18px] border border-[#ECECEC] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex flex-col sm:flex-row transition-transform hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] mb-4"
               >
              
-                <div className="sm:w-2/5 h-48 sm:h-auto relative bg-slate-300 cursor-pointer" onClick={() => router.push(`/student/courses/${course.id}`)}>
-					<Image	src={course.image_url}	alt={course.title}	fill	className="object-cover"	loading={'eager'}
+                <div className="sm:w-2/5 h-48 sm:h-auto relative bg-slate-300 cursor-pointer  " onClick={() => router.push(`/student/courses/${course.id}`)}>
+					<Image	src={course.image_url}	alt={course.title}	fill	className="object-cover  transition-all duration-300 hover:scale-105 "	loading={'eager'}
 					/>
 					<div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md border border-[#ECECEC] flex items-center space-x-1">
 						<span className="w-2 h-2 rounded-full bg-[#a20000] animate-pulse" />

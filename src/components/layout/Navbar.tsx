@@ -33,10 +33,12 @@ export default function Navbar({ setIsSidebarOpen }: { setIsSidebarOpen: React.D
 						<button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 rounded-xl bg-white  transition-all duration-300">
 							<Menu className="w-6 h-6 cursor-pointer" />
 						</button>
-						<div className="relative hidden md:block">
+
+						{/* search */}
+						{/* <div className="relative hidden md:block">
 							<Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
 							<input type="text" placeholder="Qidirish..." className="pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-2xl focus:ring-2 ring-blue-500 transition-all duration-300 w-80" />
-						</div>
+						</div> */}
 					</div>
 
 					<div className="flex items-center gap-4">

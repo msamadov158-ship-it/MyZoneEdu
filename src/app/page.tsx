@@ -31,11 +31,10 @@ export default function Login() {
           />
           <div className="mt-8 text-center px-6">
             <h3 className="text-xl font-semibold text-[#111111] mb-2">
-              Elevate Your Learning
+              O‘rganish jarayoningizni yangi bosqichga ko‘taring
             </h3>
             <p className="text-sm text-[#666666]">
-              Access premium courses, interactive modules, and expert-led
-              tutorials.
+              Premium kurslar, interaktiv modullar va mutaxassislar tomonidan olib boriladigan darslardan foydalaning.
             </p>
           </div>
         </div>
@@ -60,10 +59,10 @@ export default function Login() {
               My Zone Online
             </h1>
             <h2 className="text-[28px] text-[#111111] mb-2 font-semibold">
-              Welcome back
+              Xush kelibsiz
             </h2>
             <p className="text-base text-[#666666]">
-              Enter your details to access your dashboard.
+              Tizimga kirish uchun login va parolingizni kiriting.
             </p>
           </div>
 
@@ -78,7 +77,7 @@ export default function Login() {
                 htmlFor="email"
                 className="text-xs font-medium text-[#111111] uppercase tracking-wider ml-1 group-focus-within:text-[#a20000] transition-colors"
               >
-                Email Address
+                Foydalanuvchi nomi
               </label>
               <div className="relative">
                 <Mail className="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-[#999999] group-focus-within:text-[#a20000] transition-colors" />
@@ -88,7 +87,7 @@ export default function Login() {
                   id="email"
                   name="email"
                   type="text"
-                  placeholder="name@school.edu"
+                  placeholder="Foydalanuvchi nomingizni kiriting"
                   required
                   autoComplete="email"
                   
@@ -107,7 +106,7 @@ export default function Login() {
                   htmlFor="password"
                   className="text-xs font-medium text-[#111111] uppercase tracking-wider group-focus-within:text-[#a20000] transition-colors"
                 >
-                  Password
+                  Parolingiz
                 </label>
               </div>
               <div className="relative">
@@ -175,12 +174,7 @@ export default function Login() {
                   Remember me
                 </span>
               </label>
-              <a
-                href="#"
-                className="text-xs font-medium text-[#666666] hover:text-[#a20000] transition-colors"
-              >
-                Forgot password?
-              </a>
+              
             </div>
 
             {/* Sign In Button */}
@@ -190,22 +184,13 @@ export default function Login() {
 
               className="w-full mt-2 h-12 bg-linear-to-b from-[#d00000] via-[#d50000] to-[#c30000] text-white rounded-xl text-base font-semibold tracking-wide hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_0_rgba(208,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(208,0,0,0.23)]"
             >
-             Sign in
+             Kirish
               <ArrowRight className="material-symbols-outlined text-xl" />
           
               
             </button>
 
-            {/* Sign Up Link */}
-            <p className="text-sm text-[#666666] text-center mt-1">
-              Don&apos;t have an account?{" "}
-              <a
-                href="#"
-                className="text-[#a20000] font-medium hover:underline underline-offset-4"
-              >
-                Sign up
-              </a>
-            </p>
+          
           </form>
         </div>
       </main>

@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { LogOut, CircleQuestionMarkIcon, Award, Bell } from 'lucide-react'
+import { LogOut, CircleQuestionMarkIcon, Bell, } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { MenuItem } from '@/types'
 import { clearToken } from '@/lib/helpers/userStore'
@@ -123,10 +123,7 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 								)
 							})}
 						</ul>
-						<button className="flex w-full items-center  font-semibol justify-center space-x-2 rounded-lg border border-neutral-200 px-4 py-2 text-base font-semibold text-neutral-900 transition-colors hover:bg-neutral-100">
-							<Award size={20} />
-							<span>Upgrade Pro</span>
-						</button>
+						
 					</nav>
 					
 
@@ -140,7 +137,7 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 							}`}
 							>
 							<CircleQuestionMarkIcon size={22} />
-							<span className="text-base my-2">Help Center</span>
+								<span className="text-base my-2">Support</span>
 							</Link>
 						<button
 							onClick={clearToken}

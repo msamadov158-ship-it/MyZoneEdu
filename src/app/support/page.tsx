@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
-import { ChevronLeft, File, Play, Send, X, Check, Plus } from 'lucide-react'
+import { ChevronLeft, File, Play, SendHorizonal, X, Check, Plus, Smile } from 'lucide-react'
+import EmojiPicker from "emoji-picker-react";
 
 import { Message } from '@/types'
 import { useSupport } from '@/hooks/useSupport'
@@ -22,13 +23,15 @@ export default function SupportPage() {
 	const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 	const [isMobile, setIsMobile] = useState(false)
 	const [newTicketMessage, setNewTicketMessage] = useState('')
+	const [isOpen, setIsOpen] = useState(false)
+	
 
 	useEffect(() => {
 		function syncUser() {
 			setUser(getUserFromStorage())
 		}
 		syncUser()
-		window.addEventListener('storage', syncUser)
+			window.addEventListener('storage', syncUser)
 		return () => {
 			window.removeEventListener('storage', syncUser)
 		}
@@ -51,7 +54,7 @@ export default function SupportPage() {
 	const { tickets, loading, selectedTicket, messages, typingUserId, handleTyping, setSelectedTicket, fetchMessages, sendMessage, createTicket, editMessage, deleteMessage } = useSupport()
 
 	const primaryColor = role === 'STUDENT' ? 'purple' : 'indigo'
-	const buttonGradient = role === 'STUDENT' ? 'from-purple-500 to-pink-500' : 'from-indigo-500 to-purple-500'
+	const buttonGradient = role === 'STUDENT' ? 'bg-red-600' : 'from-indigo-500 to-purple-500'
 	const headerGradient = role === 'STUDENT' ? 'from-purple-50 to-pink-50' : 'from-indigo-50 to-purple-50'
 	const messagesGradient = `from-gray-50 to-${primaryColor}-50/30`
 
@@ -294,25 +297,46 @@ export default function SupportPage() {
 						</div>
 
 						{selectedTicket.status !== 'CLOSED' && (
-							<div className="p-4 border-t-2 border-gray-100 bg-white flex gap-3 sm:flex-row flex-col">
-								{uploadedFilePreview()}
-								<input
-									type="text"
-									placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'}
-									value={replyMessage}
-									onChange={(e) => {
-										setReplyMessage(e.target.value)
-										handleTyping(selectedTicket.id)
-									}}
-									onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendReply()}
-									className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-300 transition-colors"
-								/>
-								<div className="flex gap-3 items-center">
-									<FileUploader folder="support-chat" onUploaded={(url) => setUploadedFileUrl(url)} />
-									<button onClick={handleSendReply} disabled={loading || (!replyMessage.trim() && !uploadedFileUrl)} className={`bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed`}>
-										<Send className="w-5 h-5" />
-									</button>
-								</div>
+							<div className=" p-4 border-t-2 border-gray-100 bg-white flex justify-center items-center ">
+									<div className='w-full md:w-9/10 shadow-[0_0_10px_rgba(0,0,0,0.11)] rounded-2xl flex gap-1 md:gap-3  flex-row p-3 py-2'>
+
+										{isOpen && (
+											<div className='absolute  bottom-25 right-10 md:right-40 z-50'>
+												<EmojiPicker onEmojiClick={(chosen) => {
+													setReplyMessage((prev) => prev + chosen.emoji);
+													
+													setIsOpen(false)
+												}}  />
+											</div>
+										)}
+
+										{uploadedFilePreview()}
+											<span className='flex justify-center items-center'>
+												<FileUploader  folder="support-chat" onUploaded={(url) => setUploadedFileUrl(url)} />
+											</span>
+											<input
+			 									type="text"
+			 									placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'}
+			 									value={replyMessage}
+			 									onChange={(e) => {
+			 										setReplyMessage(e.target.value)
+			 										handleTyping(selectedTicket.id)
+			 									}}
+			 									onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendReply()}
+			 									className="flex-1 min-w-0 px-0 md:px-4 py-3 focus:outline-none focus:ring-0 focus:border-transparent"
+			 								/>
+
+												<button type='button' onClick={() => setIsOpen((prev) => !prev)} className='p-2 rounded-lg hover:bg-gray-100'>
+													<span>
+														<Smile className='w-5 h-5'/>
+													</span>
+												</button>
+
+											<button onClick={handleSendReply} disabled={loading || (!replyMessage.trim() && !uploadedFileUrl)} className={`bg-linear-to-r  ${buttonGradient} text-white px-5  rounded-xl font-medium shadow-lg  transition-all disabled:opacity-50 disabled:cursor-not-allowed`}>
+		 										<SendHorizonal className="w-5 h-5" />
+											</button>
+
+									</div>
 							</div>
 						)}
 					</>
@@ -323,3 +347,22 @@ export default function SupportPage() {
 		</div>
 	)
 }
+
+// {uploadedFilePreview()}
+// 								<input
+// 									type="text"
+// 									placeholder={role === 'STUDENT' ? 'Xabar yozing...' : 'Javob yozing...'}
+// 									value={replyMessage}
+// 									onChange={(e) => {
+// 										setReplyMessage(e.target.value)
+// 										handleTyping(selectedTicket.id)
+// 									}}
+// 									onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendReply()}
+// 									className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-300 transition-colors"
+// 								/>
+// 								<div className="flex gap-3 items-center">
+// 									<FileUploader folder="support-chat" onUploaded={(url) => setUploadedFileUrl(url)} />
+// 									<button onClick={handleSendReply} disabled={loading || (!replyMessage.trim() && !uploadedFileUrl)} className={`bg-gradient-to-r ${buttonGradient} text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed`}>
+// 										<Send className="w-5 h-5" />
+// 									</button>
+// 								</div>
