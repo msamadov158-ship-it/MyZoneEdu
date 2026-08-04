@@ -78,7 +78,7 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 									/>
 							</div>
 							<div className="">
-								<h1 className="font-headline-md text-headline-md font-bold text-primary">{user && user.full_name}</h1>
+								<h1 className="font-headline-md text-headline-md font-bold text-primary text-red-700">{user && user.full_name}</h1>
 								<p className="font-label-sm text-label-sm text-text-secondary mt-1">{user && user.role}</p>
 							</div>
 						</div>
