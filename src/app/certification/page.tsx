@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { PDFDocument, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-import { Download, ShieldCheck, Trophy, Clock, ListTodo } from "lucide-react";
+import { Download, ShieldCheck, Trophy, Clock, ListTodo, Loader2 } from "lucide-react";
 import { getUserFromStorage } from "@/lib/helpers/userStore";
 import API from "@/lib/axios";
+import QRCode from 'react-qr-code'
 
 
 export default function CertificationPage() {
@@ -290,11 +291,16 @@ export default function CertificationPage() {
 
                 {/* sertificat rasm */}
                
-                <iframe
-                  src={`${pdfUrl}#toolbar=0&view=FitBH`}
-                  className="border-0 bg-white w-full h-full pointer-events-none"
-                 
-                />
+                {pdfUrl ? (
+                  <iframe
+                    src={`${pdfUrl}#toolbar=0&view=FitBH`}
+                    className="border-0 bg-white w-full h-full"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-white">
+                    <Loader2 className="w-6 h-6 animate-spin text-red-600" />
+                  </div>
+                )}
                 
               
             </div>
@@ -339,9 +345,9 @@ export default function CertificationPage() {
                 <h4 className="text-xs text-[#666666] uppercase tracking-wide font-medium">
                   Sertifikatni tekshirish
                 </h4>
-                <img
-                  src="/verification-placeholder.png"
-                  alt="Verification"
+                <QRCode
+                 value={pdfUrl}
+                  size={200}
                   className="w-24 h-24 border border-[#ECECEC] p-2 rounded-lg my-2 object-cover"
                 />
                 <p className="text-xs text-[#666666] flex items-center gap-1">

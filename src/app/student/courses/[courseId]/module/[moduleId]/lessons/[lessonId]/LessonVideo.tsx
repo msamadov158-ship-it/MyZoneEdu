@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Lock } from 'lucide-react'
+import { Lock,Play } from 'lucide-react'
 import { getUserFromStorage } from '@/lib/helpers/userStore'
 import { studentService } from '@/services/userService'
 import { StudentEdit } from '@/types'
+import {motion, AnimatePresence} from 'framer-motion'
 
 type Watermark = {
 	id: number
@@ -26,6 +27,8 @@ export default function LessonVideo({ lesson }: any) {
 	const [reason, setReason] = useState('')
 	const [mark, setMark] = useState<Watermark | null>(null)
 
+	const [isPlaying, setPlaying] = useState(false)
+
 	// ================= USER LOAD =================
 	useEffect(() => {
 		; (async () => {
@@ -44,6 +47,10 @@ export default function LessonVideo({ lesson }: any) {
 		setIsBlocked(true)
 		setReason(msg)
 	}, [])
+
+		const handleOverlayClick = () => {
+			videoRef.current?.play()
+		}
 
 	// ================= UNBLOCK + AUTO RESUME =================
 	const handleUnblock = useCallback(async () => {
@@ -74,11 +81,16 @@ export default function LessonVideo({ lesson }: any) {
 
 	// ================= FORCE FULLSCREEN =================
 	const handlePlay = async () => {
+		setPlaying(true)
 		if (!document.fullscreenElement && containerRef.current) {
 			try {
 				await containerRef.current.requestFullscreen()
 			} catch { }
 		}
+	}
+
+	const handlePause = () => {
+		setPlaying(false)
 	}
 
 	// ================= SECURITY DETECTION =================
@@ -182,7 +194,7 @@ export default function LessonVideo({ lesson }: any) {
 			onContextMenu={(e) => e.preventDefault()}
 			className="relative w-full aspect-video bg-black rounded-xl overflow-hidden select-none"
 			style={{
-				filter: isBlocked ? 'blur(20px)' : 'none',
+				
 				WebkitUserSelect: 'none',
 			} as any}
 		>
@@ -195,8 +207,46 @@ export default function LessonVideo({ lesson }: any) {
 				disablePictureInPicture
 				disableRemotePlayback
 				onPlay={handlePlay}
+				onPause={handlePause}
 				className="w-full h-full object-contain"
 			/>
+
+			{/* middle play tugma */}
+			<AnimatePresence>
+					{!isPlaying && (
+						<motion.button
+						onClick={handleOverlayClick}
+						aria-label="Play video"
+						className="absolute inset-0 flex items-center justify-center group"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.2 }}
+						>
+						{/* Dimmed backdrop */}
+						<motion.div
+							className="absolute inset-0 bg-black/20"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.2 }}
+						/>
+
+						{/* Play circle — pops in with a spring, shrinks on click */}
+						<motion.div
+							className="relative w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-lg"
+							initial={{ scale: 0.5, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.5, opacity: 0 }}
+							whileHover={{ scale: 1.08 }}
+							whileTap={{ scale: 0.85 }}
+							transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+						>
+							<Play className="w-9 h-9 text-red-700 fill-red-700 ml-1" />
+						</motion.div>
+						</motion.button>
+					)}
+			</AnimatePresence>
 
 			{mark && (
 				<div

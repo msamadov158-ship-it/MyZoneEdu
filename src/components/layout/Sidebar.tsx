@@ -144,7 +144,7 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 							className="flex  w-full items-center space-x-4 mt-2 rounded-lg px-4 py-2 font-medium text-neutral-600 transition-all duration-200 hover:scale-95 hover:bg-red-200 hover:text-red-700 active:scale-100 "
 							>
 							<LogOut size={22} />
-							<span className="text-base my-2">Sign Out</span>
+							<span className="text-base my-2">Chiqish</span>
 						</button>
 					</div>
 				</motion.div>

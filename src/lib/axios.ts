@@ -50,16 +50,16 @@ API.interceptors.response.use(
     (error) => {
         console.log("errorrr", error)
         if (error.response && error.response.status === 401) {
-            // const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
-            // if (currentPath.startsWith('/')) {
-            //     return Promise.reject(error)
-            // }
+            const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
+            if (currentPath.startsWith('/')) {
+                return Promise.reject(error)
+            }
 
-            // if (typeof window !== 'undefined') {
-            //     window.location.href = '/'
-            // }
+            if (typeof window !== 'undefined') {
+                window.location.href = '/'
+            }
 
-            // clearToken()
+            clearToken()
 
             return Promise.reject(error)
         }

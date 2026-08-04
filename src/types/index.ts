@@ -146,6 +146,27 @@ export interface CourseContentEdit {
     description?: string
 }
 
+export interface Lesson{
+        id: string,
+      course_module_id: string,
+      title: string,
+      description: string,
+      video_url: string,
+      content: string,
+      duration: string,
+      order: number,
+      cover_url: string,
+      is_active: boolean,
+      created_at: string,
+    //   "lesson_test_progress": {
+    //     "id": 1258,
+    //     "student_id": 3,
+    //     "lesson_id": 11,
+    //     "is_completed": true,
+    //     "best_score": 9,
+    //     "created_at": "2026-03-22 17:36:27"}
+}
+
 export interface LessonMaterial {
     id: string
     title: string

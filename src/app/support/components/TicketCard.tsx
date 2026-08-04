@@ -23,7 +23,7 @@ export const TicketCard = ({ userRole, ticket, currentUserId, onClick, isSelecte
     const hasUnread = !!ticket.last_message && ticket.last_message.is_read === false && ticket.last_message.sender_id !== currentUserId
 
     return (
-        <div onClick={onClick} className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-lg ${isSelected ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md' : 'border-gray-200 bg-white hover:border-purple-300'}`}>
+        <div onClick={onClick} className={`p-4 rounded-xl  cursor-pointer transition-all duration-200 hover:shadow-lg ${isSelected ? 'bg-red-100 shadow-md' : ' bg-white border lg:border-0 '}`}>
             <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-gray-900 truncate mb-1">Savol #{ticket.id}</h3>

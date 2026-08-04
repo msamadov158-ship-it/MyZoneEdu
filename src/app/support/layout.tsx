@@ -20,9 +20,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 	const RoleMenu = role === 'SUPPORT' ? SupportMenu : StudentMenu
 
 	return (
-		<div className="min-h-screen relative bg-gradient-to-br from-gray-50 to-gray-100">
+		<div className="min-h-screen relative bg-white">
 			<Layout menuItems={RoleMenu} />
-			<main className="w-full fixed top-20 lg:top-1 left-0 lg:left-80 lg:w-[calc(100%-320px)] h-[calc(100dvh-80px)] lg:h-dvh overflow-y-auto p-2 sm:p-4 md:p-6">{children}</main>
+			<main className="w-full fixed top-20 lg:top-1 left-0 lg:left-80 lg:w-[calc(100%-300px)] h-[calc(100dvh-80px)] lg:h-dvh overflow-y-auto p-2 sm:p-4 md:p-6 lg:pl-0">{children}</main>
 		</div>
 	)
 }

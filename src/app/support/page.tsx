@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
-import { ChevronLeft, File, Play, SendHorizonal, X, Check, Plus, Smile } from 'lucide-react'
+import { ChevronLeft, File, Play, SendHorizonal, X, Check, Plus, Smile, Send } from 'lucide-react'
 import EmojiPicker from "emoji-picker-react";
 
 import { Message } from '@/types'
@@ -157,16 +157,29 @@ export default function SupportPage() {
 	const showMobileList = isMobile && !selectedTicket && !showNewTicketForm
 
 	return (
-		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full overflow-y-auto scroll-none rounded-2xl">
+		<div className="grid grid-cols-1 lg:grid-cols-3  h-full overflow-y-auto scroll-none ">
 			{/* Chap panel - Ticket list (desktopda doim, mobilida faqat list ko'rsatilganda) */}
-			<div className={`bg-white rounded-2xl shadow-xl p-4 h-full overflow-y-auto scroll-none min-h-[500px] ${isMobile && (selectedTicket || showNewTicketForm) ? 'hidden' : ''}`}>
+			<div className={`bg-white  p-4 h-full overflow-y-auto scroll-none min-h-[500px] ${isMobile && (selectedTicket || showNewTicketForm) ? 'hidden' : ''}`}>
+
+				<div className=' flex justify-start items-center pb-4'>
+						<h3>Support Tickets</h3>
+				</div>
+
+				{role === 'STUDENT' && (
+					<div>
+						<input type="text " placeholder='Savolni qidirish'
+						className='border-2 rounded-xl py-2 border-gray-300 w-full px-2 mb-4 ' />
+					</div>
+				)}
+
+
 				{role === 'STUDENT' && (
 					<button
 						onClick={() => {
 							setShowNewTicketForm(true)
 							setSelectedTicket(null)
 						}}
-						className="mb-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-xl flex justify-center gap-2"
+						className="mb-4 w-full bg-red-500 text-white py-2 rounded-xl flex justify-center gap-2 transition-all duration-300 hover:scale-105 cursor-pointer"
 					>
 						<Plus className="w-5 h-5" />
 						Yangi Savol
@@ -188,10 +201,10 @@ export default function SupportPage() {
 			</div>
 
 			{/* O'ng panel - Ticket form yoki chat */}
-			<div className={`lg:col-span-2 bg-white rounded-2xl overflow-hidden shadow-xl flex flex-col h-full min-h-[500px] ${showMobileList ? 'hidden lg:flex' : ''}`}>
+			<div className={`lg:col-span-2 bg-white  overflow-hidden  flex flex-col h-full min-h-[500px] ${showMobileList ? 'hidden lg:flex' : ''}`}>
 				{showNewTicketForm ? (
 					<>
-						<div className={`p-4 border-b-2 border-gray-100 bg-gradient-to-r ${headerGradient}`}>
+						<div className={` border-b-2 border-gray-100 `}>
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-3">
 									<button
@@ -241,7 +254,7 @@ export default function SupportPage() {
 					</>
 				) : selectedTicket ? (
 					<>
-						<div className={`p-4 border-b-2 border-gray-100 bg-gradient-to-r ${headerGradient}`}>
+						<div className={`p-4 border-b-2 border-gray-100 bg-linear-to-r ${headerGradient}`}>
 							<div className="flex items-center justify-between mb-3">
 								<div className="flex items-center gap-3">
 									<button

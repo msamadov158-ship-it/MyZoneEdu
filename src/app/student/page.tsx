@@ -233,7 +233,7 @@ export default function StudentDashboard() {
                         {/* Next: {course.nextLesson} */}
                       </p>
                       <button onClick={(e) => { e.stopPropagation()
-						 router.push(`student/courses/${course.id}`)}} className="bg-linear-to-b from-[#D00000] via-[#CD0000] to-[#C30000] hover:scale-105  duration-300 cursor-pointer text-white font-semibold text-base px-4 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+						              router.push(`student/courses/${course.id}`)}} className="bg-linear-to-b from-[#D00000] via-[#CD0000] to-[#C30000] hover:scale-105  duration-300 cursor-pointer text-white font-semibold text-base px-4 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
                         	Resume
                       </button>
                     </div>

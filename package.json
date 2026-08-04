@@ -32,6 +32,7 @@
         "react-dom": "^19.2.3",
         "react-hook-form": "^7.65.0",
         "react-hot-toast": "^2.6.0",
+        "react-qr-code": "^2.2.0",
         "react-toastify": "^11.0.5",
         "recharts": "^3.3.0",
         "shaka-player": "^4.16.12",

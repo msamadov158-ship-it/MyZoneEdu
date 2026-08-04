@@ -6,7 +6,7 @@ import { courseLessonService } from '@/services/courseLessonService'
 
 export const useLessons = (moduleId?: string) => {
     const [lessons, setLessons] = useState<Lesson[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
+    const [isLoading, setLoading] = useState<boolean>(false)
 
     const fetchLessons = useCallback(async () => {
         if (!moduleId) return
@@ -80,5 +80,5 @@ export const useLessons = (moduleId?: string) => {
         fetchLessons()
     }, [fetchLessons])
 
-    return {loading, lessons, fetchLessons, fetchLesson, createLesson, updateLesson, deleteLesson}
+    return {isLoading, lessons, fetchLessons, fetchLesson, createLesson, updateLesson, deleteLesson}
 }
