@@ -198,7 +198,7 @@ export default function ModuleTestList() {
                                 </div>
                             </div>
 
-                            {!is_passed ? (
+                            {is_passed ? (
                                 <div className="text-green-600 font-medium flex items-center gap-2">
                                     <CheckCircle className="w-5 h-5" />
                                     Muvaffaqiyatli!

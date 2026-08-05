@@ -12,7 +12,7 @@ export default function NewsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-linear-to-b from-gray-50 to-white py-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[...Array(6)].map((_, i) => (
@@ -31,7 +31,7 @@ export default function NewsPage() {
                     Yangiliklar va e&apos;lonlar
                 </h1>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Eng so&apos;nggi yangiliklar, voqealar va muhim ma&apos;lumotlar bilan tanishing
+                    Eng so'nggi yangiliklar, voqealar va muhim ma'lumotlar bilan tanishing
                 </p>
             </div>
 
@@ -45,7 +45,7 @@ export default function NewsPage() {
                 </div>
             ) : (
                 <motion.div
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4"
                     variants={{
                         hidden: { opacity: 0 },
                         show: {
@@ -63,7 +63,7 @@ export default function NewsPage() {
                                     hidden: { opacity: 0, y: 30 },
                                     show: { opacity: 1, y: 0 }
                                 }}
-                                className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 border border-gray-100"
+                                className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-red-700 group-hover:-translate-y-2 border-2 group-hover:border-red-500 group-hover:text-red-600 border border-gray-100"
                             >
                                 {/* Rasm */}
                                 <div className="relative h-56 overflow-hidden">
@@ -76,22 +76,22 @@ export default function NewsPage() {
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                                        <div className="w-full h-full bg-linear-to-br from-red-500 to-red-600 flex items-center justify-center">
                                             <Newspaper className="w-20 h-20 text-white opacity-40" />
                                         </div>
                                     )}
 
-                                    {/* Gradient overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                                    {/* linear overlay */}
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
                                 </div>
 
                                 {/* Content */}
                                 <div className="p-6">
-                                    <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors">
+                                    <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-red-600 transition-colors">
                                         {news.title}
                                     </h2>
 
-                                    <p className="text-gray-600 mb-5 line-clamp-3">
+                                    <p className="text-gray-600 mb-5 line-clamp-4">
                                         {news.description || news.content?.slice(0, 150) + '...'}
                                     </p>
 
@@ -100,7 +100,7 @@ export default function NewsPage() {
                                             <div className="flex items-center gap-1.5">
                                                 <CalendarDays className="w-4 h-4" />
                                                 <time>
-                                                    {news.created_at ? formatDistanceToNow(new Date(), { locale: uz }) : 'Yangi'}
+                                                    {news.created_at ? formatDistanceToNow(new Date(news.created_at), { locale: uz }) : 'Yangi'} oldin
                                                 </time>
                                             </div>
 
@@ -112,7 +112,13 @@ export default function NewsPage() {
                                             )}
                                         </div>
 
-                                        <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-500 transition-colors" />
+                                        <div title="Batafsil o'qish" className="group inline-flex items-center rounded-full border border-red-200 px-3 py-2 transition-all duration-300 group-hover:bg-red-600 hover:scale-110">
+                                            <span className="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover:max-w-[140px] group-hover:opacity-100 group-hover:mr-2 text-white">
+                                                Batafsil o'qish
+                                            </span>
+
+                                            <ChevronRight className="h-5 w-5 text-red-600 transition-all duration-300 group-hover:text-white group-hover:translate-x-1" />
+                                        </div>
                                     </div>
                                 </div>
                             </motion.article>

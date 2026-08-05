@@ -56,7 +56,7 @@ export default function NewsDetailPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
             </div>
         )
     }
@@ -67,7 +67,7 @@ export default function NewsDetailPage() {
                 <h1 className="text-3xl font-bold text-gray-800 mb-4">Yangilik topilmadi</h1>
                 <button
                     onClick={() => router.back()}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 hover:scale-105 transition"
                 >
                     <ArrowLeft className="w-5 h-5" />
                     Orqaga qaytish
@@ -77,16 +77,15 @@ export default function NewsDetailPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white rounded-2xl overflow-hidden">
-            <div className="relative h-[50vh] min-h-[400px] overflow-hidden">
+        <div className="min-h-screen grid grid-cols-1 md:grid-cols-3 gap-6 bg-gradient-to-b flex  from-gray-50 to-white rounded-2xl overflow-hidden">
+            {/* <div className="relative h-[50vh] min-h-[400px] overflow-hidden">
                 {news.image_url ? (
                     <Image src={news.image_url} alt={news.title} fill className="object-cover brightness-[0.85]" priority />
                 ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-red-600" />
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
-
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
                 <div className="relative h-full max-w-6xl mx-auto px-6 flex flex-col justify-end pb-16">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-2xl">
                         {news.title}
@@ -101,14 +100,16 @@ export default function NewsDetailPage() {
                         </div>
                         <div className="flex items-center gap-2">
                             <Clock className="w-5 h-5" />
-                            <span>{formatDistanceToNow(new Date(), { locale: uz })}</span>
+                            <span>{formatDistanceToNow(new Date(news.created_at), { locale: uz })}</span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
+
+
 
             {/* Content */}
-            <div className="max-w-4xl mx-auto px-6 py-16">
+            <div className="md:col-span-2 max-w-4xl mx-auto px-6 py-16">
                 <motion.article
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -158,6 +159,10 @@ export default function NewsDetailPage() {
                         Barcha yangiliklarga qaytish
                     </button>
                 </div>
+            </div>
+
+            <div className='hidden md:block'>
+                    nimadir
             </div>
         </div>
     )

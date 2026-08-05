@@ -13,6 +13,8 @@ export const useNews = () => {
         try {
             const res = await newsService.getAll()
             setNewsList(res)
+            console.log(res);
+            
         } catch (err) {
             handleApiError(err, 'Yangiliklarni yuklashda xatolik')
         } finally {
