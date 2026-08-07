@@ -19,10 +19,15 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 	const [user, setUser] = useState<StoredAuth | null>(null)
 	const [notificationCount, setNotificationCount] = useState<number>(0)
 	const { getNotificationsByUser } = useNotifications()
-
+	const [isAdmin, setADmin] = useState(false)
 	useEffect(() => {
 			const load = async () => {
 				const storedUser = getUserFromStorage()
+
+				if(storedUser?.role=== 'ADMIN'){
+					setADmin(true)
+				}
+
 				if (storedUser) {
 					setUser(storedUser)
 					const count = await getNotificationsByUser(storedUser?.user_id)
@@ -83,10 +88,15 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 							</div>
 						</div>
 						{notificationCount !== 0 && (
-							<button onClick={() => router.push('/notification')} className="relative p-2 rounded-xl  bg-white   transition-all duration-100 hover:scale-105 cursor-pointer">
+							<button onClick={() => router.push("/notification")} className="relative flex items-center justify-center p-2.5 rounded-xl bg-white text-gray-600  border-gray-100 hover:text-gray-900 hover:shadow-md hover:scale-105 active:scale-95 cursor-pointer transition-all duration-200" title="Bildirishnomalar">
 								<Bell className="w-5 h-5" />
-								<span className="absolute -top-3 -right-3 w-6 h-6 text-white bg-red-500 rounded-full border-2 border-white flex items-center justify-center">{notificationCount}</span>
-							</button>
+
+								{notificationCount > 0 && (
+									<span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 text-[11px] font-semibold text-white bg-red-500 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
+										{notificationCount > 99 ? "99+" : notificationCount}
+									</span>
+								)}
+							</button>	
 						)}
 					</div>
 
@@ -128,7 +138,8 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 					
 
 					<div className="p-4 border-t border-neutral-200">
-						<Link
+						{!isAdmin && (
+							<Link
 							href="/support"
 							className={`flex items-center space-x-4 rounded-lg px-4 py-2 font-medium transition-all duration-200 hover:scale-95 ${
 								pathname === "/support"
@@ -139,6 +150,7 @@ export default function Sidebar({ isSidebarOpen, menuItems, setIsSidebarOpen }: 
 							<CircleQuestionMarkIcon size={22} />
 								<span className="text-base my-2">Support</span>
 							</Link>
+						)}
 						<button
 							onClick={clearToken}
 							className="flex  w-full items-center space-x-4 mt-2 rounded-lg px-4 py-2 font-medium text-neutral-600 transition-all duration-200 hover:scale-95 hover:bg-red-200 hover:text-red-700 active:scale-100 "

@@ -19,15 +19,30 @@ export default function Dashboard() {
 	}, [fetchCourses])
 
 	return (
-		<motion.div variants={staggeredList} initial="hidden" animate="visible" className="space-y-8">
-			<motion.div variants={fadeUp} className="relative overflow-hidden rounded-3xl bg-myZoneOnline p-8 text-white shadow-2xl">
+		<motion.div variants={staggeredList} initial="hidden" animate="visible" className="space-y-8 p-4">
+			<motion.div
+				variants={fadeUp}
+				className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#a20000] via-[#c30000] to-[#d00000] p-8 text-white shadow-2xl shadow-[#a20000]/30"
+			>
+				{/* Ambient glow blobs */}
+				<div className="absolute -right-16 -top-16 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+				<div className="absolute -left-10 -bottom-10 w-48 h-48 bg-[#ff6b6b]/20 rounded-full blur-3xl"></div>
+				<div className="absolute right-1/3 top-0 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+
 				<div className="relative z-10">
-					<h1 className="text-3xl font-bold mb-2">Xush kelibsiz, Admin! 👋</h1>
-					<p className="text-blue-100 mb-6">Bugun platformangizda nimalar bo‘layotganini ko‘ring.</p>
-					<button className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-xl hover:bg-white/30 transition-all duration-300 border border-white/30">Analitikani ko‘rish</button>
+					<h1 className="text-3xl font-bold mb-2 tracking-tight">
+						Xush kelibsiz, Admin! 👋
+					</h1>
+					<p className="text-white/70 mb-6">
+						Bugun platformangizda nimalar bo‘layotganini ko‘ring.
+					</p>
+					<button
+						onClick={() => router.push('/admin/analytics')}
+						className="px-6 py-3 bg-white/15 backdrop-blur-md rounded-xl font-medium hover:bg-white/25 hover:scale-[1.02] active:scale-95 transition-all duration-300 border border-white/20 shadow-lg shadow-black/10"
+					>
+						Analitikani ko‘rish
+					</button>
 				</div>
-				<div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full"></div>
-				<div className="absolute -right-5 -bottom-5 w-20 h-20 bg-white/10 rounded-full"></div>
 			</motion.div>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">

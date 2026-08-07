@@ -77,7 +77,7 @@ export default function StudentDashboard() {
 
 	if (!filteredCourses || filteredCourses.length === 0) {
 		return (
-		<div className="max-w-7xl mx-auto py-12 h-190 lg:h-dvh flex justify-center items-center">
+		  <div className="max-w-7xl mx-auto py-12 h-190 lg:h-dvh flex justify-center items-center">
             <div className="relative w-full lg:w-[calc(100%-200px)] flex items-center justify-center h-64 rounded-2xl overflow-hidden
                              bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_8px_40px_rgba(162,0,0,0.08)]">
                 {/* ambient glow accents */}

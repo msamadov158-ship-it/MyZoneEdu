@@ -1,9 +1,10 @@
-import { BookOpen, Home, LayoutDashboard, Users, Type, Bell, CircleQuestionMarkIcon, Headset, Award, BookCheck, Newspaper, BookOpenCheck } from 'lucide-react'
+import {ChartNoAxesCombined,BookOpen, Home, LayoutDashboard, Users, Type, Bell, CircleQuestionMarkIcon, Headset, Award, BookCheck, Newspaper, BookOpenCheck } from 'lucide-react'
 
 export const AdminMenu = [
 	{ name: 'Boshqaruv paneli', href: '/admin', icon: <LayoutDashboard className="w-5 h-5" /> },
 	{ name: 'Talabalar', href: '/admin/students', icon: <Users className="w-5 h-5" /> },
 	{ name: 'Kurslar', href: '/admin/courses', icon: <BookOpen className="w-5 h-5" /> },
+	{ name: 'Analitika', href: '/admin/analytics', icon: <ChartNoAxesCombined className="w-5 h-5" /> },
 	{ name: 'Turlar', href: '/admin/types', icon: <Type className="w-5 h-5" /> },
 	{ name: 'Savollar', href: '/admin/questions', icon: <CircleQuestionMarkIcon className="w-5 h-5" /> },
 	{ name: 'Module Savollar', href: '/admin/module', icon: <CircleQuestionMarkIcon className="w-5 h-5" /> },
