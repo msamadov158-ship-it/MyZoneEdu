@@ -44,23 +44,44 @@ export default function CoursesPage() {
 	}
 
 	return (
-		<motion.div variants={staggeredList} initial="hidden" animate="visible" className="space-y-8">
+		<motion.div variants={staggeredList} initial="hidden" animate="visible" className="space-y-8 p-6">
 			{loading ? (
-				<motion.div variants={fadeUp} className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-lg">
-					<div className="text-center">
-						<div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-						<p className="text-gray-600">Kurs ma'lumotlari yuklanmoqda...</p>
-					</div>
-				</motion.div>
+				<motion.div  className="relative w-full  flex items-center justify-center h-64 rounded-2xl overflow-hidden
+										bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_8px_40px_rgba(162,0,0,0.08)]">
+							
+							<div className="absolute -top-24 -left-24 w-64 h-64 bg-[#d00000]/10 rounded-full blur-3xl" />
+							<div className="absolute -bottom-24 -right-24 w-64 h-64 bg-[#a20000]/10 rounded-full blur-3xl" />
+
+							<div className="relative text-center">
+								<div className="relative w-16 h-16 mx-auto mb-4">
+									<div className="absolute inset-0 rounded-full border-4 border-[#a20000]/15" />
+									<div className="absolute inset-0 rounded-full border-4 border-t-[#a20000] border-r-[#d00000] border-b-transparent border-l-transparent animate-spin" />
+								</div>
+								<p className="text-gray-600">
+									Kurs malumotlari yuklanmoqda...
+								</p>
+							</div>
+					</motion.div>
 			) : courses.length === 0 ? (
-				<motion.div variants={fadeUp} className="text-center py-16 bg-white rounded-2xl shadow-lg">
-					<BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-					<h3 className="text-lg font-semibold text-gray-900 mb-2">Kurslar topilmadi</h3>
-					<p className="text-gray-600 mb-4">Birinchi kursingizni qo‘shish orqali boshlang</p>
-					<button onClick={handleOpenCreate} className="px-6 py-3 rounded-xl bg-myZoneOnline text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg">
-						Kurs Yaratish
-					</button>
-				</motion.div>
+				<div className="relative w-full  flex items-center justify-center h-70 rounded-2xl overflow-hidden
+                             bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_8px_40px_rgba(162,0,0,0.08)]">
+                
+						<div className="absolute -top-24 -left-24 w-64 h-64 bg-[#d00000]/10 rounded-full blur-3xl" />
+						<div className="absolute -bottom-24 -right-24 w-64 h-64 bg-[#a20000]/10 rounded-full blur-3xl" />
+
+						<div className="relative flex flex-col justify-center items-center">
+							<BookOpen className='w-16 h-16 text-red-600 mb-4'/>
+							<p className="text-gray-600">
+								Kurslar topilmadi
+							</p>
+							<p className="text-gray-600">
+								Birinchi kursingizni qo'shishdan boshlang
+							</p>
+							<button onClick={handleOpenCreate} className="px-6 py-3 my-4 rounded-xl bg-myZoneOnline text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg">
+								Talaba qo‘shish
+				 			</button>
+						</div>
+					</div>
 			) : (
 				<motion.div variants={fadeUp} className="space-y-6">
 					<div className="flex items-center justify-between">

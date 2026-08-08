@@ -13,6 +13,8 @@ export const useCourses = () => {
         try {
             const res = await courseService.getAll()
             setCourses(res)
+            console.log(res);
+            
         } catch (err) {
             handleApiError(err, 'Courselarni yuklashda xatolik')
         } finally {

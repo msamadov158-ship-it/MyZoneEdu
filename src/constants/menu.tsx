@@ -5,6 +5,7 @@ export const AdminMenu = [
 	{ name: 'Talabalar', href: '/admin/students', icon: <Users className="w-5 h-5" /> },
 	{ name: 'Kurslar', href: '/admin/courses', icon: <BookOpen className="w-5 h-5" /> },
 	{ name: 'Analitika', href: '/admin/analytics', icon: <ChartNoAxesCombined className="w-5 h-5" /> },
+	{ name: 'Katalog', href: '/admin/catalog', icon: <ChartNoAxesCombined className="w-5 h-5" /> },
 	{ name: 'Turlar', href: '/admin/types', icon: <Type className="w-5 h-5" /> },
 	{ name: 'Savollar', href: '/admin/questions', icon: <CircleQuestionMarkIcon className="w-5 h-5" /> },
 	{ name: 'Module Savollar', href: '/admin/module', icon: <CircleQuestionMarkIcon className="w-5 h-5" /> },
