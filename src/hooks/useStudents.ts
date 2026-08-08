@@ -12,18 +12,32 @@ export const useStudents = () => {
     const pathname = usePathname()
     const [loading, setLoading] = useState(false)
     const [students, setStudents] = useState<Student[]>([])
+    const [allStudents, setAllStudents] =useState<Student[]>([])
+    const [totalCount, setTotalCount] = useState(0)
+    const [page, setPage] = useState(1)
+    const [perPage, setPerPage] = useState(10)
+
+    
 
     const fetchStudents = useCallback(async () => {
         setLoading(true)
         try {
             const data = await studentService.getAll()
-            setStudents(data)
+
+            setAllStudents(data)
+            setTotalCount(data.length)
+            let start = (page - 1) *perPage
+            let end = start + perPage
+            let arr = (data.slice(start,end))
+            setStudents(arr)
+            // console.log(data);
+            
         } catch (err) {
             handleApiError(err, 'Studentlarni yuklashda xatolik yuz berdi!')
         } finally {
             setLoading(false)
         }
-    }, [])
+    }, [page, perPage])
 
     const fetchStudent = useCallback(async (id: string) => {
         setLoading(true)
@@ -111,6 +125,10 @@ export const useStudents = () => {
     return {
         loading,
         students,
+        page,
+        perPage,
+        totalCount,
+        allStudents,
         setLoading,
         handleCreate,
         handleUpdate,
@@ -118,5 +136,7 @@ export const useStudents = () => {
         loginSubmit,
         fetchStudent,
         fetchStudents,
+        setPage,
+        setPerPage
     }
 }

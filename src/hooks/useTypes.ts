@@ -14,6 +14,8 @@ export const useTypes = () => {
         try {
             const data = await typeService.getAll()
             setTypes(data)
+            // console.log(data);
+            
         } catch (err) {
             handleApiError(err, 'Typeslar yuklashda xatolik yuz berdi!')
         } finally {

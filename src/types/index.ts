@@ -115,6 +115,7 @@ export interface Type {
     id: string
     title: string
     description: string
+    role:string
 }
 
 export interface TypeEdit {
