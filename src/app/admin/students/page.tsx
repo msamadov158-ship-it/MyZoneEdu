@@ -64,6 +64,37 @@ export default function Students() {
 		})
 	}
 
+	// download button
+	const handleExport = () => {
+		const headers = ['Ism', 'Username', 'Rol', 'Holat', 'Tur', 'Telefon']
+		
+		const rows = filteredStudents.map((stu) => {
+			const type = types.find((t) => t.id == stu.type_id)
+			return [
+				stu.full_name,
+				stu.username,
+				stu.role,
+				stu.is_active ? 'Faol' : 'Faol emas',
+				type?.title || '—',
+				stu.phone_number || '',
+			]
+		})
+
+		const csvContent = [headers, ...rows]
+			.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+			.join('\n')
+
+		const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
+		const url = URL.createObjectURL(blob)
+		const link = document.createElement('a')
+		link.href = url
+		link.setAttribute('download', `talabalar_${new Date().toISOString().slice(0, 10)}.csv`)
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+		URL.revokeObjectURL(url)
+		}
+
 	return (
 		<motion.div variants={staggeredList} initial="hidden" animate="visible" className="space-y-8 p-4">
 			{/* loading done */}
@@ -114,7 +145,7 @@ export default function Students() {
 							<p className="text-gray-500 mt-1">Platformadagi barcha foydalanuvchilarni boshqaring va kuzating</p>
 						</div>
 						<div className="flex gap-3">
-							<button className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+							<button onClick={handleExport} className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2.5 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
 								<Download className="w-4 h-4" />
 								<span className="text-sm font-medium">Yuklab olish</span>
 							</button>
